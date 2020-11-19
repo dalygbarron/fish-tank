@@ -1,0 +1,34 @@
+module.exports = function(grunt) {
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
+        jshint: {
+            options: {
+                esversion: 6
+            },
+            all: ['src/*.js']
+        },
+        concat: {
+            dist: {
+                src: [
+                    'src/dep/gl-matrix.js',
+                    'src/types.js',
+                    'src/screen.js',
+                    'src/main.js'
+                ],
+                dest: 'build/<%= pkg.name %>.js'
+            }
+        },
+        terser: {
+            options: {ecma: 2015},
+            main: {
+                files: {
+                    'build/fish-tank.min.js': ['build/fish-tank.js']
+                }
+            }
+        }
+    });
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-terser');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.registerTask('default', ['jshint', 'concat', 'terser:main']);
+};
