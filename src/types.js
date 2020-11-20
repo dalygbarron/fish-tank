@@ -1,45 +1,68 @@
-/**
- * Creates an object representing a colour. The numbers should be between 0 and
- * 1, unless you are doing somethign freaky I guess.
- * @param r is red.
- * @param g is green.
- * @param b is blue.
- * @param a is alpha.
- * @return the colour object.
- */
-function createColour(r, g, b, a) {
-    return {r: r, g: g, b: b, a: a};
+class Colour {
+    constructor(r, g, b, a) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
 }
 
-/**
- * Creates a rectangle.
- * @param x is the left position.
- * @param y is the top position.
- * @param w is the width.
- * @param h is the height.
- * @return the rect object.
- */
-function createRect(x, y, w, h) {
-    return {x: x, y: y, w: w, h: h};
+class Vector {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    add(other) {
+        this.x += other.x;
+        this.y += other.y;
+    }
+
+    wrap(bounds) {
+        while (this.x < bounds.pos.x) this.x += bounds.size.x;
+        while (this.y < bounds.pos.y) this.y += bounds.size.y;
+        while (this.x >= bounds.pos.x + bounds.size.x) this.x -= bounds.size.x;
+        while (this.y >= bounds.pos.y + bounds.size.y) this.y -= bounds.size.y;
+    }
 }
 
-/**
- * Creates a vector which is two dimensions.
- * @param x is the x dimension.
- * @param y is the y dimension.
- * @return the vector.
- */
-function createVector(x, y) {
-    return {x: x, y: y};
+class Rect {
+    constructor(x, y, w, h) {
+        this.pos = new Vector(x, y);
+        this.size = new Vector(w, h);
+    }
+
+    get x() {
+        return this.pos.x;
+    }
+
+    get y() {
+        return this.pos.y;
+    }
+
+    get w() {
+        return this.size.x;
+    }
+
+    get h() {
+        return this.size.y;
+    }
+
+    get r() {
+        return this.pos.x + this.size.x;
+    }
+
+    get b() {
+        return this.pos.y + this.size.y;
+    }
 }
 
-/**
- * Tells you if the given number is a power of two.
- * @param n is the number to check.
- * @return true iff n is a power of two.
- */
-function isPowerOfTwo(n) {
-    return Math.floor(n / 2) == n / 2;
+class Texture {
+    constructor(glTexture, width, height) {
+        this.glTexture = glTexture;
+        this.width = width;
+        this.height = height;
+    }
 }
 
 /**
@@ -69,7 +92,7 @@ async function loadTexture(gl, url) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            resolve(texture);
+            resolve(new Texture(texture, image.width, image.height));
         };
         image.src = url;
     });

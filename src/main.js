@@ -19,6 +19,9 @@ function start(gl, screen) {
             screens.push(response.value);
         }
     };
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     setInterval(() => {
         if (screens.length > 0) {
             // TODO: inputs.

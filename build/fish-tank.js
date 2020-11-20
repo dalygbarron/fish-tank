@@ -1,35 +1,68 @@
-/**
- * Creates an object representing a colour. The numbers should be between 0 and
- * 1, unless you are doing somethign freaky I guess.
- * @param r is red.
- * @param g is green.
- * @param b is blue.
- * @param a is alpha.
- * @return the colour object.
- */
-function createColour(r, g, b, a) {
-    return {r: r, g: g, b: b, a: a};
+class Colour {
+    constructor(r, g, b, a) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
 }
 
-/**
- * Creates a rectangle.
- * @param x is the left position.
- * @param y is the top position.
- * @param w is the width.
- * @param h is the height.
- * @return the rect object.
- */
-function createRect(x, y, w, h) {
-    return {x: x, y: y, w: w, h: h};
+class Vector {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    add(other) {
+        this.x += other.x;
+        this.y += other.y;
+    }
+
+    wrap(bounds) {
+        while (this.x < bounds.pos.x) this.x += bounds.size.x;
+        while (this.y < bounds.pos.y) this.y += bounds.size.y;
+        while (this.x >= bounds.pos.x + bounds.size.x) this.x -= bounds.size.x;
+        while (this.y >= bounds.pos.y + bounds.size.y) this.y -= bounds.size.y;
+    }
 }
 
-/**
- * Tells you if the given number is a power of two.
- * @param n is the number to check.
- * @return true iff n is a power of two.
- */
-function isPowerOfTwo(n) {
-    return Math.floor(n / 2) == n / 2;
+class Rect {
+    constructor(x, y, w, h) {
+        this.pos = new Vector(x, y);
+        this.size = new Vector(w, h);
+    }
+
+    get x() {
+        return this.pos.x;
+    }
+
+    get y() {
+        return this.pos.y;
+    }
+
+    get w() {
+        return this.size.x;
+    }
+
+    get h() {
+        return this.size.y;
+    }
+
+    get r() {
+        return this.pos.x + this.size.x;
+    }
+
+    get b() {
+        return this.pos.y + this.size.y;
+    }
+}
+
+class Texture {
+    constructor(glTexture, width, height) {
+        this.glTexture = glTexture;
+        this.width = width;
+        this.height = height;
+    }
 }
 
 /**
@@ -59,7 +92,7 @@ async function loadTexture(gl, url) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            resolve(texture);
+            resolve(new Texture(texture, image.width, image.height));
         };
         image.src = url;
     });
@@ -68,11 +101,12 @@ async function loadTexture(gl, url) {
 const defaultVertexShader = `
 attribute vec4 position;
 attribute vec4 textureCoord;
-uniform vec4 canvas;
+uniform vec4 invCanvas;
+uniform vec2 invTextureSize;
 varying highp vec2 vTextureCoord;
 void main() {
-    gl_Position = position / (canvas * vec4(0.5, 0.5, 1.0, 1.0)) - vec4(1.0, 1.0, 0, 0);
-    vTextureCoord = textureCoord.xy / canvas.xy;
+    gl_Position = position * (invCanvas * vec4(2, 2, 1.0, 1.0)) - vec4(1.0, 1.0, 0, 0);
+    vTextureCoord = textureCoord.xy * invTextureSize;
 }`;
 
 const defaultFragmentShader = `
@@ -137,13 +171,14 @@ function createShaderProgram(gl, vertexSrc=null, fragmentSrc=null) {
     const width = gl.canvas.clientWidth;
     const height = gl.canvas.clientHeight;
     gl.useProgram(program);
-    const canvas = gl.getUniformLocation(program, 'canvas');
-    gl.uniform4f(canvas, width, height, 1, 1);
+    const invCanvas = gl.getUniformLocation(program, 'invCanvas');
+    gl.uniform4f(invCanvas, 1 / width, 1 / height, 1, 1);
     return {
         program: program,
         position: gl.getAttribLocation(program, 'position'),
         textureCoord: gl.getAttribLocation(program, 'textureCoord'),
-        canvas: canvas,
+        invTextureSize: gl.getUniformLocation(program, 'invTextureSize'),
+        invCanvas: invCanvas,
         sampler: gl.getUniformLocation(program, 'sampler')
     };
 }
@@ -185,30 +220,31 @@ function createBatch(gl, texture, max) {
     return {
         add: (src, dst) => {
             if (n >= max) return;
-            items[n * 12] = dst.x;
-            items[n * 12 + 1] = dst.y;
-            items[n * 12 + 2] = dst.x + dst.w;
-            items[n * 12 + 3] = dst.y;
-            items[n * 12 + 4] = dst.x;
-            items[n * 12 + 5] = dst.y + dst.h;
-            items[n * 12 + 6] = dst.x + dst.w;
-            items[n * 12 + 7] = dst.y;
-            items[n * 12 + 8] = dst.x + dst.w;
-            items[n * 12 + 9] = dst.y + dst.h;
-            items[n * 12 + 10] = dst.x;
-            items[n * 12 + 11] = dst.y + dst.h;
-            textureItems[n * 12] = src.x;
-            textureItems[n * 12 + 1] = src.y;
-            textureItems[n * 12 + 2] = src.x + src.w;
-            textureItems[n * 12 + 3] = src.y;
-            textureItems[n * 12 + 4] = src.x;
-            textureItems[n * 12 + 5] = src.y + src.h;
-            textureItems[n * 12 + 6] = src.x + src.w;
-            textureItems[n * 12 + 7] = src.y;
-            textureItems[n * 12 + 8] = src.x + src.w;
-            textureItems[n * 12 + 9] = src.y + src.h;
-            textureItems[n * 12 + 10] = src.x;
-            textureItems[n * 12 + 11] = src.y + src.h;
+            const offset = n * 12;
+            items[offset] = dst.x;
+            items[offset + 1] = dst.y;
+            items[offset + 2] = dst.r;
+            items[offset + 3] = dst.y;
+            items[offset + 4] = dst.x;
+            items[offset + 5] = dst.b;
+            items[offset + 6] = dst.r;
+            items[offset + 7] = dst.y;
+            items[offset + 8] = dst.r;
+            items[offset + 9] = dst.b;
+            items[offset + 10] = dst.x;
+            items[offset + 11] = dst.b;
+            textureItems[offset] = src.x;
+            textureItems[offset + 1] = src.y;
+            textureItems[offset + 2] = src.r;
+            textureItems[offset + 3] = src.y;
+            textureItems[offset + 4] = src.x;
+            textureItems[offset + 5] = src.b;
+            textureItems[offset + 6] = src.r;
+            textureItems[offset + 7] = src.y;
+            textureItems[offset + 8] = src.r;
+            textureItems[offset + 9] = src.b;
+            textureItems[offset + 10] = src.x;
+            textureItems[offset + 11] = src.b;
             n++;
         },
         clear: () => {
@@ -233,8 +269,9 @@ function createBatch(gl, texture, max) {
             // TODO: use different texture slots to save time when using
             //       more than one texture.
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.bindTexture(gl.TEXTURE_2D, texture.glTexture);
             gl.uniform1i(shader.sampler, 0);
+            gl.uniform2f(shader.invTextureSize, 1 / texture.width, 1 / texture.height);
             gl.drawArrays(gl.TRIANGLES, 0, n * 6);
         }
     };
@@ -325,6 +362,9 @@ function start(gl, screen) {
             screens.push(response.value);
         }
     };
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     setInterval(() => {
         if (screens.length > 0) {
             // TODO: inputs.
