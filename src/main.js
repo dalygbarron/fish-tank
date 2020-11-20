@@ -4,12 +4,7 @@
  * @param canvas is a html canvas.
  * @param screen is the first screen to place on the screen stack.
  */
-function start(canvas, screen) {
-    const gl = canvas.getContext('webgl');
-    if (gl === null) {
-        alert('the police the FBI are coming in your window man');
-        return;
-    }
+function start(gl, screen) {
     const width = gl.canvas.clientWidth;
     const height = gl.canvas.clientHeight;
     screens = [screen];
@@ -29,12 +24,11 @@ function start(canvas, screen) {
             // TODO: inputs.
             // TODO: calculate the passage of time.
             updateScreens();
-            // TODO: make rendering run on requestAnimationFrame time
             gl.clearColor(0, 0, 0, 1);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            gl.clear(gl.COLOR_BUFFER_BIT);
             for (screen of screens) {
                 screen.render(gl, 0, 0, width, height);
             }
         }
-    }, 50);
+    }, 20);
 }

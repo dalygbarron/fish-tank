@@ -3,7 +3,7 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
             options: {
-                esversion: 6
+                esversion: 8
             },
             all: ['src/*.js']
         },
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
             }
         },
         terser: {
-            options: {ecma: 2015},
+            options: {ecma: 2017},
             main: {
                 files: {
                     'build/fish-tank.min.js': ['build/fish-tank.js']

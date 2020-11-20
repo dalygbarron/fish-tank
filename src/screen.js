@@ -14,14 +14,14 @@
  *                 ended.
  * @return the newly created screen object.
  */
-const createScreen = (input, update, render, evaluate) => {
+function createScreen(input, update, render, evaluate) {
     return {
         input: input,
         update: update,
         render: render,
         evaluate: evaluate
     };
-};
+}
 
 /**
  * Creates a screen that only updates and renders, absorbs all input without
@@ -30,16 +30,34 @@ const createScreen = (input, update, render, evaluate) => {
  * @param render is the render function.
  * @return the new screen.
  */
-const createDullScreen = (update, render) => {
+function createDullScreen(update, render) {
     return createScreen(
-        (key) => {
-            return true;
-        },
+        (key) => {return true;},
         update,
         render,
-        () => {
-            return null;
+        () => {return null;}
+    );
+}
+
+/**
+ * Takes a bunch of promises and waits for them all to load while showing some
+ * junk on the screen to keep the kids entertained.
+ * @param promises is the lot of promises.
+ * @return the loading screen.
+ */
+function createLoadScreen(after, ...promises) {
+    let newScreen = null;
+    Promise.all(promises).then((v) => {
+        newScreen = after(...v);
+    });
+    return createDullScreen(
+        (function* () {
+            while (!newScreen) yield;
+            return newScreen;
+        })(),
+        (gl, x, y, w, h) => {
+            gl.clearColor(Math.random(), Math.random(), Math.random(), 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
         }
     );
-};
-
+}

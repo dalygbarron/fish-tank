@@ -7,37 +7,50 @@
         <script src="build/fish-tank.js" defer></script>
         <script defer>
             window.onload = () => {
-                const createBasedScreen = () => {
+                const gl = document.querySelector('#sex-zone').getContext('webgl');
+                if (gl === null) {
+                    alert('the police the FBI are coming in your window man');
+                    return;
+                }
+                const createBasedScreen = (texture) => {
                     let number = 0;
+                    let batch = createBatch(gl, texture, 2000);
+                    let boxes = [];
+                    for (let i = 0; i < 2000; i++) {
+                        boxes.push(createRect(0, 0, 0, 0));
+                    }
                     return createDullScreen(
                         (function* () {
                             for (let i = 0; i < 100; i++) {
+                                for (u in boxes) {
+                                    boxes[u].w = Math.random() * 50;
+                                    boxes[u].h = Math.random() * 50;
+                                    boxes[u].x = Math.random() * (1024 - boxes[u].w);
+                                    boxes[u].y = Math.random() * (600 - boxes[u].h);
+                                }
                                 yield;
                             }
                         })(),
                         (gl, x, y, width, height) => {
-                            const programInfo = createShaderProgram(gl);
-                            const buffer = createBuffer(gl);
-                            const projectionMatrix = mat4.create();
-                            gl.bindBuffer(gl.ARRAY_BUFFER, buffer.position);
-                            gl.vertexAttribPointer(
-                                programInfo.attribLocations.position,
-                                2,
-                                gl.FLOAT,
-                                false,
-                                0,
-                                0
-                            );
-                            gl.enableVertexAttribArray(
-                                programInfo.attribLocations.vertexPosition
-                            );
-                            gl.useProgram(programInfo.program);
-                            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                            if (batch) {
+                                batch.clear();
+                                for (u in boxes) {
+                                    batch.add(boxes[u], boxes[u]);
+                                }
+                                batch.render();
+                            }
                         }
                     );
                 };
 
-        start(document.querySelector('#sex-zone'), createBasedScreen());
+                start(
+                    gl,
+                    createLoadScreen(
+                        createBasedScreen,
+                        loadTexture(gl, "/waterPov.png")
+                    )
+                );
+
             };
         </script>
     </head>
