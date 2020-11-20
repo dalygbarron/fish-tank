@@ -24,6 +24,16 @@ function createRect(x, y, w, h) {
 }
 
 /**
+ * Creates a vector which is two dimensions.
+ * @param x is the x dimension.
+ * @param y is the y dimension.
+ * @return the vector.
+ */
+function createVector(x, y) {
+    return {x: x, y: y};
+}
+
+/**
  * Tells you if the given number is a power of two.
  * @param n is the number to check.
  * @return true iff n is a power of two.

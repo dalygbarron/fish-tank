@@ -5,6 +5,8 @@
                 integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
                 crossorigin="anonymous" defer></script>
         <script src="build/fish-tank.js" defer></script>
+        <script src="test.js" defer>
+        </script>
         <script defer>
             window.onload = () => {
                 const gl = document.querySelector('#sex-zone').getContext('webgl');
@@ -12,45 +14,7 @@
                     alert('the police the FBI are coming in your window man');
                     return;
                 }
-                const createBasedScreen = (texture) => {
-                    let number = 0;
-                    let batch = createBatch(gl, texture, 2000);
-                    let boxes = [];
-                    for (let i = 0; i < 2000; i++) {
-                        boxes.push(createRect(0, 0, 0, 0));
-                    }
-                    return createDullScreen(
-                        (function* () {
-                            for (let i = 0; i < 100; i++) {
-                                for (u in boxes) {
-                                    boxes[u].w = Math.random() * 50;
-                                    boxes[u].h = Math.random() * 50;
-                                    boxes[u].x = Math.random() * (1024 - boxes[u].w);
-                                    boxes[u].y = Math.random() * (600 - boxes[u].h);
-                                }
-                                yield;
-                            }
-                        })(),
-                        (gl, x, y, width, height) => {
-                            if (batch) {
-                                batch.clear();
-                                for (u in boxes) {
-                                    batch.add(boxes[u], boxes[u]);
-                                }
-                                batch.render();
-                            }
-                        }
-                    );
-                };
-
-                start(
-                    gl,
-                    createLoadScreen(
-                        createBasedScreen,
-                        loadTexture(gl, "/waterPov.png")
-                    )
-                );
-
+                go(gl);
             };
         </script>
     </head>
