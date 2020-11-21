@@ -18,11 +18,16 @@ class Vector {
         this.y += other.y;
     }
 
+    /**
+     * Wraps this vector destructively in a rectangle that starts at (0, 0)
+     * then goes to bounds.
+     * @param bounds is a vector representing the far corner.
+     */
     wrap(bounds) {
-        while (this.x < bounds.pos.x) this.x += bounds.size.x;
-        while (this.y < bounds.pos.y) this.y += bounds.size.y;
-        while (this.x >= bounds.pos.x + bounds.size.x) this.x -= bounds.size.x;
-        while (this.y >= bounds.pos.y + bounds.size.y) this.y -= bounds.size.y;
+        this.x = (this.x < 0) ? (bounds.x - Math.abs(this.x % bounds.x)) :
+            (this.x % bounds.x);
+        this.y = (this.y < 0) ? (bounds.y - Math.abs(this.y % bounds.y)) :
+            (this.y % bounds.y);
     }
 }
 

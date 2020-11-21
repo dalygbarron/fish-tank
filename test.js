@@ -11,12 +11,13 @@ class Rodent {
             (Math.random() - 0.5) * 5,
             (Math.random() - 0.5) * 5
         );
+        this.bounds = new Vector(1024, 600);
     }
 
     update() {
         this.pos.pos.add(this.velocity);
         this.pos.pos.y += 0.3;
-        this.pos.pos.wrap(new Rect(0, 0, 1024, 600));
+        this.pos.pos.wrap(this.bounds);
     }
 }
 
