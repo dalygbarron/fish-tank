@@ -47,13 +47,21 @@ function createDullScreen(update, render) {
  */
 function createLoadScreen(after, args, ...promises) {
     let newScreen = null;
-    Promise.all(promises).then((v) => {
-        newScreen = after(...args, ...v);
-    });
+    let fail = false;
+    Promise.all(promises).then(
+        v => {
+            newScreen = after(...args, ...v);
+        },
+        reason => {
+            console.error(reason);
+            fail = true;
+        }
+    );
     return createDullScreen(
         (function* () {
-            while (!newScreen) yield;
-            return newScreen;
+            if (newScreen) return newScreen;
+            else if (fail) return;
+            yield;
         })(),
         (gl, x, y, w, h) => {
             gl.clearColor(Math.random(), Math.random(), Math.random(), 1);

@@ -62,7 +62,16 @@ class Rect {
     }
 }
 
+/**
+ * Represents a texture from opengl but also holds it's width and height.
+ */
 class Texture {
+    /**
+     * Creates the texture.
+     * @param glTexture is the actual texture inside.
+     * @param width     is the width of the texture.
+     * @param height    is the height of the texture.
+     */
     constructor(glTexture, width, height) {
         this.glTexture = glTexture;
         this.width = width;
@@ -98,6 +107,9 @@ async function loadTexture(gl, url) {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
             resolve(new Texture(texture, image.width, image.height));
+        };
+        image.onerror = () => {
+            reject("failed loading "+url);
         };
         image.src = url;
     });
