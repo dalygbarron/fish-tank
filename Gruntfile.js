@@ -10,6 +10,7 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: [
+                    'src/dep/gl-matrix.js',
                     'src/types.js',
                     'src/shader.js',
                     'src/screen.js',

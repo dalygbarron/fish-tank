@@ -45,10 +45,10 @@ function createDullScreen(update, render) {
  * @param promises is the lot of promises.
  * @return the loading screen.
  */
-function createLoadScreen(after, ...promises) {
+function createLoadScreen(after, args, ...promises) {
     let newScreen = null;
     Promise.all(promises).then((v) => {
-        newScreen = after(...v);
+        newScreen = after(...args, ...v);
     });
     return createDullScreen(
         (function* () {
