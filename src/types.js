@@ -109,7 +109,7 @@ async function loadTexture(gl, url) {
             resolve(new Texture(texture, image.width, image.height));
         };
         image.onerror = () => {
-            reject("failed loading "+url);
+            reject(`failed loading image '${url}'`);
         };
         image.src = url;
     });

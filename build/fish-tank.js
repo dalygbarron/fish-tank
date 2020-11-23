@@ -7869,7 +7869,7 @@ async function loadTexture(gl, url) {
             resolve(new Texture(texture, image.width, image.height));
         };
         image.onerror = () => {
-            reject("failed loading "+url);
+            reject(`failed loading image '${url}'`);
         };
         image.src = url;
     });
@@ -8088,10 +8088,14 @@ function createScreen(input, update, render, evaluate) {
  */
 function createDullScreen(update, render) {
     return createScreen(
-        (key) => {return true;},
+        key => {
+            return true;
+        },
         update,
         render,
-        () => {return null;}
+        () => {
+            return null;
+        }
     );
 }
 
@@ -8115,9 +8119,11 @@ function createLoadScreen(after, args, ...promises) {
     );
     return createDullScreen(
         (function* () {
-            if (newScreen) return newScreen;
-            else if (fail) return;
-            yield;
+            while (true) {
+                if (newScreen) return newScreen;
+                else if (fail) return;
+                else yield;
+            }
         })(),
         (gl, x, y, w, h) => {
             gl.clearColor(Math.random(), Math.random(), Math.random(), 1);
