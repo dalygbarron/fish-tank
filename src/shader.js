@@ -134,17 +134,17 @@ function createBatch(gl, texture, max) {
             items[offset + 10] = dst.x;
             items[offset + 11] = dst.b;
             textureItems[offset] = src.x;
-            textureItems[offset + 1] = src.y;
+            textureItems[offset + 1] = src.b;
             textureItems[offset + 2] = src.r;
-            textureItems[offset + 3] = src.y;
+            textureItems[offset + 3] = src.b;
             textureItems[offset + 4] = src.x;
-            textureItems[offset + 5] = src.b;
+            textureItems[offset + 5] = src.y;
             textureItems[offset + 6] = src.r;
-            textureItems[offset + 7] = src.y;
+            textureItems[offset + 7] = src.b;
             textureItems[offset + 8] = src.r;
-            textureItems[offset + 9] = src.b;
+            textureItems[offset + 9] = src.y;
             textureItems[offset + 10] = src.x;
-            textureItems[offset + 11] = src.b;
+            textureItems[offset + 11] = src.y;
             n++;
         },
         clear: () => {

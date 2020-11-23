@@ -7840,6 +7840,48 @@ class Texture {
 }
 
 /**
+ * Stores sprites.
+ */
+class Atlas {
+    /**
+     * Creates the atlas with nothing in it yet.
+     */
+    constructor() {
+        this.sprites = {};
+    }
+
+    /**
+     * Adds a sprite into the atlas.
+     * @param name   is the name of the atlas.
+     * @param sprite is the sprite to add.
+     */
+    add(name, sprite) {
+        this.sprites[name] = sprite;
+    }
+
+    /**
+     * Gets a sprite out of the atlas.
+     * @param name is the name of the sprite to get.
+     * @return the sprite found or an empty one if it lacks it.
+     */
+    get(name) {
+        if (name in this.sprites) return this.sprites[name];
+        console.error(`unknown sprite name ${name}`);
+        return new Rect(0, 0, 0, 0);
+    }
+
+    /**
+     * Iterates over all sprites in the atlas.
+     * @param callback is a callback to run for each one.
+     */
+    forEach(callback) {
+        for (let sprite in this.sprites) {
+            callback(sprite, this.sprites[sprite]);
+        }
+    }
+}
+
+/**
  * Asynchronously loads a texture out of a url. I made it asynchronous because
  * returning a test image would work quite poorly with texture atlases, and it
  * will also fuck up with other data types so we need to implement asynchronous
@@ -7872,6 +7914,44 @@ async function loadTexture(gl, url) {
             reject(`failed loading image '${url}'`);
         };
         image.src = url;
+    });
+}
+
+/**
+ * Loads in the data part of a texture atlas.
+ * @param url is the url to load it from.
+ * @return the created atlas. I dunno what happens if you fuck it up but
+ *         probably something bad.
+ */
+async function loadAtlas(url) {
+    let text = await loadText(url);
+    let data = JSON.parse(text);
+    let atlas = new Atlas();
+    for (let frame in data.frames) {
+        let rect = data.frames[frame].frame;
+        atlas.add(frame, new Rect(rect.x, rect.y, rect.w, rect.h));
+    }
+    return atlas;
+}
+
+/**
+ * Asynchronously loads a text file in.
+ * @param url is the url to load the file from.
+ * @return a promise that resolves to the loaded file.
+ */
+async function loadText(url) {
+    return await new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) resolve(this.responseText);
+                else reject(
+                    `couldn't get file '${url}', response code ${this.status}`
+                );
+            }
+        };
+        xhr.open("GET", url, true);
+        xhr.send();
     });
 }
 
@@ -8011,17 +8091,17 @@ function createBatch(gl, texture, max) {
             items[offset + 10] = dst.x;
             items[offset + 11] = dst.b;
             textureItems[offset] = src.x;
-            textureItems[offset + 1] = src.y;
+            textureItems[offset + 1] = src.b;
             textureItems[offset + 2] = src.r;
-            textureItems[offset + 3] = src.y;
+            textureItems[offset + 3] = src.b;
             textureItems[offset + 4] = src.x;
-            textureItems[offset + 5] = src.b;
+            textureItems[offset + 5] = src.y;
             textureItems[offset + 6] = src.r;
-            textureItems[offset + 7] = src.y;
+            textureItems[offset + 7] = src.b;
             textureItems[offset + 8] = src.r;
-            textureItems[offset + 9] = src.b;
+            textureItems[offset + 9] = src.y;
             textureItems[offset + 10] = src.x;
-            textureItems[offset + 11] = src.b;
+            textureItems[offset + 11] = src.y;
             n++;
         },
         clear: () => {

@@ -80,6 +80,48 @@ class Texture {
 }
 
 /**
+ * Stores sprites.
+ */
+class Atlas {
+    /**
+     * Creates the atlas with nothing in it yet.
+     */
+    constructor() {
+        this.sprites = {};
+    }
+
+    /**
+     * Adds a sprite into the atlas.
+     * @param name   is the name of the atlas.
+     * @param sprite is the sprite to add.
+     */
+    add(name, sprite) {
+        this.sprites[name] = sprite;
+    }
+
+    /**
+     * Gets a sprite out of the atlas.
+     * @param name is the name of the sprite to get.
+     * @return the sprite found or an empty one if it lacks it.
+     */
+    get(name) {
+        if (name in this.sprites) return this.sprites[name];
+        console.error(`unknown sprite name ${name}`);
+        return new Rect(0, 0, 0, 0);
+    }
+
+    /**
+     * Iterates over all sprites in the atlas.
+     * @param callback is a callback to run for each one.
+     */
+    forEach(callback) {
+        for (let sprite in this.sprites) {
+            callback(sprite, this.sprites[sprite]);
+        }
+    }
+}
+
+/**
  * Asynchronously loads a texture out of a url. I made it asynchronous because
  * returning a test image would work quite poorly with texture atlases, and it
  * will also fuck up with other data types so we need to implement asynchronous
@@ -113,4 +155,21 @@ async function loadTexture(gl, url) {
         };
         image.src = url;
     });
+}
+
+/**
+ * Loads in the data part of a texture atlas.
+ * @param url is the url to load it from.
+ * @return the created atlas. I dunno what happens if you fuck it up but
+ *         probably something bad.
+ */
+async function loadAtlas(url) {
+    let text = await loadText(url);
+    let data = JSON.parse(text);
+    let atlas = new Atlas();
+    for (let frame in data.frames) {
+        let rect = data.frames[frame].frame;
+        atlas.add(frame, new Rect(rect.x, rect.y, rect.w, rect.h));
+    }
+    return atlas;
 }

@@ -12,6 +12,7 @@ module.exports = function(grunt) {
                 src: [
                     'src/dep/gl-matrix.js',
                     'src/types.js',
+                    'src/util.js',
                     'src/shader.js',
                     'src/screen.js',
                     'src/main.js'
