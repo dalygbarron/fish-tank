@@ -56,9 +56,6 @@ function go(gl) {
     };
     start(
         gl,
-        createLoadScreen(
-            createBasedScreen,
-            loadTexture(gl, "/out.png")
-        )
+        createLoadScreen(createBasedScreen, loadTexture(gl, "/out.png"))
     );
 }
