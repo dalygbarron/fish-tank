@@ -71,12 +71,20 @@ fish.Graphics = function (gl) {
         };
 
         /**
+         * Tells you the number of sprites.
+         * @return the number of sprites.
+         */
+        this.n = () => {
+            return Object.keys(sprites).length;
+        };
+
+        /**
          * Iterates over all sprites in the atlas.
          * @param callback is a callback to run for each one.
          */
-        this.forEach = (callback) => {
-            for (let sprite in this.sprites) {
-                callback(sprite, this.sprites[sprite]);
+        this.forEach = callback => {
+            for (let sprite in sprites) {
+                callback(sprite, sprites[sprite]);
             }
         };
     };
@@ -256,15 +264,16 @@ fish.Graphics = function (gl) {
     /**
      * Loads in the data part of a texture atlas.
      * @param url is the url to load it from.
-     * @return the created atlas. I dunno what happens if you fuck it up but
-     *         probably something bad.
+     * @return the created atlas or null if it couldn't load the text or
+     *         something.
      */
     this.loadAtlas = async function (url) {
         let text = await fish.util.loadText(url);
+        if (text == null) return null;
         let data = JSON.parse(text);
         let atlas = new Atlas();
-        for (let frame in data.frames) {
-            let rect = data.frames[frame].frame;
+        for (let frame in data) {
+            let rect = data[frame];
             atlas.add(
                 frame,
                 new fish.util.Rect(rect.x, rect.y, rect.w, rect.h)

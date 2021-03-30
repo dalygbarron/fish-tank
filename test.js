@@ -24,16 +24,15 @@ class Rodent {
 async function createBasedScreen(cont) {
     let number = 0;
     let texture = await cont.store.getTexture('out.png');
-    if (texture == null) return null;
+    let atlas = await cont.store.getAtlas('sprites.json');
+    if (texture == null || atlas == null) return null;
     let batch = new cont.graphics.Batch(texture, 2000);
     let boxes = [];
-    for (let i = 0; i < 2000; i++) {
-        boxes.push(new Rodent(new fish.util.Rect(
-            Math.random() * texture.getWidth() - 40,
-            Math.random() * texture.getHeight() - 40,
-            Math.random() * 40,
-            Math.random() * 40
-        )));
+    console.log(atlas.n());
+    for (let i = 0; i < Math.floor(2000 / atlas.n()); i++) {
+        atlas.forEach((name, sprite) => {
+            boxes.push(new Rodent(sprite));
+        });
     }
     return new fish.screen.DullScreen(
         (function* () {

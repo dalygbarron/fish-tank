@@ -7794,37 +7794,64 @@ fish.util.Vector = function (x, y) {
 
 /**
  * Represents an axis aligned rectangle.
- * @param x is the horizontal position of the rectangle.
- * @param y is the vertical position of the rectangle.
- * @param w is the width of the rectangle.
- * @param h is the height of the rectangle.
  */
 fish.util.Rect = class {
+    /**
+     * Creates the rectangle.
+     * @param x is the horizontal position of the rectangle.
+     * @param y is the vertical position of the rectangle.
+     * @param w is the width of the rectangle.
+     * @param h is the height of the rectangle.
+     */
     constructor(x, y, w, h) {
         this.pos = new fish.util.Vector(x, y);
         this.size = new fish.util.Vector(w, h);
     }
 
+    /**
+     * Gets the horizontal position of the rectangle.
+     * @return x
+     */
     get x() {
         return this.pos.x;
     }
 
+    /**
+     * Gets the vertical position of the rectangle.
+     * @return y.
+     */
     get y() {
         return this.pos.y;
     }
 
+    /**
+     * Gets the width of the rectangle.
+     * @return w.
+     */
     get w() {
         return this.size.x;
     }
 
+    /**
+     * Gets the height of the rectangle.
+     * @return h.
+     */
     get h() {
         return this.size.y;
     }
 
+    /**
+     * Gets the position of the right hand side of the rectangle.
+     * @return x + w
+     */
     get r() {
         return this.pos.x + this.size.x;
     }
 
+    /**
+     * Gets the position of the bottom of the rectangle.
+     * @return y + h
+     */
     get b() {
         return this.pos.y + this.size.y;
     }
@@ -7924,12 +7951,20 @@ fish.Graphics = function (gl) {
         };
 
         /**
+         * Tells you the number of sprites.
+         * @return the number of sprites.
+         */
+        this.n = () => {
+            return Object.keys(sprites).length;
+        };
+
+        /**
          * Iterates over all sprites in the atlas.
          * @param callback is a callback to run for each one.
          */
-        this.forEach = (callback) => {
-            for (let sprite in this.sprites) {
-                callback(sprite, this.sprites[sprite]);
+        this.forEach = callback => {
+            for (let sprite in sprites) {
+                callback(sprite, sprites[sprite]);
             }
         };
     };
@@ -8109,15 +8144,16 @@ fish.Graphics = function (gl) {
     /**
      * Loads in the data part of a texture atlas.
      * @param url is the url to load it from.
-     * @return the created atlas. I dunno what happens if you fuck it up but
-     *         probably something bad.
+     * @return the created atlas or null if it couldn't load the text or
+     *         something.
      */
     this.loadAtlas = async function (url) {
         let text = await fish.util.loadText(url);
+        if (text == null) return null;
         let data = JSON.parse(text);
         let atlas = new Atlas();
-        for (let frame in data.frames) {
-            let rect = data.frames[frame].frame;
+        for (let frame in data) {
+            let rect = data[frame];
             atlas.add(
                 frame,
                 new fish.util.Rect(rect.x, rect.y, rect.w, rect.h)
@@ -8153,7 +8189,8 @@ var fish = fish || {};
 fish.Store = function (graphics, prefix) {
     let assets = {};
     let loaders = {
-        texture: graphics.loadTexture
+        texture: graphics.loadTexture,
+        atlas: graphics.loadAtlas
     };
 
     /**
@@ -8186,6 +8223,15 @@ fish.Store = function (graphics, prefix) {
      */
     this.getTexture = async function (name) {
         return await get(name, 'texture');
+    };
+
+    /**
+     * Gets a texture atlas thingy.
+     * @param name is the name of the atlas to get.
+     * @return whatever it finds which could be null if it failed.
+     */
+    this.getAtlas = async function (name) {
+        return await get(name, 'atlas');
     };
 };
 

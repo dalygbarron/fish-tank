@@ -6,7 +6,8 @@ var fish = fish || {};
 fish.Store = function (graphics, prefix) {
     let assets = {};
     let loaders = {
-        texture: graphics.loadTexture
+        texture: graphics.loadTexture,
+        atlas: graphics.loadAtlas
     };
 
     /**
@@ -39,5 +40,14 @@ fish.Store = function (graphics, prefix) {
      */
     this.getTexture = async function (name) {
         return await get(name, 'texture');
+    };
+
+    /**
+     * Gets a texture atlas thingy.
+     * @param name is the name of the atlas to get.
+     * @return whatever it finds which could be null if it failed.
+     */
+    this.getAtlas = async function (name) {
+        return await get(name, 'atlas');
     };
 };
