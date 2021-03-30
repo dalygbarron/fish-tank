@@ -11,11 +11,12 @@ module.exports = function(grunt) {
             dist: {
                 src: [
                     'src/dep/gl-matrix.js',
-                    'src/types.js',
                     'src/util.js',
+                    'src/Graphics.js',
+                    'src/Store.js',
                     'src/shader.js',
                     'src/screen.js',
-                    'src/main.js'
+                    'src/fish.js'
                 ],
                 dest: 'build/<%= pkg.name %>.js'
             }

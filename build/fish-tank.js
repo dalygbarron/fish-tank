@@ -7758,43 +7758,51 @@ THE SOFTWARE.
 
 })));
 
-class Colour {
-    constructor(r, g, b, a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-}
+var fish = fish || {};
+fish.util = {};
 
-class Vector {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    add(other) {
-        this.x += other.x;
-        this.y += other.y;
-    }
+/**
+ * Represents a two dimensional point / direction via cartesian coordinates.
+ * @param x is the horizontal part.
+ * @param y is the vector part.
+ */
+fish.util.Vector = function (x, y) {
+    this.x = x;
+    this.y = y;
 
     /**
-     * Wraps this vector destructively in a rectangle that starts at (0, 0)
-     * then goes to bounds.
+     * Adds another vector to this vector, modifying this one.
+     * @param other is the other vector.
+     */
+    this.add = (other) => {
+        this.x += other.x;
+        this.y += other.y;
+    };
+
+    /**
+     * Wraps this vector in a rectangle that starts at (0, 0) then goes to
+     * bounds.
      * @param bounds is a vector representing the far corner.
      */
-    wrap(bounds) {
+    this.wrap = (bounds) => {
         this.x = (this.x < 0) ? (bounds.x - Math.abs(this.x % bounds.x)) :
             (this.x % bounds.x);
         this.y = (this.y < 0) ? (bounds.y - Math.abs(this.y % bounds.y)) :
             (this.y % bounds.y);
-    }
-}
+    };
+};
 
-class Rect {
+/**
+ * Represents an axis aligned rectangle.
+ * @param x is the horizontal position of the rectangle.
+ * @param y is the vertical position of the rectangle.
+ * @param w is the width of the rectangle.
+ * @param h is the height of the rectangle.
+ */
+fish.util.Rect = class {
     constructor(x, y, w, h) {
-        this.pos = new Vector(x, y);
-        this.size = new Vector(w, h);
+        this.pos = new fish.util.Vector(x, y);
+        this.size = new fish.util.Vector(w, h);
     }
 
     get x() {
@@ -7820,126 +7828,14 @@ class Rect {
     get b() {
         return this.pos.y + this.size.y;
     }
-}
-
-/**
- * Represents a texture from opengl but also holds it's width and height.
- */
-class Texture {
-    /**
-     * Creates the texture.
-     * @param glTexture is the actual texture inside.
-     * @param width     is the width of the texture.
-     * @param height    is the height of the texture.
-     */
-    constructor(glTexture, width, height) {
-        this.glTexture = glTexture;
-        this.width = width;
-        this.height = height;
-    }
-}
-
-/**
- * Stores sprites.
- */
-class Atlas {
-    /**
-     * Creates the atlas with nothing in it yet.
-     */
-    constructor() {
-        this.sprites = {};
-    }
-
-    /**
-     * Adds a sprite into the atlas.
-     * @param name   is the name of the atlas.
-     * @param sprite is the sprite to add.
-     */
-    add(name, sprite) {
-        this.sprites[name] = sprite;
-    }
-
-    /**
-     * Gets a sprite out of the atlas.
-     * @param name is the name of the sprite to get.
-     * @return the sprite found or an empty one if it lacks it.
-     */
-    get(name) {
-        if (name in this.sprites) return this.sprites[name];
-        console.error(`unknown sprite name ${name}`);
-        return new Rect(0, 0, 0, 0);
-    }
-
-    /**
-     * Iterates over all sprites in the atlas.
-     * @param callback is a callback to run for each one.
-     */
-    forEach(callback) {
-        for (let sprite in this.sprites) {
-            callback(sprite, this.sprites[sprite]);
-        }
-    }
-}
-
-/**
- * Asynchronously loads a texture out of a url. I made it asynchronous because
- * returning a test image would work quite poorly with texture atlases, and it
- * will also fuck up with other data types so we need to implement asynchronous
- * loading.
- * @param gl  is the opengl context for doing texture stuff.
- * @param url is the url to load the texture from.
- * @return the texture.
- */
-async function loadTexture(gl, url) {
-    return await new Promise((resolve, reject) => {
-        const image = new Image();
-        image.onload = () => {
-            const texture = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.texImage2D(
-                gl.TEXTURE_2D,
-                0,
-                gl.RGBA,
-                gl.RGBA,
-                gl.UNSIGNED_BYTE,
-                image
-            );
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            resolve(new Texture(texture, image.width, image.height));
-        };
-        image.onerror = () => {
-            reject(`failed loading image '${url}'`);
-        };
-        image.src = url;
-    });
-}
-
-/**
- * Loads in the data part of a texture atlas.
- * @param url is the url to load it from.
- * @return the created atlas. I dunno what happens if you fuck it up but
- *         probably something bad.
- */
-async function loadAtlas(url) {
-    let text = await loadText(url);
-    let data = JSON.parse(text);
-    let atlas = new Atlas();
-    for (let frame in data.frames) {
-        let rect = data.frames[frame].frame;
-        atlas.add(frame, new Rect(rect.x, rect.y, rect.w, rect.h));
-    }
-    return atlas;
-}
+};
 
 /**
  * Asynchronously loads a text file in.
  * @param url is the url to load the file from.
  * @return a promise that resolves to the loaded file.
  */
-async function loadText(url) {
+fish.util.loadText = async function (url) {
     return await new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -7950,132 +7846,121 @@ async function loadText(url) {
                 );
             }
         };
-        xhr.open("GET", url, true);
+        xhr.open('GET', url, true);
         xhr.send();
     });
-}
+};
 
-const defaultVertexShader = `
-attribute vec4 position;
-attribute vec4 textureCoord;
-uniform vec4 invCanvas;
-uniform vec2 invTextureSize;
-varying highp vec2 vTextureCoord;
-void main() {
-    gl_Position = position * (invCanvas * vec4(2, 2, 1.0, 1.0)) - vec4(1.0, 1.0, 0, 0);
-    vTextureCoord = textureCoord.xy * invTextureSize;
-}`;
-
-const defaultFragmentShader = `
-uniform sampler2D sampler;
-varying highp vec2 vTextureCoord;
-void main() {
-    gl_FragColor = texture2D(sampler, vTextureCoord);
-}`;
-
-let defaultShader = null;
+var fish = fish || {};
 
 /**
- * Loads a shader from text source.
- * @param gl     is the opengl context.
- * @param type   is the type of shader to load.
- * @param source is the text source code.
- * @return the created shader or null if it screwed up.
- */
-function loadShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(
-            'Could not compiler shader: ' + gl.getShaderInfoLog(shader)
-        );
-        return null;
-    }
-    return shader;
-}
-
-/**
- * Creates a shader program out of the source of a vertex and fragment shader.
- * @param gl          is the opengl context.
- * @param fragmentSrc is the source of the fragment shader which when null uses
- *                    a default one.
- * @param vertexSrc   is the source of the vertex shader which when null uses
- *                    a default one.
- * @return the new shader program or null if it failed.
- */
-function createShaderProgram(gl, vertexSrc=null, fragmentSrc=null) {
-    const vertex = loadShader(
-        gl,
-        gl.VERTEX_SHADER,
-        vertexSrc ? vertexSrc : defaultVertexShader
-    );
-    const fragment = loadShader(
-        gl,
-        gl.FRAGMENT_SHADER,
-        fragmentSrc ? fragmentSrc : defaultFragmentShader
-    );
-    const program = gl.createProgram();
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error(
-            'Could not init shader program: ' + gl.getProgramInfoLog(program)
-        );
-        return null;
-    }
-    const width = gl.canvas.clientWidth;
-    const height = gl.canvas.clientHeight;
-    gl.useProgram(program);
-    const invCanvas = gl.getUniformLocation(program, 'invCanvas');
-    gl.uniform4f(invCanvas, 1 / width, 1 / height, 1, 1);
-    return {
-        program: program,
-        position: gl.getAttribLocation(program, 'position'),
-        textureCoord: gl.getAttribLocation(program, 'textureCoord'),
-        invTextureSize: gl.getUniformLocation(program, 'invTextureSize'),
-        invCanvas: invCanvas,
-        sampler: gl.getUniformLocation(program, 'sampler')
-    };
-}
-
-/**
- * Binds the default shader for some nice default rendering.
+ * This whole file is just a class which gets instantiated and passed to you,
+ * so there is not really a reason for you to make a copy of it.
  * @param gl is the opengl context.
  */
-function bindDefaultShader(gl) {
-    if (defaultShader == null) {
-        defaultShader = createShaderProgram(gl);
-    }
-    gl.useProgram(defaultShader.program);
-    return defaultShader;
-}
+fish.Graphics = function (gl) {
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    this.width = gl.canvas.clientWidth;
+    this.height = gl.canvas.clientHeight;
 
-/**
- * Creates a texture batcher which one may use to draw cool stuff. You need to
- * call it's clear function every frame so that it does not draw stuff from
- * last frame again. If you try that it will do nothign and complain.
- * @param gl  is the opengl context which is used to do stuff.
- * @param max is the maximum number of sprites the batch may draw per frame.
- */
-function createBatch(gl, texture, max) {
-    let items = new Float32Array(max * 12);
-    let textureItems = new Float32Array(max * 12);
-    let n = 0;
-    let rendered = false;
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-        gl.ARRAY_BUFFER,
-        items,
-        gl.DYNAMIC_DRAW
-    );
-    const textureBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
-    return {
-        add: (src, dst) => {
+    /**
+     * Creates a texture object out of a gl texture.
+     * @param glTexture is the open gl reference to the texture.
+     * @param width     is the width of the texture.
+     * @param height    is the height of the texture.
+     */
+    let Texture = function (glTexture, width, height) {
+        /**
+         * Gives you the opengl texture.
+         * @return the opengl reference to the texture.
+         */
+        this.getGlTexture = () => {
+            return glTexture;
+        };
+
+        /**
+         * Gives you the width of the texture.
+         * @return the width.
+         */
+        this.getWidth = () => {
+            return width;
+        };
+
+        /**
+         * Gives you the height of the texture.
+         * @return the height.
+         */
+        this.getHeight = () => {
+            return height;
+        };
+    };
+
+    /**
+     * Stores sprites.
+     */
+    let Atlas = function () {
+        let sprites = {};
+
+        /**
+         * Adds a sprite into the atlas.
+         * @param name   is the name of the atlas.
+         * @param sprite is the sprite to add.
+         */
+        this.add = (name, sprite) => {
+            sprites[name] = sprite;
+        };
+
+        /**
+         * Gets a sprite out of the atlas.
+         * @param name is the name of the sprite to get.
+         * @return the sprite found or an empty one if it lacks it.
+         */
+        this.get = (name) => {
+            if (name in this.sprites) return this.sprites[name];
+            console.error(`unknown sprite name ${name}`);
+            return new fish.util.Rect(0, 0, 0, 0);
+        };
+
+        /**
+         * Iterates over all sprites in the atlas.
+         * @param callback is a callback to run for each one.
+         */
+        this.forEach = (callback) => {
+            for (let sprite in this.sprites) {
+                callback(sprite, this.sprites[sprite]);
+            }
+        };
+    };
+
+    /**
+     * A thing that batches draw calls.
+     * @param texture is the texture all the draws must be from.
+     * @param max     is the max things to draw in one go.
+     */
+    this.Batch = function (texture, max) {
+        let items = new Float32Array(max * 12);
+        let textureItems = new Float32Array(max * 12);
+        let n = 0;
+        let rendered = false;
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(
+            gl.ARRAY_BUFFER,
+            items,
+            gl.DYNAMIC_DRAW
+        );
+        const textureBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
+
+        /**
+         * Adds a thingy to draw.
+         * @param src is the source rectangle on the batch texture.
+         * @param dst is where to draw it on the screen.
+         */
+        this.add = (src, dst) => {
             if (n >= max) return;
             const offset = n * 12;
             items[offset] = dst.x;
@@ -8103,36 +7988,314 @@ function createBatch(gl, texture, max) {
             textureItems[offset + 10] = src.x;
             textureItems[offset + 11] = src.y;
             n++;
-        },
-        clear: () => {
+        };
+
+        /**
+         * Blanks the contents of the batch to go again.
+         */
+        this.clear = () => {
             rendered = false;
             n = 0;
-        },
-        render: () => {
+        };
+
+        /**
+         * Renders what the batch currently has to the screen.
+         */
+        this.render = () => {
             if (rendered) {
                 console.error('repeat batch rendering without clear');
                 return;
             }
             rendered = true;
-            let shader = bindDefaultShader(gl);
+            let shader = fish.shader.bindDefaultShader(gl);
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
             gl.bufferSubData(gl.ARRAY_BUFFER, 0, items);
             gl.vertexAttribPointer(shader.position, 2, gl.FLOAT, false, 0, 0);
             gl.enableVertexAttribArray(shader.position);
             gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
             gl.bufferSubData(gl.ARRAY_BUFFER, 0, textureItems);
-            gl.vertexAttribPointer(shader.textureCoord, 2, gl.FLOAT, false, 0, 0);
+            gl.vertexAttribPointer(
+                shader.textureCoord,
+                2,
+                gl.FLOAT,
+                false,
+                0,
+                0
+            );
             gl.enableVertexAttribArray(shader.textureCoord);
-            // TODO: use different texture slots to save time when using
-            //       more than one texture.
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, texture.glTexture);
+            gl.bindTexture(gl.TEXTURE_2D, texture.getGlTexture());
             gl.uniform1i(shader.sampler, 0);
-            gl.uniform2f(shader.invTextureSize, 1 / texture.width, 1 / texture.height);
+            gl.uniform2f(
+                shader.invTextureSize,
+                1 / texture.getWidth(),
+                1 / texture.getHeight()
+            );
             gl.drawArrays(gl.TRIANGLES, 0, n * 6);
-        }
+        };
     };
-}
+
+    /**
+     * Represents a colour with parts from 0 to 1.
+     * @param r is the red part.
+     * @param g is the green part.
+     * @param b is the blue part.
+     * @param a is the transparancy part.
+     */
+    this.Colour = function (r, g, b, a) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    };
+
+    /**
+     * Asynchronously loads a texture out of a url. I made it asynchronous
+     * because * returning a test image would work quite poorly with texture
+     * atlases, and it will also fuck up with other data types so we need to
+     * implement asynchronous loading.
+     * @param url is the url to load the texture from.
+     * @return a promise which should never reject but might resolve to null if
+     *         it couldn't get it's hands on the texture.
+     */
+    this.loadTexture = async function (url) {
+        return await new Promise(resolve => {
+            const image = new Image();
+            image.onload = () => {
+                const texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.texImage2D(
+                    gl.TEXTURE_2D,
+                    0,
+                    gl.RGBA,
+                    gl.RGBA,
+                    gl.UNSIGNED_BYTE,
+                    image
+                );
+                gl.texParameteri(
+                    gl.TEXTURE_2D,
+                    gl.TEXTURE_WRAP_S,
+                    gl.CLAMP_TO_EDGE
+                );
+                gl.texParameteri(
+                    gl.TEXTURE_2D,
+                    gl.TEXTURE_WRAP_T,
+                    gl.CLAMP_TO_EDGE
+                );
+                gl.texParameteri(
+                    gl.TEXTURE_2D,
+                    gl.TEXTURE_MIN_FILTER,
+                    gl.NEAREST
+                );
+                gl.texParameteri(
+                    gl.TEXTURE_2D,
+                    gl.TEXTURE_MAG_FILTER,
+                    gl.NEAREST
+                );
+                resolve(new Texture(
+                    texture,
+                    image.width,
+                    image.height
+                ));
+            };
+            image.onerror = () => {
+                console.error(`failed loading image ${url}`);
+                resolve(null);
+            };
+            image.src = url;
+        });
+    };
+
+    /**
+     * Loads in the data part of a texture atlas.
+     * @param url is the url to load it from.
+     * @return the created atlas. I dunno what happens if you fuck it up but
+     *         probably something bad.
+     */
+    this.loadAtlas = async function (url) {
+        let text = await fish.util.loadText(url);
+        let data = JSON.parse(text);
+        let atlas = new Atlas();
+        for (let frame in data.frames) {
+            let rect = data.frames[frame].frame;
+            atlas.add(
+                frame,
+                new fish.util.Rect(rect.x, rect.y, rect.w, rect.h)
+            );
+        }
+        return atlas;
+    };
+
+    /**
+     * Clears the screen with some nice colour.
+     * @param colour is the colour object.
+     */
+    this.clear = colour => {
+        gl.clearColor(colour.r, colour.g, colour.b, colour.a);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+    };
+
+    /**
+     * Colour constants.
+     */
+    this.BLACK = new this.Colour(0, 0, 0, 1);
+    this.WHITE = new this.Colour(1, 1, 1, 1);
+    this.RED = new this.Colour(1, 0, 0, 1);
+    this.GREEN = new this.Colour(0, 1, 0, 1);
+    this.BLUE = new this.Colour(0, 0, 1, 1);
+};
+
+var fish = fish || {};
+
+/**
+ * Class that stores assets.
+ */
+fish.Store = function (graphics, prefix) {
+    let assets = {};
+    let loaders = {
+        texture: graphics.loadTexture
+    };
+
+    /**
+     * Gets a thing of arbitrary type from the asset store, or creates and adds
+     * it if it cannot be found.
+     * @param name is the name of the thing to find.
+     * @param type is the type of the thing to find.
+     * @return the thing if it is found or null.
+     */
+    let get = async function (name, type) {
+        if (!(name in assets)) {
+            if (type in loaders) {
+                let item = await loaders[type](prefix + name);
+                if (item == null) {
+                    console.error(`loading ${prefix}${name} failed`);
+                }
+                assets[name] = item;
+            } else {
+                console.error(`${type} is a not a valid asset type`);
+                assets[name] = null;
+            }
+        }
+        return assets[name];
+    };
+
+    /**
+     * Gets a texture.
+     * @param name is the name of the texture to get.
+     * @return whatever it finds which could be null if it failed.
+     */
+    this.getTexture = async function (name) {
+        return await get(name, 'texture');
+    };
+};
+
+var fish = fish || {};
+
+fish.shader = (() => {
+    const defaultVertexShader = `
+    attribute vec4 position;
+    attribute vec4 textureCoord;
+    uniform vec4 invCanvas;
+    uniform vec2 invTextureSize;
+    varying highp vec2 vTextureCoord;
+    void main() {
+        gl_Position = position * (invCanvas * vec4(2, 2, 1.0, 1.0)) - vec4(1.0, 1.0, 0, 0);
+        vTextureCoord = textureCoord.xy * invTextureSize;
+    }`;
+
+    const defaultFragmentShader = `
+    uniform sampler2D sampler;
+    varying highp vec2 vTextureCoord;
+    void main() {
+        gl_FragColor = texture2D(sampler, vTextureCoord);
+    }`;
+
+    let defaultShader = null;
+    let shader = {};
+    
+    /**
+     * Loads a shader from text source.
+     * @param gl     is the opengl context.
+     * @param type   is the type of shader to load.
+     * @param source is the text source code.
+     * @return the created shader or null if it screwed up.
+     */
+     shader.loadShader = (gl, type, source) => {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error(
+                'Could not compiler shader: ' + gl.getShaderInfoLog(shader)
+            );
+            return null;
+        }
+        return shader;
+    };
+
+    /**
+     * Creates a shader out of the source of a vertex and fragment shader.
+     * @param gl          is the opengl context.
+     * @param fragmentSrc is the source of the fragment shader which when null
+     *                    uses a default one.
+     * @param vertexSrc   is the source of the vertex shader which when null
+     *                    uses a default one.
+     * @return the new shader program or null if it failed.
+     */
+    shader.createShaderProgram = (gl, vertexSrc=null, fragmentSrc=null) => {
+        const vertex = shader.loadShader(
+            gl,
+            gl.VERTEX_SHADER,
+            vertexSrc ? vertexSrc : defaultVertexShader
+        );
+        const fragment = shader.loadShader(
+            gl,
+            gl.FRAGMENT_SHADER,
+            fragmentSrc ? fragmentSrc : defaultFragmentShader
+        );
+        const program = gl.createProgram();
+        gl.attachShader(program, vertex);
+        gl.attachShader(program, fragment);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error(
+                'Could not init shader program: ' +
+                    gl.getProgramInfoLog(program)
+            );
+            return null;
+        }
+        const width = gl.canvas.clientWidth;
+        const height = gl.canvas.clientHeight;
+        gl.useProgram(program);
+        const invCanvas = gl.getUniformLocation(program, 'invCanvas');
+        gl.uniform4f(invCanvas, 1 / width, 1 / height, 1, 1);
+        return {
+            program: program,
+            position: gl.getAttribLocation(program, 'position'),
+            textureCoord: gl.getAttribLocation(program, 'textureCoord'),
+            invTextureSize: gl.getUniformLocation(program, 'invTextureSize'),
+            invCanvas: invCanvas,
+            sampler: gl.getUniformLocation(program, 'sampler')
+        };
+    };
+
+    /**
+     * Binds the default shader for some nice default rendering.
+     * @param gl is the opengl context.
+     */
+    shader.bindDefaultShader = (gl) => {
+        if (defaultShader == null) {
+            defaultShader = shader.createShaderProgram(gl);
+        }
+        gl.useProgram(defaultShader.program);
+        return defaultShader;
+    };
+
+    return shader;
+})();
+
+var fish = fish || {};
+fish.screen = {};
 
 /**
  * Creates a screen object by taking the four things a screen needs.
@@ -8148,69 +8311,31 @@ function createBatch(gl, texture, max) {
  *                 this one's update coroutine has ended. It doesn't need to
  *                 be able to return a valid value until the update thing has
  *                 ended.
- * @return the newly created screen object.
  */
-function createScreen(input, update, render, evaluate) {
-    return {
-        input: input,
-        update: update,
-        render: render,
-        evaluate: evaluate
-    };
-}
+fish.screen.Screen = function (input, update, render, evaluate) {
+    this.input = input;
+    this.update = update;
+    this.render = render;
+    this.evaluate = evaluate;
+};
 
 /**
  * Creates a screen that only updates and renders, absorbs all input without
  * using it, and evaluates to nothing when completed.
  * @param update is the update coroutine.
  * @param render is the render function.
- * @return the new screen.
  */
-function createDullScreen(update, render) {
-    return createScreen(
-        key => {
-            return true;
-        },
+fish.screen.DullScreen = function (update, render) {
+    fish.screen.Screen.call(
+        this,
+        key => {return true;},
         update,
         render,
-        () => {
-            return null;
-        }
+        () => {return null;}
     );
-}
+};
 
-/**
- * Takes a bunch of promises and waits for them all to load while showing some
- * junk on the screen to keep the kids entertained.
- * @param promises is the lot of promises.
- * @return the loading screen.
- */
-function createLoadScreen(after, ...promises) {
-    let newScreen = null;
-    let fail = false;
-    Promise.all(promises).then(
-        v => {
-            newScreen = after(...v);
-        },
-        reason => {
-            console.error(reason);
-            fail = true;
-        }
-    );
-    return createDullScreen(
-        (function* () {
-            while (true) {
-                if (newScreen) return newScreen;
-                else if (fail) return;
-                else yield;
-            }
-        })(),
-        (gl, x, y, w, h) => {
-            gl.clearColor(Math.random(), Math.random(), Math.random(), 1);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-        }
-    );
-}
+var fish = fish || {};
 
 /**
  * Starts the thing's main loop ticking along by passing to it the rendering
@@ -8218,10 +8343,15 @@ function createLoadScreen(after, ...promises) {
  * @param canvas is a html canvas.
  * @param screen is the first screen to place on the screen stack.
  */
-function start(gl, screen) {
-    const width = gl.canvas.clientWidth;
-    const height = gl.canvas.clientHeight;
-    screens = [screen];
+fish.start = async function (gl, init) {
+    let graphics = new fish.Graphics(gl);
+    let cont = {
+        graphics: graphics,
+        store: new fish.Store(graphics, '')
+    };
+    let screen = await init(cont);
+    if (screen == null) return; // TODO: message
+    let screens = [screen];
     const updateScreens = (message=null) => {
         const response = screens[screens.length - 1].update.next(message);
         if (response.done) {
@@ -8233,19 +8363,15 @@ function start(gl, screen) {
             screens.push(response.value);
         }
     };
-    gl.disable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     setInterval(() => {
         if (screens.length > 0) {
             // TODO: inputs.
             // TODO: calculate the passage of time.
             updateScreens();
-            gl.clearColor(0, 0, 0, 1);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+            graphics.clear(graphics.BLACK);
             for (screen of screens) {
-                screen.render(gl, 0, 0, width, height);
+                screen.render(graphics);
             }
         }
     }, 20);
-}
+};

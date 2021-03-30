@@ -1,12 +1,12 @@
-let fish = fish || {};
-let fish.util = {};
+var fish = fish || {};
+fish.util = {};
 
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
  * @param x is the horizontal part.
  * @param y is the vector part.
  */
-fish.util.Vector = (x, y) => {
+fish.util.Vector = function (x, y) {
     this.x = x;
     this.y = y;
 
@@ -34,14 +34,67 @@ fish.util.Vector = (x, y) => {
 
 /**
  * Represents an axis aligned rectangle.
- * @param x is the horizontal position of the rectangle.
- * @param y is the vertical position of the rectangle.
- * @param w is the width of the rectangle.
- * @param h is the height of the rectangle.
  */
-types.util.Rect = (x, y, w, h) => {
-    this.pos = new Vector(x, y);
-    this.size = new Vector(w, g);
+fish.util.Rect = class {
+    /**
+     * Creates the rectangle.
+     * @param x is the horizontal position of the rectangle.
+     * @param y is the vertical position of the rectangle.
+     * @param w is the width of the rectangle.
+     * @param h is the height of the rectangle.
+     */
+    constructor(x, y, w, h) {
+        this.pos = new fish.util.Vector(x, y);
+        this.size = new fish.util.Vector(w, h);
+    }
+
+    /**
+     * Gets the horizontal position of the rectangle.
+     * @return x
+     */
+    get x() {
+        return this.pos.x;
+    }
+
+    /**
+     * Gets the vertical position of the rectangle.
+     * @return y.
+     */
+    get y() {
+        return this.pos.y;
+    }
+
+    /**
+     * Gets the width of the rectangle.
+     * @return w.
+     */
+    get w() {
+        return this.size.x;
+    }
+
+    /**
+     * Gets the height of the rectangle.
+     * @return h.
+     */
+    get h() {
+        return this.size.y;
+    }
+
+    /**
+     * Gets the position of the right hand side of the rectangle.
+     * @return x + w
+     */
+    get r() {
+        return this.pos.x + this.size.x;
+    }
+
+    /**
+     * Gets the position of the bottom of the rectangle.
+     * @return y + h
+     */
+    get b() {
+        return this.pos.y + this.size.y;
+    }
 };
 
 /**
