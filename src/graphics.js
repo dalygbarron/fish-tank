@@ -254,8 +254,7 @@ fish.Graphics = function (gl) {
                 ));
             };
             image.onerror = () => {
-                console.error(`failed loading image ${url}`);
-                resolve(null);
+                reject(`failed loading image ${url}`);
             };
             image.src = url;
         });
@@ -288,6 +287,18 @@ fish.Graphics = function (gl) {
      */
     this.clear = colour => {
         gl.clearColor(colour.r, colour.g, colour.b, colour.a);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+    };
+
+    /**
+     * Same as clear but uses components of the colour instead of an object.
+     * @param r is the red part.
+     * @param g is the green part.
+     * @param b is the blue part.
+     * @param a is the transparancy part.
+     */
+    this.clearf = (r, g, b, a) => {
+        gl.clearColor(r, g, b, a);
         gl.clear(gl.COLOR_BUFFER_BIT);
     };
 

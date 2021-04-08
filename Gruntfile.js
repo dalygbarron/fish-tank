@@ -11,8 +11,11 @@ module.exports = function(grunt) {
             dist: {
                 src: [
                     'src/dep/gl-matrix.js',
+                    'src/dep/chiptune2.js',
                     'src/util.js',
                     'src/Graphics.js',
+                    'src/Audio.js',
+                    'src/dep/libopenmpt.js',
                     'src/Store.js',
                     'src/shader.js',
                     'src/screen.js',

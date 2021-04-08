@@ -10,11 +10,12 @@
         <script defer>
             window.onload = () => {
                 const gl = document.querySelector('#sex-zone').getContext('webgl');
-                if (gl === null) {
+                const context = new AudioContext();
+                if (gl === null || context === null) {
                     alert('the police the FBI are coming in your window man');
                     return;
                 }
-                go(gl);
+                go(gl, context);
             };
         </script>
     </head>

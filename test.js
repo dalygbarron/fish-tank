@@ -35,6 +35,9 @@ async function createBasedScreen(cont) {
         });
     }
     return new fish.screen.DullScreen(
+        () => {
+            cont.audio.playSong('musicke.xm');
+        },
         (function* () {
             for (let i = 0; i < 1000; i++) {
                 for (u in boxes) {
@@ -53,6 +56,6 @@ async function createBasedScreen(cont) {
     );
 };
 
-function go(gl) {
-    fish.start(gl, createBasedScreen);
+function go(gl, audio) {
+    fish.start(gl, audio, createBasedScreen);
 }

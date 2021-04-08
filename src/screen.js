@@ -3,6 +3,9 @@ fish.screen = {};
 
 /**
  * Creates a screen object by taking the four things a screen needs.
+ * @param refresh  is a function that gets called every time the screen either
+ *                 gets put on top of the screen stack, or is revealed at the
+ *                 top of the screen stack.
  * @param input    is a function called when input is received, which returns
  *                 a boolean telling you whether the input was used.
  * @param update   is an instantiated coroutine which can assume to be called 60
@@ -16,7 +19,8 @@ fish.screen = {};
  *                 be able to return a valid value until the update thing has
  *                 ended.
  */
-fish.screen.Screen = function (input, update, render, evaluate) {
+fish.screen.Screen = function (refresh, input, update, render, evaluate) {
+    this.refresh = refresh;
     this.input = input;
     this.update = update;
     this.render = render;
@@ -26,15 +30,51 @@ fish.screen.Screen = function (input, update, render, evaluate) {
 /**
  * Creates a screen that only updates and renders, absorbs all input without
  * using it, and evaluates to nothing when completed.
- * @param update is the update coroutine.
- * @param render is the render function.
+ * @param refresh is the refresh function.
+ * @param update  is the update coroutine.
+ * @param render  is the render function.
  */
-fish.screen.DullScreen = function (update, render) {
+fish.screen.DullScreen = function (refresh, update, render) {
     fish.screen.Screen.call(
         this,
+        refresh,
         key => {return true;},
         update,
         render,
         () => {return null;}
+    );
+};
+
+/**
+ * Creates a loading screen that waits for a bunch of promises to evaluate.
+ * @param graphics    is the game graphics object used to render stuff.
+ * @param after       is a function called with all the evaluated promises
+ *                    which should itself evaluate to a replacement screen.
+ * @param ...promises is all the promises.
+ */
+fish.screen.LoadScreen = function (graphics, after, ...promises) {
+    let newScreen = null;
+    Promise.all(promises).then(
+        values => {
+            
+        },
+        reason => {
+
+        }
+    );
+    fish.screen.DullScreen.call(
+        this,
+        () => {},
+        () => {
+
+        },
+        () => {
+            graphics.clearf(
+                Math.random(),
+                Math.random(),
+                math.random(),
+                1
+            );
+        }
     );
 };

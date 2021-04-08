@@ -3,27 +3,34 @@ var fish = fish || {};
 /**
  * Starts the thing's main loop ticking along by passing to it the rendering
  * canvas, and the starting screen.
- * @param canvas is a html canvas.
- * @param screen is the first screen to place on the screen stack.
+ * @param gl    is a html canvas.
+ * @param audio is the audio context.
+ * @param init  is a function to generate the starting screen.
  */
-fish.start = async function (gl, init) {
+fish.start = async function (gl, audio, init) {
     let graphics = new fish.Graphics(gl);
     let cont = {
         graphics: graphics,
-        store: new fish.Store(graphics, '')
+        store: new fish.Store(graphics, ''),
+        audio: new fish.Audio(audio)
     };
     let screen = await init(cont);
     if (screen == null) return; // TODO: message
     let screens = [screen];
+    screen.refresh();
     const updateScreens = (message=null) => {
         const response = screens[screens.length - 1].update.next(message);
         if (response.done) {
             const evaluation = screens[screens.length - 1].evaluate();
             screens.pop();
-            if (screens.length > 0) updateScreens(evaluation);
+            if (screens.length > 0) {
+                screens[screens.length - 1].refresh();
+                updateScreens(evaluation);
+            }
         }
         if (response.value) {
             screens.push(response.value);
+            screens[screens.length - 1].refresh();
         }
     };
     setInterval(() => {
