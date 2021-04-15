@@ -9,10 +9,11 @@ var fish = fish || {};
  */
 fish.start = async function (gl, audio, init) {
     let graphics = new fish.Graphics(gl);
+    let fishAudio = new fish.Audio(audio);
     let cont = {
         graphics: graphics,
-        store: new fish.Store(graphics, ''),
-        audio: new fish.Audio(audio)
+        audio: fishAudio,
+        store: new fish.Store(graphics, fishAudio, '')
     };
     let screen = await init(cont);
     if (screen == null) return; // TODO: message

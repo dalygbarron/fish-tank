@@ -3,11 +3,12 @@ var fish = fish || {};
 /**
  * Class that stores assets.
  */
-fish.Store = function (graphics, prefix) {
+fish.Store = function (graphics, audio, prefix) {
     let assets = {};
     let loaders = {
         texture: graphics.loadTexture,
-        atlas: graphics.loadAtlas
+        atlas: graphics.loadAtlas,
+        sample: audio.loadSample
     };
 
     /**
@@ -49,5 +50,14 @@ fish.Store = function (graphics, prefix) {
      */
     this.getAtlas = async function (name) {
         return await get(name, 'atlas');
+    };
+
+    /**
+     * Loads a sound sample.
+     * @param name is the name of the sample to g4et.
+     * @return the sample or null if it screwed up.
+     */
+    this.getSample = async function (name) {
+        return await get(name, 'sample');
     };
 };

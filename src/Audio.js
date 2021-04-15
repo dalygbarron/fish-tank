@@ -4,12 +4,10 @@ var fish = fish || {};
  * handles audio and shiet.
  */
 fish.Audio = function (context, players=3) {
+    let songPlayer = context.createBufferSource();
     let playingSong = '';
-    let playingSounds = {};
     let soundPlayers = [];
-
-
-
+    let frame = 0;
 
     /**
      * Nice little sample object that stores it's name so we can use that for
@@ -23,19 +21,114 @@ fish.Audio = function (context, players=3) {
     };
 
     /**
-     * Removes the record of all playing sounds.
+     * Little thing that holds an audio buffer source and keeps track of what
+     * it is being used for.
      */
-    this.refresh = function () {
-        playingSounds = {};
+    let SamplePlayer = function () {
+        let source = context.createBufferSource();
+        source.connect(context.destination);
+        let playing = false;
+        let start = 0;
+        let sample = null;
+        let priority = 0;
+
+        /**
+         * Tells you if this sample player is currently playing.
+         * @return true if it is playing.
+         */
+        this.isPlaying = function () {
+            return playing;
+        };
+
+        /**
+         * Tells you the tick that the current sample started on.
+         * @return the tick as a number.
+         */
+        this.getStart = function () {
+            return start;
+        };
+
+        /**
+         * Tells you the priority of the currently playing sample on this
+         * thing. Keep in mind if it's not actually playing it's really not
+         * that high priority.
+         * @return the priority of the last played sample.
+         */
+        this.getPriority = function () {
+            return priority;
+        };
+
+        /**
+         * Play a given sample.
+         * @param sample   is the sample to play.
+         * @param priority is the priority to say this had.
+         */
+        this.play = function (sample, priority) {
+            playing = true;
+            start = frame;
+            sample = sample;
+            priority = priority;
+            source.buffer = sample.buffer;
+            source.start(0);
+            source.onended = () => {playing = false;};
+        };
+
+        /**
+         * Tells you if a given sample is the same as the one this one is
+         * playing.
+         * @param sample is the sample to check.
+         * @return true if they are the same and this sample player is still
+         *              playing.
+         */
+        this.same = function (sample) {
+            return playing && sample && sample.name == this.sample.name;
+        };
+
+        /**
+         * Tells you if this sample player is less important than another
+         * hypothetical sample player playing with the given properties.
+         * @param otherPriority is the priority of the other sample player.
+         * @param otherStart    is the start of the other sample player.
+         * @return true if this one is less important.
+         */
+        this.lesser = function (otherPriority, otherStart) {
+            return !playing || priority < otherPriority ||
+                (priority == otherPriority && start < otherStart);
+        };
+    };
+
+    for (let i = 0; i < players; i++) soundPlayers.push(new SamplePlayer());
+
+    /**
+     * Updates the audio player. Needs to be done once per frame.
+     */
+    this.update = function () {
+        frame++;
     };
 
     /**
      * Plays a sample as long as it has not played since the last refresh.
-     * @param sample is the sample to play.
+     * @param sample   is the sample to play.
+     * @param priority is it's priority so it can play over things of lesser
+     *                 importance.
      */
-    this.playSample = function (sample) {
-        if (!(sample in playingSounds)) {
-
+    this.playSample = function (sample, priority=0) {
+        let chosen = -1;
+        let chosenPriority = -99999;
+        let chosenStart = 0;
+        for (let i = 0; i < soundPlayers.length; i++) {
+            if (soundPlayers[i].same(sample) &&
+                soundPlayers[i].getStart() == frame) {
+                return;
+            }
+            if (soundPlayers[i].lesser(chosenPriority, chosenStart)) {
+                chosen = i;
+                chosenPriority = soundPlayers[i].getPriority();
+                chosenStart = soundPlayers[i].getStart();
+            }
+        }
+        if (chosen >= 0) {
+            soundPlayers[chosen].play(sample, priority);
         }
     };
 
@@ -46,7 +139,7 @@ fish.Audio = function (context, players=3) {
     this.playSong = function (sample) {
         if (playingSong == sample.name) return;
         playingSong = sample.name;
-        // TODO: join it up.
+        songPlayer.buffer = sample.buffer;
     };
 
     /**
@@ -58,11 +151,20 @@ fish.Audio = function (context, players=3) {
     this.loadSample = async function (url) {
         let request = new XMLHttpRequest();
         request.open('GET', url, true);
-        request.onload = () => {
-            context.decodeAudioData(request.response, buffer => {
-                
-            });
-        };
-        request.send();
+        request.responseType = 'arraybuffer';
+        return new Promise((resolve, reject) => {
+            request.onload = () => {
+                context.decodeAudioData(
+                    request.response,
+                    buffer => {
+                        resolve(new Sample(url, buffer));
+                    },
+                    () => {
+                        reject('didn');
+                    }
+                );
+            };
+            request.send();
+        });
     };
 };
