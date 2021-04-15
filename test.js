@@ -25,7 +25,7 @@ async function createBasedScreen(cont) {
     let number = 0;
     let texture = await cont.store.getTexture('out.png');
     let atlas = await cont.store.getAtlas('sprites.json');
-    let noise = await cont.store.getSample('beep.wav');
+    let noise = await cont.store.getSample('ging.ogg');
     if (texture == null || atlas == null || noise == null) return null;
     cont.audio.playSample(noise);
     let batch = new cont.graphics.Batch(texture, 2000);
