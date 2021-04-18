@@ -8365,6 +8365,58 @@ fish.Audio = function (context, players=3) {
 
 var fish = fish || {};
 
+fish.Input = function () {
+    this.TYPE = {
+        UP: 'up',
+        DOWN: 'down',
+        LEFT: 'left',
+        RIGHT: 'right',
+        X: 'x',
+        Y: 'y',
+        A: 'a',
+        B: 'b',
+        L: 'l',
+        R: 'r',
+        SELECT: 'select',
+        START: 'start'
+    };
+    let frame = 0;
+    let keyStates = {};
+
+    /**
+     * Just iterates the frame number.
+     */
+    this.update = function () {
+        frame++;
+    };
+
+    /**
+     * Tells you if the given input is pressed.
+     * @param code represents the iinput button thing.
+     * @return true if it is pressed.
+     */
+    this.pressed = function (code) {
+        if (!(code in this.TYPE)) {
+            throw 'retard';
+        }
+        return this.TYPE[code] >= 0;
+    };
+
+    /**
+     * Tells you if the given input was pressed this frame I think.
+     * @param code is the code to represent or whatever.
+     * @return true if it was pressed this frame.
+     */
+    this.justPressed = function (code) {
+        if (!(code in this.TYPE)) {
+            throw 'retard';
+        }
+        return this.TYPE[code] == frame;
+    };
+};
+
+var fish = fish || {};
+
 /**
  * Class that stores assets.
  */
@@ -8628,6 +8680,7 @@ fish.start = async function (gl, audio, init) {
     let cont = {
         graphics: graphics,
         audio: fishAudio,
+        input: new fish.Input(),
         store: new fish.Store(graphics, fishAudio, '')
     };
     let screen = await init(cont);
@@ -8651,8 +8704,9 @@ fish.start = async function (gl, audio, init) {
     };
     setInterval(() => {
         if (screens.length > 0) {
-            // TODO: inputs.
             // TODO: calculate the passage of time.
+            cont.audio.update();
+            cont.input.update();
             updateScreens();
             graphics.clear(graphics.BLACK);
             for (screen of screens) {

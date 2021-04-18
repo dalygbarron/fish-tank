@@ -15,6 +15,7 @@ module.exports = function(grunt) {
                     'src/util.js',
                     'src/Graphics.js',
                     'src/Audio.js',
+                    'src/Input.js',
                     'src/dep/libopenmpt.js',
                     'src/Store.js',
                     'src/shader.js',

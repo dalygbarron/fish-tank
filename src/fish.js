@@ -13,6 +13,7 @@ fish.start = async function (gl, audio, init) {
     let cont = {
         graphics: graphics,
         audio: fishAudio,
+        input: new fish.Input(),
         store: new fish.Store(graphics, fishAudio, '')
     };
     let screen = await init(cont);
@@ -36,8 +37,9 @@ fish.start = async function (gl, audio, init) {
     };
     setInterval(() => {
         if (screens.length > 0) {
-            // TODO: inputs.
             // TODO: calculate the passage of time.
+            cont.audio.update();
+            cont.input.update();
             updateScreens();
             graphics.clear(graphics.BLACK);
             for (screen of screens) {
