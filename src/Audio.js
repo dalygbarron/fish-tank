@@ -5,6 +5,7 @@ var fish = fish || {};
  */
 fish.Audio = function (context, players=3) {
     let songPlayer = context.createBufferSource();
+    songPlayer.connect(context.destination);
     let playingSong = '';
     let soundPlayers = [];
     let frame = 0;
@@ -137,9 +138,23 @@ fish.Audio = function (context, players=3) {
      * @param sample is the audio to play.
      */
     this.playSong = function (sample) {
-        if (playingSong == sample.name) return;
+        if (playingSong == sample.name) {
+            return;
+        }
         playingSong = sample.name;
         songPlayer.buffer = sample.buffer;
+        songPlayer.start(0);
+    };
+
+    /**
+     * Load a song from the store and then play it right away.
+     * @param store is the store to load from.
+     * @param name  is the key to the song as you would normally use to load it
+     *              from the store.
+     */
+    this.loadSong = async function (store, name) {
+        let sample = await store.getSample(name);
+        if (sample) this.playSong(sample);
     };
 
     /**

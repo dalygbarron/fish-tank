@@ -25,12 +25,9 @@ async function createBasedScreen(cont) {
     let number = 0;
     let texture = await cont.store.getTexture('out.png');
     let atlas = await cont.store.getAtlas('sprites.json');
-    let noise = await cont.store.getSample('ging.ogg');
-    if (texture == null || atlas == null || noise == null) return null;
-    cont.audio.playSample(noise);
+    if (texture == null || atlas == null) return null;
     let batch = new cont.graphics.Batch(texture, 2000);
     let boxes = [];
-    console.log(atlas.n());
     for (let i = 0; i < Math.floor(2000 / atlas.n()); i++) {
         atlas.forEach((name, sprite) => {
             boxes.push(new Rodent(sprite));
@@ -38,11 +35,15 @@ async function createBasedScreen(cont) {
     }
     return new fish.screen.DullScreen(
         () => {
-            cont.audio.playSong('musicke.xm');
+            cont.audio.loadSong(cont.store, 'ging.ogg');
         },
         (function* () {
             for (let i = 0; i < 1000; i++) {
                 for (u in boxes) {
+                    if (cont.input.down(cont.input.UP)) boxes[u].velocity.y += 0.1;
+                    if (cont.input.down(cont.input.DOWN)) boxes[u].velocity.y -= 0.1;
+                    if (cont.input.down(cont.input.LEFT)) boxes[u].velocity.x -= 0.1;
+                    if (cont.input.down(cont.input.RIGHT)) boxes[u].velocity.x += 0.1;
                     boxes[u].update();
                 }
                 yield;
