@@ -8199,8 +8199,11 @@ var fish = fish || {};
  */
 fish.Audio = function (context, players=3) {
     let songPlayer = context.createBufferSource();
+    let noisePlayer = context.createBufferSource();
     songPlayer.connect(context.destination);
+    noisePlayer.connect(context.destination);
     let playingSong = '';
+    let playingNoise = '';
     let soundPlayers = [];
     let frame = 0;
 
@@ -8347,6 +8350,30 @@ fish.Audio = function (context, players=3) {
      *              from the store.
      */
     this.loadSong = async function (store, name) {
+        let sample = await store.getSample(name);
+        if (sample) this.playSong(sample);
+    };
+
+    /**
+     * Play the given noise and if it is already playing then do nothing.
+     * @param sample is the audio to play.
+     */
+    this.playNoise = function (sample) {
+        if (playingNoise == sample.name) {
+            return;
+        }
+        playingNoise = sample.name;
+        noisePlayer.buffer = sample.buffer;
+        noisePlayer.start(0);
+    };
+
+    /**
+     * Load a noise from the store and then play it right away.
+     * @param store is the store to load from.
+     * @param name  is the key to the noise as you would normally use to load
+     *              it from the store.
+     */
+    this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
         if (sample) this.playSong(sample);
     };
