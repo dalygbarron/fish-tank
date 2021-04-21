@@ -4,7 +4,7 @@ var fish = fish || {};
  * Class that stores assets.
  */
 fish.Store = function (graphics, audio, prefix) {
-    let assets = {
+    let assets = {};
     let loaders = {
         texture: graphics.loadTexture,
         atlas: graphics.loadAtlas,

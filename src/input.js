@@ -1,20 +1,33 @@
 var fish = fish || {};
 
-fish.Input = function (threshold = 0.9) {
+fish.Input = function (keymap={}, threshold = 0.9) {
+    if (!keymap.UP) keymap.UP = 'ArrowUp';
+    if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
+    if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
+    if (!keymap.RIGHT) keymap.RIGHT = 'ArrowRight';
+    if (!keymap.A) keymap.A = 'Shift';
+    if (!keymap.B) keymap.B = 'z';
+    if (!keymap.X) keymap.X = 'a';
+    if (!keymap.Y) keymap.Y = 'x';
+    if (!keymap.L) keymap.L = 'd';
+    if (!keymap.R) keymap.R = 'c';
+    if (!keymap.SELECT) keymap.SELECT = 'Escape';
+    if (!keymap.START) keymap.START = 'Enter';
     let frame = 0;
-    let keyStates = {
-        UP: 0,
-        DOWN: 0,
-        LEFT: 0,
-        RIGHT: 0,
-        X: 0,
-        Y: 0,
-        A: 0,
-        B: 0,
-        L: 0,
-        R: 0,
-        SELECT: 0,
-        START: 0
+    let keys = {};
+    let buttonStates = {
+        UP: false,
+        DOWN: false,
+        LEFT: false,
+        RIGHT: false,
+        X: false,
+        Y: false,
+        A: false,
+        B: false,
+        L: false,
+        R: false,
+        SELECT: false,
+        START: false
     };
     this.UP = 'UP';
     this.DOWN = 'DOWN';
@@ -28,6 +41,8 @@ fish.Input = function (threshold = 0.9) {
     this.R = 'R';
     this.SELECT = 'SELECT';
     this.START = 'START';
+    document.addEventListener('keydown', (e) => {keys[e.key] = true;});
+    document.addEventListener('keyup', (e) => {keys[e.key] = false;});
 
     /**
      * Tells you if the given button is pressed whether it is a number or
@@ -43,29 +58,65 @@ fish.Input = function (threshold = 0.9) {
     };
 
     /**
+     * Sets a button to the correct value based on whether it is pressed or not
+     * rn.
+     * @param button is the button to update.
+     * @param value  is whether or not it is pressed right now.
+     */
+    let updateButton = function (button, value, include=false) {
+        if (include) value = value || buttonStates[button] > 0;
+        if (!value) buttonStates[button] = 0;
+        else if (buttonStates[button] == 0) buttonStates[button] = frame;
+    };
+
+    /**
      * Just iterates the frame number.
      */
     this.update = function () {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+        updateButton(this.A, keys[keymap.A]);
+        updateButton(this.B, keys[keymap.B]);
+        updateButton(this.X, keys[keymap.X]);
+        updateButton(this.Y, keys[keymap.Y]);
+        updateButton(this.L, keys[keymap.L]);
+        updateButton(this.R, keys[keymap.R]);
+        updateButton(this.SELECT, keys[keymap.SELECT]);
+        updateButton(this.START, keys[keymap.START]);
+        updateButton(this.UP, keys[keymap.UP]);
+        updateButton(this.DOWN, keys[keymap.DOWN]);
+        updateButton(this.LEFT, keys[keymap.LEFT]);
+        updateButton(this.RIGHT, keys[keymap.RIGHT]);
         for (let pad of gamepads) {
-            keyStates[this.A] = pressed(pad.buttons[0]) ? frame : 0;
-            keyStates[this.B] = pressed(pad.buttons[1]) ? frame : 0;
-            keyStates[this.X] = pressed(pad.buttons[2]) ? frame : 0;
-            keyStates[this.Y] = pressed(pad.buttons[3]) ? frame : 0;
-            keyStates[this.L] = pressed(pad.buttons[4]) ? frame : 0;
-            keyStates[this.R] = pressed(pad.buttons[5]) ? frame : 0;
-            keyStates[this.SELECT] = pressed(pad.buttons[8]) ? frame : 0;
-            keyStates[this.START] = pressed(pad.buttons[9]) ? frame : 0;
-            keyStates[this.UP] = pressed(pad.buttons[12]) ? frame :
-                pad.axes[1] < -threshold;
-            keyStates[this.DOWN] = pressed(pad.buttons[13]) ? frame :
-                pad.axes[1] > threshold;
-            keyStates[this.LEFT] = pressed(pad.buttons[14]) ? frame :
-                pad.axes[0] < -threshold;
-            keyStates[this.RIGHT] = pressed(pad.buttons[15]) ? frame :
-                pad.axes[0] > threshold;
+            updateButton(this.A, pressed(pad.buttons[0]), true);
+            updateButton(this.B, pressed(pad.buttons[1]), true);
+            updateButton(this.X, pressed(pad.buttons[2]), true);
+            updateButton(this.Y, pressed(pad.buttons[3]), true);
+            updateButton(this.L, pressed(pad.buttons[4]), true);
+            updateButton(this.R, pressed(pad.buttons[5]), true);
+            updateButton(this.SELECT, pressed(pad.buttons[8]), true);
+            updateButton(this.START, pressed(pad.buttons[9]), true);
+            updateButton(
+                this.UP,
+                pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
+                true
+            );
+            updateButton(
+                this.DOWN,
+                pressed(pad.buttons[13]) || pad.axes[1] > threshold,
+                true
+            );
+            updateButton(
+                this.LEFT,
+                pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
+                true
+            );
+            updateButton(
+                this.RIGHT,
+                pressed(pad.buttons[15]) || pad.axes[0] > threshold,
+                true
+            );
         }
     };
 
@@ -75,10 +126,8 @@ fish.Input = function (threshold = 0.9) {
      * @return true if it is pressed.
      */
     this.down = function (code) {
-        if (!(code in keyStates)) {
-            throw code;
-        }
-        return keyStates[code] > 0;
+        if (!(code in buttonStates)) throw code;
+        return buttonStates[code] > 0;
     };
 
     /**
@@ -87,9 +136,7 @@ fish.Input = function (threshold = 0.9) {
      * @return true if it was pressed this frame.
      */
     this.justDown = function (code) {
-        if (!(code in keyStates)) {
-            throw code;
-        }
-        return keyStates[code] == frame;
+        if (!(code in buttonStates)) throw code;
+        return buttonStates[code] == frame;
     };
 };
