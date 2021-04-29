@@ -214,7 +214,7 @@ fish.Graphics = function (gl) {
      *         it couldn't get it's hands on the texture.
      */
     this.loadTexture = async function (url) {
-        return await new Promise(resolve => {
+        return await new Promise((resolve, reject) => {
             const image = new Image();
             image.onload = () => {
                 const texture = gl.createTexture();
