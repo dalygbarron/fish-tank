@@ -1,23 +1,27 @@
 var fish = fish || {};
 
 /**
- * Starts the thing's main loop ticking along by passing to it the rendering
- * canvas, and the starting screen.
- * @param gl    is a html canvas.
- * @param audio is the audio context.
- * @param init  is a function to generate the starting screen.
+ * Real function that starts the application running. Just takes all of the
+ * sybsystems like graphics and audio rather than building them, so that you
+ * can create different ones to your heart's content.
+ * @param graphics is the graphics system.
+ * @param audio    is the audio system.
+ * @param input    is the input system.
+ * @param store    is the asset store system.
+ * @param init     is the initialisation function that generates the starting
+ *                 screen.
  */
-fish.start = async function (gl, audio, init) {
-    let graphics = new fish.Graphics(gl);
-    let fishAudio = new fish.Audio(audio);
+fish.start = async function (graphics, audio, input, store, init) {
     let cont = {
         graphics: graphics,
         audio: fishAudio,
-        input: new fish.Input(),
+        input: input,
         store: new fish.Store(graphics, fishAudio, '')
     };
     let screen = await init(cont);
-    if (screen == null) return; // TODO: message
+    if (screen == null) {
+        console.err("No Starting Screen. Game Cannot Start.");
+    }
     let screens = [screen];
     screen.refresh();
     const updateScreens = (message=null) => {
@@ -47,4 +51,26 @@ fish.start = async function (gl, audio, init) {
             }
         }
     }, 20);
+};
+
+
+/**
+ * Starts the thing's main loop ticking along by passing to it the rendering
+ * canvas, and the starting screen.
+ * @param gl           is a html canvas.
+ * @param audio        is the audio context.
+ * @param assetsPrefix is the prefix under which assets are found by the assets
+ *                     store.
+ * @param init         is a function to generate the starting screen.
+ */
+fish.normalStart = async function (gl, audio, assetsPrefix, init) {
+    let graphics = new fish.Graphics(gl);
+    let fishAudio = new fish.Audio(audio);
+    await fish.start(
+        graphics,
+        fishAudio,
+        new fish.Input(),
+        new fish.Store(graphics, fishAudio, assetsPrefix),
+        init
+    );
 };
