@@ -7,7 +7,7 @@ fish.Store = function (graphics, audio, prefix) {
     let assets = {};
     let loaders = {
         texture: graphics.loadTexture,
-        atlas: graphics.loadAtlas,
+        atlas: fish.graphics.loadAtlas,
         sample: audio.loadSample
     };
 

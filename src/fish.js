@@ -78,7 +78,7 @@ fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
         rate,
         graphics,
         fishAudio,
-        new fish.Input(),
+        new fish.input.BasicInput(),
         new fish.Store(graphics, fishAudio, assetsPrefix),
         init
     );

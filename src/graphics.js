@@ -165,11 +165,11 @@ fish.graphics.loadTexture = async function (gl, url) {
  * @return the created atlas or null if it couldn't load the text or
  *         something.
  */
-this.loadAtlas = async function (url) {
+fish.graphics.loadAtlas = async function (url) {
     let text = await fish.util.loadText(url);
     if (text == null) return null;
     let data = JSON.parse(text);
-    let atlas = new Atlas();
+    let atlas = new fish.graphics.Atlas();
     for (let frame in data) {
         let rect = data[frame];
         atlas.add(
@@ -279,7 +279,7 @@ fish.graphics.SpriteRenderer = function (gl) {
             );
             gl.enableVertexAttribArray(shader.textureCoord);
             // TODO: decide active texture better.
-            gl.activeTexture(gl.TEXTURE1);
+            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture.getGlTexture());
             gl.uniform1i(shader.sampler, 0);
             gl.uniform2f(

@@ -285,11 +285,11 @@ fish.graphics.loadTexture = async function (gl, url) {
  * @return the created atlas or null if it couldn't load the text or
  *         something.
  */
-this.loadAtlas = async function (url) {
+fish.graphics.loadAtlas = async function (url) {
     let text = await fish.util.loadText(url);
     if (text == null) return null;
     let data = JSON.parse(text);
-    let atlas = new Atlas();
+    let atlas = new fish.graphics.Atlas();
     for (let frame in data) {
         let rect = data[frame];
         atlas.add(
@@ -399,7 +399,7 @@ fish.graphics.SpriteRenderer = function (gl) {
             );
             gl.enableVertexAttribArray(shader.textureCoord);
             // TODO: decide active texture better.
-            gl.activeTexture(gl.TEXTURE1);
+            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture.getGlTexture());
             gl.uniform1i(shader.sampler, 0);
             gl.uniform2f(
@@ -472,32 +472,6 @@ fish.audio.Sample = function (name, buffer) {
 };
 
 /**
- * Loads a piece of audio into memory from soem url.
- * @param url is the joint to load from.
- * @return the sound I guess assuming it didn't fuck up, then it return
- * a promise? hmmm.
- */
-this.loadSample = async function (url) {
-    let request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
-    return new Promise((resolve, reject) => {
-        request.onload = () => {
-            context.decodeAudioData(
-                request.response,
-                buffer => {
-                    resolve(new Sample(url, buffer));
-                },
-                () => {
-                    reject('didn');
-                }
-            );
-        };
-        request.send();
-    });
-};
-
-/**
  * A basic audio handler that has a music channel, a looping background sound
  * channel, and a couple of channels for playing sound effects.
  */
@@ -515,7 +489,7 @@ fish.audio.BasicAudio = function (context, players=3) {
      * Little thing that holds an audio buffer source and keeps track of what
      * it is being used for.
      */
-    let SamplePlayer = () => {
+    let SamplePlayer = function () {
         let source = context.createBufferSource();
         source.connect(context.destination);
         let playing = false;
@@ -669,6 +643,32 @@ fish.audio.BasicAudio = function (context, players=3) {
     this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
         if (sample) this.playSong(sample);
+    };
+
+    /**
+     * Loads a piece of audio into memory from soem url.
+     * @param url is the joint to load from.
+     * @return the sound I guess assuming it didn't fuck up, then it return
+     * a promise? hmmm.
+     */
+    this.loadSample = async function (url) {
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+        return new Promise((resolve, reject) => {
+            request.onload = () => {
+                context.decodeAudioData(
+                    request.response,
+                    buffer => {
+                        resolve(new fish.audio.Sample(url, buffer));
+                    },
+                    () => {
+                        reject(`Couldn't load sample ${url}`);
+                    }
+                );
+            };
+            request.send();
+        });
     };
 };
 
@@ -879,7 +879,7 @@ fish.Store = function (graphics, audio, prefix) {
     let assets = {};
     let loaders = {
         texture: graphics.loadTexture,
-        atlas: graphics.loadAtlas,
+        atlas: fish.graphics.loadAtlas,
         sample: audio.loadSample
     };
 
@@ -1200,7 +1200,7 @@ fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
         rate,
         graphics,
         fishAudio,
-        new fish.Input(),
+        new fish.input.BasicInput(),
         new fish.Store(graphics, fishAudio, assetsPrefix),
         init
     );

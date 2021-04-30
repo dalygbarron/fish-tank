@@ -23,32 +23,6 @@ fish.audio.Sample = function (name, buffer) {
 };
 
 /**
- * Loads a piece of audio into memory from soem url.
- * @param url is the joint to load from.
- * @return the sound I guess assuming it didn't fuck up, then it return
- * a promise? hmmm.
- */
-this.loadSample = async function (url) {
-    let request = new XMLHttpRequest();
-    request.open('GET', url, true);
-    request.responseType = 'arraybuffer';
-    return new Promise((resolve, reject) => {
-        request.onload = () => {
-            context.decodeAudioData(
-                request.response,
-                buffer => {
-                    resolve(new Sample(url, buffer));
-                },
-                () => {
-                    reject('didn');
-                }
-            );
-        };
-        request.send();
-    });
-};
-
-/**
  * A basic audio handler that has a music channel, a looping background sound
  * channel, and a couple of channels for playing sound effects.
  */
@@ -66,7 +40,7 @@ fish.audio.BasicAudio = function (context, players=3) {
      * Little thing that holds an audio buffer source and keeps track of what
      * it is being used for.
      */
-    let SamplePlayer = () => {
+    let SamplePlayer = function () {
         let source = context.createBufferSource();
         source.connect(context.destination);
         let playing = false;
@@ -220,5 +194,31 @@ fish.audio.BasicAudio = function (context, players=3) {
     this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
         if (sample) this.playSong(sample);
+    };
+
+    /**
+     * Loads a piece of audio into memory from soem url.
+     * @param url is the joint to load from.
+     * @return the sound I guess assuming it didn't fuck up, then it return
+     * a promise? hmmm.
+     */
+    this.loadSample = async function (url) {
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+        return new Promise((resolve, reject) => {
+            request.onload = () => {
+                context.decodeAudioData(
+                    request.response,
+                    buffer => {
+                        resolve(new fish.audio.Sample(url, buffer));
+                    },
+                    () => {
+                        reject(`Couldn't load sample ${url}`);
+                    }
+                );
+            };
+            request.send();
+        });
     };
 };
