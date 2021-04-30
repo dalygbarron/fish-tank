@@ -1,9 +1,58 @@
+/**
+ * This file provides audio playing and loading functionality and a basic sound
+ * player class. This player only supports playing audio files that are fully
+ * loaded into memory, there is no audio streaming because it would lag and
+ * suck.
+ * If you need more flexible audio playing then feel free to create your own
+ * class that does what you need.
+ */
+
 var fish = fish || {};
+fish.audio = {};
 
 /**
- * handles audio and shiet.
+ * Nice little sample object that stores it's name so we can use that for
+ * stuff. You probably don't want to create one of these directly unless you
+ * are creating your own audio system.
+ * @param name   is the name / url of the samepl.
+ * @param buffer is the actual audio data.
  */
-fish.Audio = function (context, players=3) {
+fish.audio.Sample = function (name, buffer) {
+    this.name = name;
+    this.buffer = buffer;
+};
+
+/**
+ * Loads a piece of audio into memory from soem url.
+ * @param url is the joint to load from.
+ * @return the sound I guess assuming it didn't fuck up, then it return
+ * a promise? hmmm.
+ */
+this.loadSample = async function (url) {
+    let request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+    return new Promise((resolve, reject) => {
+        request.onload = () => {
+            context.decodeAudioData(
+                request.response,
+                buffer => {
+                    resolve(new Sample(url, buffer));
+                },
+                () => {
+                    reject('didn');
+                }
+            );
+        };
+        request.send();
+    });
+};
+
+/**
+ * A basic audio handler that has a music channel, a looping background sound
+ * channel, and a couple of channels for playing sound effects.
+ */
+fish.audio.BasicAudio = function (context, players=3) {
     let songPlayer = context.createBufferSource();
     let noisePlayer = context.createBufferSource();
     songPlayer.connect(context.destination);
@@ -14,21 +63,10 @@ fish.Audio = function (context, players=3) {
     let frame = 0;
 
     /**
-     * Nice little sample object that stores it's name so we can use that for
-     * stuff.
-     * @param name   is the name / url of the samepl.
-     * @param buffer is the actual audio data.
-     */
-    let Sample = function (name, buffer) {
-        this.name = name;
-        this.buffer = buffer;
-    };
-
-    /**
      * Little thing that holds an audio buffer source and keeps track of what
      * it is being used for.
      */
-    let SamplePlayer = function () {
+    let SamplePlayer = () => {
         let source = context.createBufferSource();
         source.connect(context.destination);
         let playing = false;
@@ -40,7 +78,7 @@ fish.Audio = function (context, players=3) {
          * Tells you if this sample player is currently playing.
          * @return true if it is playing.
          */
-        this.isPlaying = function () {
+        this.isPlaying = () => {
             return playing;
         };
 
@@ -48,7 +86,7 @@ fish.Audio = function (context, players=3) {
          * Tells you the tick that the current sample started on.
          * @return the tick as a number.
          */
-        this.getStart = function () {
+        this.getStart = () => {
             return start;
         };
 
@@ -58,7 +96,7 @@ fish.Audio = function (context, players=3) {
          * that high priority.
          * @return the priority of the last played sample.
          */
-        this.getPriority = function () {
+        this.getPriority = () => {
             return priority;
         };
 
@@ -67,7 +105,7 @@ fish.Audio = function (context, players=3) {
          * @param sample   is the sample to play.
          * @param priority is the priority to say this had.
          */
-        this.play = function (sample, priority) {
+        this.play = (sample, priority) => {
             playing = true;
             start = frame;
             sample = sample;
@@ -84,7 +122,7 @@ fish.Audio = function (context, players=3) {
          * @return true if they are the same and this sample player is still
          *              playing.
          */
-        this.same = function (sample) {
+        this.same = sample => {
             return playing && sample && sample.name == this.sample.name;
         };
 
@@ -95,7 +133,7 @@ fish.Audio = function (context, players=3) {
          * @param otherStart    is the start of the other sample player.
          * @return true if this one is less important.
          */
-        this.lesser = function (otherPriority, otherStart) {
+        this.lesser = (otherPriority, otherStart) => {
             return !playing || priority < otherPriority ||
                 (priority == otherPriority && start < otherStart);
         };
@@ -106,7 +144,7 @@ fish.Audio = function (context, players=3) {
     /**
      * Updates the audio player. Needs to be done once per frame.
      */
-    this.update = function () {
+    this.update = () => {
         frame++;
     };
 
@@ -116,7 +154,7 @@ fish.Audio = function (context, players=3) {
      * @param priority is it's priority so it can play over things of lesser
      *                 importance.
      */
-    this.playSample = function (sample, priority=0) {
+    this.playSample = (sample, priority=0) => {
         let chosen = -1;
         let chosenPriority = -99999;
         let chosenStart = 0;
@@ -140,7 +178,7 @@ fish.Audio = function (context, players=3) {
      * Play the given song and if it is already playing then do nothing.
      * @param sample is the audio to play.
      */
-    this.playSong = function (sample) {
+    this.playSong = sample => {
         if (playingSong == sample.name) {
             return;
         }
@@ -164,7 +202,7 @@ fish.Audio = function (context, players=3) {
      * Play the given noise and if it is already playing then do nothing.
      * @param sample is the audio to play.
      */
-    this.playNoise = function (sample) {
+    this.playNoise = sample => {
         if (playingNoise == sample.name) {
             return;
         }
@@ -182,31 +220,5 @@ fish.Audio = function (context, players=3) {
     this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
         if (sample) this.playSong(sample);
-    };
-
-    /**
-     * Loads a piece of audio into memory from soem url.
-     * @param url is the joint to load from.
-     * @return the sound I guess assuming it didn't fuck up, then it return
-     * a promise? hmmm.
-     */
-    this.loadSample = async function (url) {
-        let request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
-        return new Promise((resolve, reject) => {
-            request.onload = () => {
-                context.decodeAudioData(
-                    request.response,
-                    buffer => {
-                        resolve(new Sample(url, buffer));
-                    },
-                    () => {
-                        reject('didn');
-                    }
-                );
-            };
-            request.send();
-        });
     };
 };

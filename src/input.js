@@ -1,6 +1,26 @@
-var fish = fish || {};
+/**
+ * Contains the base input handler and a couple of button constants that are
+ * required to be handled by the gui system. If you create your input handler
+ * you just need to make sure you implement uiDown and uiJustDown so that it
+ * will work with the gui system.
+ */
 
-fish.Input = function (keymap={}, threshold = 0.9) {
+var fish = fish || {};
+fish.input = {};
+
+fish.input.UI_UP = 'UI_UP';
+fish.input.UI_DOWN = 'UI_DOWN';
+fish.input.UI_LEFT = 'UI_LEFT';
+fish.input.UI_RIGHT = 'UI_RIGHT';
+fish.input.UI_ACCEPT = 'UI_ACCEPT';
+fish.input.UI_CANCEL = 'UI_CANCEL';
+
+/**
+ * An input handler that unifies all input from gamepads / keyboard into one
+ * abstract input which is supposed to work like a gamepad basically. It only
+ * works with 1 player games for that reason.
+ */
+fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     if (!keymap.UP) keymap.UP = 'ArrowUp';
     if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
     if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
@@ -67,6 +87,23 @@ fish.Input = function (keymap={}, threshold = 0.9) {
         if (include) value = value || buttonStates[button] > 0;
         if (!value) buttonStates[button] = 0;
         else if (buttonStates[button] == 0) buttonStates[button] = frame;
+    };
+
+    /**
+     * Converts a ui button to an actual button on this controller thing.
+     * @param uiCode is the code to convert.
+     * @return the corresponding actual button.
+     */
+    let uiToButton = (uiCode) => {
+        switch (uiCode) {
+            case fish.input.UI_UP: return this.UP;
+            case fish.input.UI_DOWN: return this.DOWN;
+            case fish.input.UI_LEFT: return this.LEFT;
+            case fish.input.UI_RIGHT: return this.RIGHT;
+            case fish.input.UI_ACCEPT: return this.A;
+            case fish.input.UI_CANCEL: return this.B;
+        }
+        return null;
     };
 
     /**
@@ -138,5 +175,23 @@ fish.Input = function (keymap={}, threshold = 0.9) {
     this.justDown = function (code) {
         if (!(code in buttonStates)) throw code;
         return buttonStates[code] == frame;
+    };
+
+    /**
+     * Tells you if the given ui button is down.
+     * @param uiCode is the ui button in question.
+     * @return true if it is down now.
+     */
+    this.uiDown = (uiCode) => {
+        return this.down(uiToButton(uiCode));
+    };
+
+    /**
+     * Tells you if the given ui button just went down last frame.
+     * @param uiCode is the ui button in question.
+     * @return true if it just went down.
+     */
+    this.uiJustDown = (uiCode) => {
+        return this.justDown(uiToButton(uiCode));
     };
 };

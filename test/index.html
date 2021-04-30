@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>fish-tank test</title>
+        <script src="/build/fish-tank.js" defer></script>
+        <script src="/test/test.js" defer></script>
+        <script defer>
+            window.onload = () => {
+                const gl = document.querySelector('#canvas').getContext('webgl');
+                const context = new AudioContext();
+                if (gl === null || context === null) {
+                    alert('the police the FBI are coming in your window man');
+                    return;
+                }
+                go(gl, context);
+            };
+        </script>
+    </head>
+    <body>
+        <canvas id="canvas" width="1024" height="600"></canvas>
+    </body>
+</html>

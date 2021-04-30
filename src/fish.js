@@ -2,8 +2,11 @@ var fish = fish || {};
 
 /**
  * Real function that starts the application running. Just takes all of the
- * sybsystems like graphics and audio rather than building them, so that you
+ * subsystems like graphics and audio rather than building them, so that you
  * can create different ones to your heart's content.
+ * @param rate     is the number of logic frames per second to aim for. If you
+ *                 give a number less than 1 you are asking for variable frame
+ *                 rate.
  * @param graphics is the graphics system.
  * @param audio    is the audio system.
  * @param input    is the input system.
@@ -11,16 +14,18 @@ var fish = fish || {};
  * @param init     is the initialisation function that generates the starting
  *                 screen.
  */
-fish.start = async function (graphics, audio, input, store, init) {
+fish.start = async function (rate, graphics, audio, input, store, init) {
+    const FRAME_LENGTH = 1 / rate;
     let cont = {
         graphics: graphics,
-        audio: fishAudio,
+        audio: audio,
         input: input,
-        store: new fish.Store(graphics, fishAudio, '')
+        store: store
     };
     let screen = await init(cont);
     if (screen == null) {
         console.err("No Starting Screen. Game Cannot Start.");
+        return;
     }
     let screens = [screen];
     screen.refresh();
@@ -45,7 +50,7 @@ fish.start = async function (graphics, audio, input, store, init) {
             cont.audio.update();
             cont.input.update();
             updateScreens();
-            graphics.clear(graphics.BLACK);
+            graphics.clear(0, 0, 0, 1);
             for (screen of screens) {
                 screen.render(graphics);
             }
@@ -57,16 +62,20 @@ fish.start = async function (graphics, audio, input, store, init) {
 /**
  * Starts the thing's main loop ticking along by passing to it the rendering
  * canvas, and the starting screen.
+ * @param rate         is the number of logic frames per second to aim for. If
+ *                     you give a number less than 1 you are asking for
+ *                     variable frame rate.
  * @param gl           is a html canvas.
  * @param audio        is the audio context.
  * @param assetsPrefix is the prefix under which assets are found by the assets
  *                     store.
  * @param init         is a function to generate the starting screen.
  */
-fish.normalStart = async function (gl, audio, assetsPrefix, init) {
-    let graphics = new fish.Graphics(gl);
-    let fishAudio = new fish.Audio(audio);
+fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
+    let graphics = new fish.graphics.SpriteRenderer(gl);
+    let fishAudio = new fish.audio.BasicAudio(audio);
     await fish.start(
+        rate,
         graphics,
         fishAudio,
         new fish.Input(),

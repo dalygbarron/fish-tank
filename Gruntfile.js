@@ -10,14 +10,11 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: [
-                    'src/dep/gl-matrix.js',
-                    'src/dep/chiptune2.js',
                     'src/util.js',
-                    'src/Graphics.js',
-                    'src/Audio.js',
-                    'src/Input.js',
-                    'src/dep/libopenmpt.js',
-                    'src/Store.js',
+                    'src/graphics.js',
+                    'src/audio.js',
+                    'src/input.js',
+                    'src/store.js',
                     'src/shader.js',
                     'src/screen.js',
                     'src/fish.js'
