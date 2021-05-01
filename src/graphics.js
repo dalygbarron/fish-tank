@@ -181,6 +181,130 @@ fish.graphics.loadAtlas = async function (url) {
 };
 
 /**
+ * 9 patch implementation that uses a sprite rectangle for each part of the
+ * patch. This is just the object that holds the data for the 9 patch.
+ */
+fish.graphics.Patch = class {
+    /**
+     * Creates it by giving a sprite and a border around the outside which
+     * becomes the non middle parts.
+     * @param rect is the overall sprite to make the patch from.
+     * @param born is the width of the border of the patch.
+     */
+    constructor(rect, bord) {
+        let hMid = rect.w - bord * 2;
+        let vMid = rect.h - bord * 2;
+        if (hMid < 1 || vMid < 1) {
+            throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
+        }
+        let tl = fish.util.Rect(rect.x, rect.y, bord, bord);
+        let t = fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
+        let tr = fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
+        let ml = fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
+        let m = fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
+        let mr = fish.util.Rect(
+            rect.x + bord + hMid,
+            rect.y + bord,
+            bord,
+            vMid
+        );
+        let bl = fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
+        let b = fish.util.Rect(
+            rect.x + bord,
+            rect.y + bord + vMid,
+            hMid,
+            bord
+        );
+        let br = fish.util.Rect(
+            rect.x + bord + hMid,
+            rect.y + bord + vMid,
+            bord,
+            bord
+        );
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get tl() {
+        return tl;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get t() {
+        return t;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get tr() {
+        return tr;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get ml() {
+        return ml;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get m() {
+        return m;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get mr() {
+        return mr;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get bl() {
+        return bl;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get b() {
+        return b;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get br() {
+        return br;
+    }
+
+    /**
+     * Gives you the rect's border size.
+     * @return the border size as in perpendicular distance from the outside.
+     */
+    get border() {
+        return border;
+    }
+};
+
+/**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
  * @param gl is the opengl context.
@@ -192,6 +316,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.width = gl.canvas.clientWidth;
     this.height = gl.canvas.clientHeight;
+
 
     /**
      * A thing that batches draw calls.
@@ -243,6 +368,17 @@ fish.graphics.SpriteRenderer = function (gl) {
             textureItems[offset + 10] = src.x;
             textureItems[offset + 11] = src.y;
             n++;
+        };
+
+        /**
+         * Draws a 9 patch at the given place. If you give an area that is too
+         * small it will look munted beware.
+         * @param patch is the 9patch to draw.
+         * @param dst   is the place to draw it.
+         */
+        this.addPatch = (patch, dst) => {
+            let middle = dst.w > patch.
+
         };
 
         /**

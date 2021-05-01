@@ -32,8 +32,13 @@ fish.util.Vector = function (x, y) {
     };
 };
 
+// TODO: might be useful to have an immutable vector class that wraps around an
+// existing vector but only gives you an immutable view of it. hmmm or it would
+// be a big wank for no reason.
+
 /**
- * Represents an axis aligned rectangle.
+ * Represents an axis aligned rectangle and it should be immutable I think.
+ * wait no. But I should make it immutable maybe.
  */
 fish.util.Rect = class {
     /**
