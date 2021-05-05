@@ -1,10 +1,17 @@
 var fish = fish || {};
+
+/**
+ * Provides some basic utility stuff. Maths classes and whatever the hell ya
+ * know.
+ * @namespace
+ */
 fish.util = {};
 
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
- * @param x is the horizontal part.
- * @param y is the vector part.
+ * @constructor
+ * @param {number} x is the horizontal part.
+ * @param {number} y is the vector part.
  */
 fish.util.Vector = function (x, y) {
     this.x = x;
@@ -12,7 +19,7 @@ fish.util.Vector = function (x, y) {
 
     /**
      * Adds another vector to this vector, modifying this one.
-     * @param other is the other vector.
+     * @param {fish.util.Vector} other is the other vector.
      */
     this.add = (other) => {
         this.x += other.x;
@@ -22,7 +29,8 @@ fish.util.Vector = function (x, y) {
     /**
      * Wraps this vector in a rectangle that starts at (0, 0) then goes to
      * bounds.
-     * @param bounds is a vector representing the far corner.
+     * @param {fish.util.Vector} bounds is a vector representing the far
+     *                           corner.
      */
     this.wrap = (bounds) => {
         this.x = (this.x < 0) ? (bounds.x - Math.abs(this.x % bounds.x)) :
@@ -104,8 +112,8 @@ fish.util.Rect = class {
 
 /**
  * Asynchronously loads a text file in.
- * @param url is the url to load the file from.
- * @return a promise that resolves to the loaded file.
+ * @param {string} url is the url to load the file from.
+ * @return {Promise<string>} that resolves to the loaded file content.
  */
 fish.util.loadText = async function (url) {
     return await new Promise((resolve, reject) => {

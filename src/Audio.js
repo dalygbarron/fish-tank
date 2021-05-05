@@ -1,3 +1,5 @@
+var fish = fish || {};
+
 /**
  * This file provides audio playing and loading functionality and a basic sound
  * player class. This player only supports playing audio files that are fully
@@ -5,15 +7,15 @@
  * suck.
  * If you need more flexible audio playing then feel free to create your own
  * class that does what you need.
+ * @namespace
  */
-
-var fish = fish || {};
 fish.audio = {};
 
 /**
  * Nice little sample object that stores it's name so we can use that for
  * stuff. You probably don't want to create one of these directly unless you
  * are creating your own audio system.
+ * @constructor
  * @param name   is the name / url of the samepl.
  * @param buffer is the actual audio data.
  */
@@ -25,6 +27,9 @@ fish.audio.Sample = function (name, buffer) {
 /**
  * A basic audio handler that has a music channel, a looping background sound
  * channel, and a couple of channels for playing sound effects.
+ * @constructor
+ * @param {AudioContext} context is the audio context.
+ * @param {number} players is the number of samples that can play at once.
  */
 fish.audio.BasicAudio = function (context, players=3) {
     let songPlayer = context.createBufferSource();
@@ -39,6 +44,8 @@ fish.audio.BasicAudio = function (context, players=3) {
     /**
      * Little thing that holds an audio buffer source and keeps track of what
      * it is being used for.
+     * @private
+     * @constructor
      */
     let SamplePlayer = function () {
         let source = context.createBufferSource();
@@ -124,9 +131,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Plays a sample as long as it has not played since the last refresh.
-     * @param sample   is the sample to play.
-     * @param priority is it's priority so it can play over things of lesser
-     *                 importance.
+     * @param {fish.audio.Sample} sample   is the sample to play.
+     * @param {number}            priority is it's priority so it can play
+     *                            over things of lesser importance.
      */
     this.playSample = (sample, priority=0) => {
         let chosen = -1;
@@ -150,7 +157,7 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Play the given song and if it is already playing then do nothing.
-     * @param sample is the audio to play.
+     * @param {fish.audio.Sample} sample is the audio to play.
      */
     this.playSong = sample => {
         if (playingSong == sample.name) {
@@ -163,9 +170,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Load a song from the store and then play it right away.
-     * @param store is the store to load from.
-     * @param name  is the key to the song as you would normally use to load it
-     *              from the store.
+     * @param {fish.Store} store is the store to load from.
+     * @param {string}     name  is the key to the song as you would normally
+     *                           use to load it from the store.
      */
     this.loadSong = async function (store, name) {
         let sample = await store.getSample(name);
@@ -174,7 +181,7 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Play the given noise and if it is already playing then do nothing.
-     * @param sample is the audio to play.
+     * @param {fish.audio.Sample} sample is the audio to play.
      */
     this.playNoise = sample => {
         if (playingNoise == sample.name) {
@@ -187,9 +194,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Load a noise from the store and then play it right away.
-     * @param store is the store to load from.
-     * @param name  is the key to the noise as you would normally use to load
-     *              it from the store.
+     * @param {fish.Store} store is the store to load from.
+     * @param {string}     name  is the key to the noise as you would normally
+     *                           use to load it from the store.
      */
     this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
@@ -198,9 +205,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Loads a piece of audio into memory from soem url.
-     * @param url is the joint to load from.
-     * @return the sound I guess assuming it didn't fuck up, then it return
-     * a promise? hmmm.
+     * @param {strimg} url is the joint to load from.
+     * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
+     *                                      didn't fuck up.
      */
     this.loadSample = async function (url) {
         let request = new XMLHttpRequest();

@@ -3,8 +3,9 @@ fish.util = {};
 
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
- * @param x is the horizontal part.
- * @param y is the vector part.
+ * @constructor
+ * @param {number} x is the horizontal part.
+ * @param {number} y is the vector part.
  */
 fish.util.Vector = function (x, y) {
     this.x = x;
@@ -12,7 +13,7 @@ fish.util.Vector = function (x, y) {
 
     /**
      * Adds another vector to this vector, modifying this one.
-     * @param other is the other vector.
+     * @param {fish.util.Vector} other is the other vector.
      */
     this.add = (other) => {
         this.x += other.x;
@@ -22,7 +23,8 @@ fish.util.Vector = function (x, y) {
     /**
      * Wraps this vector in a rectangle that starts at (0, 0) then goes to
      * bounds.
-     * @param bounds is a vector representing the far corner.
+     * @param {fish.util.Vector} bounds is a vector representing the far
+     *                           corner.
      */
     this.wrap = (bounds) => {
         this.x = (this.x < 0) ? (bounds.x - Math.abs(this.x % bounds.x)) :
@@ -32,8 +34,13 @@ fish.util.Vector = function (x, y) {
     };
 };
 
+// TODO: might be useful to have an immutable vector class that wraps around an
+// existing vector but only gives you an immutable view of it. hmmm or it would
+// be a big wank for no reason.
+
 /**
- * Represents an axis aligned rectangle.
+ * Represents an axis aligned rectangle and it should be immutable I think.
+ * wait no. But I should make it immutable maybe.
  */
 fish.util.Rect = class {
     /**
@@ -135,14 +142,15 @@ fish.graphics = {};
  * Creates a texture object out of a gl texture. You probably don't want to
  * instantiate one of these directly unless you are creating your own graphics
  * system.
- * @param glTexture is the open gl reference to the texture.
- * @param width     is the width of the texture.
- * @param height    is the height of the texture.
+ * @constructor
+ * @param {number} glTexture is the open gl reference to the texture.
+ * @param {number} width     is the width of the texture.
+ * @param {number} height    is the height of the texture.
  */
 fish.graphics.Texture = function (glTexture, width, height) {
     /**
      * Gives you the opengl texture.
-     * @return the opengl reference to the texture.
+     * @return {number} the opengl reference to the texture.
      */
     this.getGlTexture = () => {
         return glTexture;
@@ -150,7 +158,7 @@ fish.graphics.Texture = function (glTexture, width, height) {
 
     /**
      * Gives you the width of the texture.
-     * @return the width.
+     * @return {number} the width.
      */
     this.getWidth = () => {
         return width;
@@ -158,7 +166,7 @@ fish.graphics.Texture = function (glTexture, width, height) {
 
     /**
      * Gives you the height of the texture.
-     * @return the height.
+     * @return {number} the height.
      */
     this.getHeight = () => {
         return height;
@@ -168,14 +176,15 @@ fish.graphics.Texture = function (glTexture, width, height) {
 /**
  * Stores sprites. You probably don't want to instantiate one of these directly
  * unless you are creating your own graphics system.
+ * @constructor
  */
 fish.graphics.Atlas = function () {
     let sprites = {};
 
     /**
      * Adds a sprite into the atlas.
-     * @param name   is the name of the atlas.
-     * @param sprite is the sprite to add.
+     * @param {string}         name   is the name of the atlas.
+     * @param {fish.util.Rect} sprite is the sprite to add.
      */
     this.add = (name, sprite) => {
         sprites[name] = sprite;
@@ -183,8 +192,8 @@ fish.graphics.Atlas = function () {
 
     /**
      * Gets a sprite out of the atlas.
-     * @param name is the name of the sprite to get.
-     * @return the sprite found or an empty one if it lacks it.
+     * @param {string} name is the name of the sprite to get.
+     * @return {fish.util.Rect} the sprite found or an empty one if it lacks it.
      */
     this.get = (name) => {
         if (name in this.sprites) return this.sprites[name];
@@ -194,15 +203,23 @@ fish.graphics.Atlas = function () {
 
     /**
      * Tells you the number of sprites.
-     * @return the number of sprites.
+     * @return {number} the number of sprites.
      */
     this.n = () => {
         return Object.keys(sprites).length;
     };
 
     /**
+     * The atlas foreach callback structure which gets called on each sprite in
+     * the atlas.
+     * @callback fish.graphics.Atlas~callback
+     * @param {string}         name   is the name of the sprite.
+     * @param {fish.util.Rect} sprite is the sprite.
+     */
+
+    /**
      * Iterates over all sprites in the atlas.
-     * @param callback is a callback to run for each one.
+     * @param {fish.graphics.Atlas~callback} callback is a callback to run for each one.
      */
     this.forEach = callback => {
         for (let sprite in sprites) callback(sprite, sprites[sprite]);
@@ -211,10 +228,11 @@ fish.graphics.Atlas = function () {
 
 /**
  * Represents a colour with parts from 0 to 1.
- * @param r is the red part.
- * @param g is the green part.
- * @param b is the blue part.
- * @param a is the transparancy part.
+ * @constructor
+ * @param {number} r is the red part.
+ * @param {number} g is the green part.
+ * @param {number} b is the blue part.
+ * @param {number} a is the transparancy part.
  */
 fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
     this.r = r;
@@ -301,6 +319,130 @@ fish.graphics.loadAtlas = async function (url) {
 };
 
 /**
+ * 9 patch implementation that uses a sprite rectangle for each part of the
+ * patch. This is just the object that holds the data for the 9 patch.
+ */
+fish.graphics.Patch = class {
+    /**
+     * Creates it by giving a sprite and a border around the outside which
+     * becomes the non middle parts.
+     * @param rect is the overall sprite to make the patch from.
+     * @param born is the width of the border of the patch.
+     */
+    constructor(rect, bord) {
+        let hMid = rect.w - bord * 2;
+        let vMid = rect.h - bord * 2;
+        if (hMid < 1 || vMid < 1) {
+            throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
+        }
+        let tl = fish.util.Rect(rect.x, rect.y, bord, bord);
+        let t = fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
+        let tr = fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
+        let ml = fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
+        let m = fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
+        let mr = fish.util.Rect(
+            rect.x + bord + hMid,
+            rect.y + bord,
+            bord,
+            vMid
+        );
+        let bl = fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
+        let b = fish.util.Rect(
+            rect.x + bord,
+            rect.y + bord + vMid,
+            hMid,
+            bord
+        );
+        let br = fish.util.Rect(
+            rect.x + bord + hMid,
+            rect.y + bord + vMid,
+            bord,
+            bord
+        );
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get tl() {
+        return tl;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get t() {
+        return t;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get tr() {
+        return tr;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get ml() {
+        return ml;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get m() {
+        return m;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get mr() {
+        return mr;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get bl() {
+        return bl;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get b() {
+        return b;
+    }
+
+    /**
+     * Gets the rect for there.
+     * @return the rect.
+     */
+    get br() {
+        return br;
+    }
+
+    /**
+     * Gives you the rect's border size.
+     * @return the border size as in perpendicular distance from the outside.
+     */
+    get border() {
+        return border;
+    }
+};
+
+/**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
  * @param gl is the opengl context.
@@ -312,6 +454,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.width = gl.canvas.clientWidth;
     this.height = gl.canvas.clientHeight;
+
 
     /**
      * A thing that batches draw calls.
@@ -363,6 +506,70 @@ fish.graphics.SpriteRenderer = function (gl) {
             textureItems[offset + 10] = src.x;
             textureItems[offset + 11] = src.y;
             n++;
+        };
+
+        /**
+         * Draws a 9 patch at the given place. If you give an area that is too
+         * small it will look munted beware.
+         * @param patch is the 9patch to draw.
+         * @param dst   is the place to draw it.
+         */
+        this.addPatch = (patch, dst) => {
+            let rect = new fish.util.Rect(0, 0, 0, 0);
+            this.add(patch.tl, new fish.util.Rect(
+                dst.x,
+                dst.y,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.t, new fish.util.Rect(
+                dst.x + patch.border,
+                dst.y,
+                dst.w - patch.border * 2,
+                patch.border
+            ));
+            this.add(patch.tr, new fish.util.Rect(
+                dst.x + dst.w - patch.border,
+                dst.y,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.ml, new fish.util.Rect(
+                dst.x,
+                dst.y + patch.border,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.m, new fish.util.Rect(
+                dst.x + patch.border,
+                dst.y + patch.border,
+                dst.w - patch.border * 2,
+                patch.border
+            ));
+            this.add(patch.mr, new fish.util.Rect(
+                dst.x + dst.w - patch.border,
+                dst.y + patch.border,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.bl, new fish.util.Rect(
+                dst.x,
+                dst.y + dst.h - patch.border,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.b, new fish.util.Rect(
+                dst.x + patch.border,
+                dst.y + dst.h - patch.border,
+                dst.w - patch.border * 2,
+                patch.border
+            ));
+            this.add(patch.br, new fish.util.Rect(
+                dst.x + dst.w - patch.border,
+                dst.y + dst.h - patch.border,
+                patch.border,
+                patch.border
+            ));
         };
 
         /**

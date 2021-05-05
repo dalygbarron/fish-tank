@@ -1,24 +1,41 @@
+var fish = fish || {};
+
 /**
  * Contains the base input handler and a couple of button constants that are
  * required to be handled by the gui system. If you create your input handler
  * you just need to make sure you implement uiDown and uiJustDown so that it
  * will work with the gui system.
+ * @namespace
  */
-
-var fish = fish || {};
 fish.input = {};
 
+/** @constant */
 fish.input.UI_UP = 'UI_UP';
+
+/** @constant */
 fish.input.UI_DOWN = 'UI_DOWN';
+
+/** @constant */
 fish.input.UI_LEFT = 'UI_LEFT';
+
+/** @constant */
 fish.input.UI_RIGHT = 'UI_RIGHT';
+
+/** @constant */
 fish.input.UI_ACCEPT = 'UI_ACCEPT';
+
+/** @constant */
 fish.input.UI_CANCEL = 'UI_CANCEL';
 
 /**
  * An input handler that unifies all input from gamepads / keyboard into one
  * abstract input which is supposed to work like a gamepad basically. It only
  * works with 1 player games for that reason.
+ * @constructor
+ * @param {Object.<string, string>} keymap is a mapping from html key names to
+ *                                         button on the virtual controller.
+ * @param {number}                         is the threshold beyond which a
+ *                                         gamepad axis is considered pressed.
  */
 fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     if (!keymap.UP) keymap.UP = 'ArrowUp';
@@ -67,8 +84,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     /**
      * Tells you if the given button is pressed whether it is a number or
      * a button object thing.
-     * @param button is either a number or a button object thingo.
-     * @return true iff it is pressed.
+     * @param {string} button is either a number or a button object thingo.
+     * @return {boolean} true iff it is pressed.
      */
     let pressed = function (button) {
         if (typeof(button) == 'object') {
@@ -80,8 +97,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     /**
      * Sets a button to the correct value based on whether it is pressed or not
      * rn.
-     * @param button is the button to update.
-     * @param value  is whether or not it is pressed right now.
+     * @param {string}  button is the button to update.
+     * @param {boolean} value  is whether or not it is pressed right now.
      */
     let updateButton = function (button, value, include=false) {
         if (include) value = value || buttonStates[button] > 0;
@@ -91,8 +108,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Converts a ui button to an actual button on this controller thing.
-     * @param uiCode is the code to convert.
-     * @return the corresponding actual button.
+     * @param {string} uiCode is the code to convert.
+     * @return {string} the corresponding actual button.
      */
     let uiToButton = (uiCode) => {
         switch (uiCode) {
@@ -159,8 +176,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given input is pressed.
-     * @param code represents the iinput button thing.
-     * @return true if it is pressed.
+     * @param {string} code represents the iinput button thing.
+     * @return {boolean} true if it is pressed.
      */
     this.down = function (code) {
         if (!(code in buttonStates)) throw code;
@@ -169,8 +186,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given input was pressed this frame I think.
-     * @param code is the code to represent or whatever.
-     * @return true if it was pressed this frame.
+     * @param {string} code is the code to represent or whatever.
+     * @return {boolean} true if it was pressed this frame.
      */
     this.justDown = function (code) {
         if (!(code in buttonStates)) throw code;
@@ -179,8 +196,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given ui button is down.
-     * @param uiCode is the ui button in question.
-     * @return true if it is down now.
+     * @param {string} uiCode is the ui button in question.
+     * @return {boolean} true if it is down now.
      */
     this.uiDown = (uiCode) => {
         return this.down(uiToButton(uiCode));
@@ -188,8 +205,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given ui button just went down last frame.
-     * @param uiCode is the ui button in question.
-     * @return true if it just went down.
+     * @param {string} uiCode is the ui button in question.
+     * @return {boolean} true if it just went down.
      */
     this.uiJustDown = (uiCode) => {
         return this.justDown(uiToButton(uiCode));

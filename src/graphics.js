@@ -1,3 +1,5 @@
+var fish = fish || {};
+
 /**
  * This file provides functionality for doing graphics stuff. A lot of it is
  * made publically accessible so that if you don't like the SpriteRenderer
@@ -6,23 +8,23 @@
  * different rendering classes as interoperable as practical.
  * So, unless you want to make your own rendering class, probably the only
  * thing you are going to use from this file is SpriteRenderer.
+ * @namespace
  */
-
-var fish = fish || {};
 fish.graphics = {};
 
 /**
  * Creates a texture object out of a gl texture. You probably don't want to
  * instantiate one of these directly unless you are creating your own graphics
  * system.
- * @param glTexture is the open gl reference to the texture.
- * @param width     is the width of the texture.
- * @param height    is the height of the texture.
+ * @constructor
+ * @param {number} glTexture is the open gl reference to the texture.
+ * @param {number} width     is the width of the texture.
+ * @param {number} height    is the height of the texture.
  */
 fish.graphics.Texture = function (glTexture, width, height) {
     /**
      * Gives you the opengl texture.
-     * @return the opengl reference to the texture.
+     * @return {number} the opengl reference to the texture.
      */
     this.getGlTexture = () => {
         return glTexture;
@@ -30,7 +32,7 @@ fish.graphics.Texture = function (glTexture, width, height) {
 
     /**
      * Gives you the width of the texture.
-     * @return the width.
+     * @return {number} the width.
      */
     this.getWidth = () => {
         return width;
@@ -38,7 +40,7 @@ fish.graphics.Texture = function (glTexture, width, height) {
 
     /**
      * Gives you the height of the texture.
-     * @return the height.
+     * @return {number} the height.
      */
     this.getHeight = () => {
         return height;
@@ -48,14 +50,15 @@ fish.graphics.Texture = function (glTexture, width, height) {
 /**
  * Stores sprites. You probably don't want to instantiate one of these directly
  * unless you are creating your own graphics system.
+ * @constructor
  */
 fish.graphics.Atlas = function () {
     let sprites = {};
 
     /**
      * Adds a sprite into the atlas.
-     * @param name   is the name of the atlas.
-     * @param sprite is the sprite to add.
+     * @param {string}         name   is the name of the atlas.
+     * @param {fish.util.Rect} sprite is the sprite to add.
      */
     this.add = (name, sprite) => {
         sprites[name] = sprite;
@@ -63,8 +66,8 @@ fish.graphics.Atlas = function () {
 
     /**
      * Gets a sprite out of the atlas.
-     * @param name is the name of the sprite to get.
-     * @return the sprite found or an empty one if it lacks it.
+     * @param {string} name is the name of the sprite to get.
+     * @return {fish.util.Rect} the sprite found or an empty one if it lacks it.
      */
     this.get = (name) => {
         if (name in this.sprites) return this.sprites[name];
@@ -74,15 +77,23 @@ fish.graphics.Atlas = function () {
 
     /**
      * Tells you the number of sprites.
-     * @return the number of sprites.
+     * @return {number} the number of sprites.
      */
     this.n = () => {
         return Object.keys(sprites).length;
     };
 
     /**
+     * The atlas foreach callback structure which gets called on each sprite in
+     * the atlas.
+     * @callback fish.graphics.Atlas~callback
+     * @param {string}         name   is the name of the sprite.
+     * @param {fish.util.Rect} sprite is the sprite.
+     */
+
+    /**
      * Iterates over all sprites in the atlas.
-     * @param callback is a callback to run for each one.
+     * @param {fish.graphics.Atlas~callback} callback is a callback to run for each one.
      */
     this.forEach = callback => {
         for (let sprite in sprites) callback(sprite, sprites[sprite]);
@@ -91,15 +102,35 @@ fish.graphics.Atlas = function () {
 
 /**
  * Represents a colour with parts from 0 to 1.
- * @param r is the red part.
- * @param g is the green part.
- * @param b is the blue part.
- * @param a is the transparancy part.
+ * @constructor
+ * @param {number} r is the red part.
+ * @param {number} g is the green part.
+ * @param {number} b is the blue part.
+ * @param {number} a is the transparancy part.
  */
 fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
+    /** 
+     * Red component of the colour from 0 to 1.
+     * @member {number}
+     */
     this.r = r;
+
+    /**
+     * Green component of the colour from 0 to 1.
+     * @member {number}
+     */
     this.g = g;
+
+    /**
+     * Blue component of the colour from 0 to 1.
+     * @member {number}
+     */
     this.b = b;
+
+    /**
+     * The transparancy part of the colour from 0 to 1.
+     * @member {number}
+     */
     this.a = a;
 };
 
@@ -307,6 +338,7 @@ fish.graphics.Patch = class {
 /**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
+ * @constructor
  * @param gl is the opengl context.
  */
 fish.graphics.SpriteRenderer = function (gl) {
@@ -320,8 +352,10 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * A thing that batches draw calls.
-     * @param texture is the texture all the draws must be from.
-     * @param max     is the max things to draw in one go.
+     * @constructor
+     * @param {fish.graphics.Texture} texture is the texture all the draws must
+     *                                        be from.
+     * @param {number}                max     is the max things to draw.
      */
     this.Batch = function (texture, max) {
         let items = new Float32Array(max * 12);
@@ -337,8 +371,8 @@ fish.graphics.SpriteRenderer = function (gl) {
 
         /**
          * Adds a thingy to draw.
-         * @param src is the source rectangle on the batch texture.
-         * @param dst is where to draw it on the screen.
+         * @param {fish.util.Rect} src is the src rectangle from the texture.
+         * @param {fish.util.Rect} dst is where to draw it on the screen.
          */
         this.add = (src, dst) => {
             if (n >= max) return;
@@ -377,8 +411,61 @@ fish.graphics.SpriteRenderer = function (gl) {
          * @param dst   is the place to draw it.
          */
         this.addPatch = (patch, dst) => {
-            let middle = dst.w > patch.
-
+            let rect = new fish.util.Rect(0, 0, 0, 0);
+            this.add(patch.tl, new fish.util.Rect(
+                dst.x,
+                dst.y,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.t, new fish.util.Rect(
+                dst.x + patch.border,
+                dst.y,
+                dst.w - patch.border * 2,
+                patch.border
+            ));
+            this.add(patch.tr, new fish.util.Rect(
+                dst.x + dst.w - patch.border,
+                dst.y,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.ml, new fish.util.Rect(
+                dst.x,
+                dst.y + patch.border,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.m, new fish.util.Rect(
+                dst.x + patch.border,
+                dst.y + patch.border,
+                dst.w - patch.border * 2,
+                patch.border
+            ));
+            this.add(patch.mr, new fish.util.Rect(
+                dst.x + dst.w - patch.border,
+                dst.y + patch.border,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.bl, new fish.util.Rect(
+                dst.x,
+                dst.y + dst.h - patch.border,
+                patch.border,
+                patch.border
+            ));
+            this.add(patch.b, new fish.util.Rect(
+                dst.x + patch.border,
+                dst.y + dst.h - patch.border,
+                dst.w - patch.border * 2,
+                patch.border
+            ));
+            this.add(patch.br, new fish.util.Rect(
+                dst.x + dst.w - patch.border,
+                dst.y + dst.h - patch.border,
+                patch.border,
+                patch.border
+            ));
         };
 
         /**
@@ -429,7 +516,7 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * Loads a texture using this graphics thing's gl context.
-     * @param url is the url of the texture to load.
+     * @param {string} url is the url of the texture to load.
      * @return the texture if it worked.
      */
     this.loadTexture = async function (url) {
@@ -438,10 +525,10 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * Same as clear but uses components of the colour instead of an object.
-     * @param r is the red part.
-     * @param g is the green part.
-     * @param b is the blue part.
-     * @param a is the transparancy part.
+     * @param {number} r is the red part.
+     * @param {number} g is the green part.
+     * @param {number} b is the blue part.
+     * @param {number} a is the transparancy part.
      */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);
@@ -450,7 +537,7 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * Clears the screen with a colour object.
-     * @param colour is the colour to clear with.
+     * @param {fish.graphics.Colour} colour is the colour to clear with.
      */
     this.clearColour = colour => {
         this.clear(colour.r, colour.g, colour.b, colour.a);

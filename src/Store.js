@@ -2,6 +2,7 @@ var fish = fish || {};
 
 /**
  * Class that stores assets.
+ * @constructor
  */
 fish.Store = function (graphics, audio, prefix) {
     let assets = {};

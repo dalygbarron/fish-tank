@@ -1,8 +1,15 @@
 var fish = fish || {};
+
+/**
+ * Contains the screen class and some generic types of screen that you can use
+ * yourself if you want to.
+ * @namespace
+ */
 fish.screen = {};
 
 /**
  * Creates a screen object by taking the four things a screen needs.
+ * @constructor
  * @param refresh  is a function that gets called every time the screen either
  *                 gets put on top of the screen stack, or is revealed at the
  *                 top of the screen stack.
@@ -30,6 +37,8 @@ fish.screen.Screen = function (refresh, input, update, render, evaluate) {
 /**
  * Creates a screen that only updates and renders, absorbs all input without
  * using it, and evaluates to nothing when completed.
+ * @constructor
+ * @implements fish.screen.Screen
  * @param refresh is the refresh function.
  * @param update  is the update coroutine.
  * @param render  is the render function.
@@ -47,6 +56,8 @@ fish.screen.DullScreen = function (refresh, update, render) {
 
 /**
  * Creates a loading screen that waits for a bunch of promises to evaluate.
+ * @constructor
+ * @implements fish.screen.Screen
  * @param graphics    is the game graphics object used to render stuff.
  * @param after       is a function called with all the evaluated promises
  *                    which should itself evaluate to a replacement screen.
