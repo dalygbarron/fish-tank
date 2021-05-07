@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: screen.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: screen.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>var fish = fish || {};
+
+/**
+ * Contains the screen class and some generic types of screen that you can use
+ * yourself if you want to.
+ * @namespace
+ */
+fish.screen = {};
+
+/**
+ * Creates a screen object by taking the four things a screen needs.
+ * @constructor
+ * @param refresh  is a function that gets called every time the screen either
+ *                 gets put on top of the screen stack, or is revealed at the
+ *                 top of the screen stack.
+ * @param input    is a function called when input is received, which returns
+ *                 a boolean telling you whether the input was used.
+ * @param update   is an instantiated coroutine which can assume to be called 60
+ *                 times per second, and yields/returns other screens that it can
+ *                 assume will be placed on top of the screen stack. If it
+ *                 returns, it can assume itself to be removed from the stack,
+ *                 which happens before any are added.
+ * @param render   just renders the screen and is called whenever.
+ * @param evaluate returns a value that can be passed to a screen below when
+ *                 this one's update coroutine has ended. It doesn't need to
+ *                 be able to return a valid value until the update thing has
+ *                 ended.
+ */
+fish.screen.Screen = function (refresh, input, update, render, evaluate) {
+    this.refresh = refresh;
+    this.input = input;
+    this.update = update;
+    this.render = render;
+    this.evaluate = evaluate;
+};
+
+/**
+ * Creates a screen that only updates and renders, absorbs all input without
+ * using it, and evaluates to nothing when completed.
+ * @constructor
+ * @implements fish.screen.Screen
+ * @param refresh is the refresh function.
+ * @param update  is the update coroutine.
+ * @param render  is the render function.
+ */
+fish.screen.DullScreen = function (refresh, update, render) {
+    fish.screen.Screen.call(
+        this,
+        refresh,
+        key => {return true;},
+        update,
+        render,
+        () => {return null;}
+    );
+};
+
+/**
+ * Creates a loading screen that waits for a bunch of promises to evaluate.
+ * @constructor
+ * @implements fish.screen.Screen
+ * @param graphics    is the game graphics object used to render stuff.
+ * @param after       is a function called with all the evaluated promises
+ *                    which should itself evaluate to a replacement screen.
+ * @param ...promises is all the promises.
+ */
+fish.screen.LoadScreen = function (graphics, after, ...promises) {
+    let newScreen = null;
+    Promise.all(promises).then(
+        values => {
+            
+        },
+        reason => {
+
+        }
+    );
+    fish.screen.DullScreen.call(
+        this,
+        () => {},
+        () => {
+
+        },
+        () => {
+            graphics.clearf(
+                Math.random(),
+                Math.random(),
+                math.random(),
+                1
+            );
+        }
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 19:36:02 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
