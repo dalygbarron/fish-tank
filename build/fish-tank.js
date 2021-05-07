@@ -21,7 +21,7 @@ fish.util.Vector = function (x, y) {
      * Adds another vector or value to this vector and returns the result
      * without changing this object.
      * @param {fish.util.Vector|number} other is the one to add.
-     * @return a new vector that is the result.
+     * @return {fish.util.Vector} a new vector that is the result.
      */
     this.plus = other => {
         return (other instanceof fish.util.Vector) ?
@@ -33,7 +33,7 @@ fish.util.Vector = function (x, y) {
      * Subtracts another vector or value from this vector and returns the
      * result without changing this object.
      * @param {fish.util.Vector|number} other is the one to subtract.
-     * @return a new vector that is the result.
+     * @return {fish.util.Vector} a new vector that is the result.
      */
     this.minus = other => {
         return (other instanceof fish.util.Vector) ?
@@ -45,7 +45,7 @@ fish.util.Vector = function (x, y) {
      * Multiplies another vector or value with this vector and returns the
      * result without changing this object.
      * @param {fish.util.Vector|number} other is the one to multiply.
-     * @return a new vector that is the result.
+     * @return {fish.util.Vector} a new vector that is the result.
      */
     this.times = other => {
         return (other instanceof fish.util.Vector) ?
@@ -308,9 +308,9 @@ fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
  * Asynchronously loads a texture out of a url. This function requires you to
  * pass a gl context so you probably want to use the version built into the
  * renderer unless you are making your own graphics system.
- * @param url is the url to load the texture from.
- * @return a promise which should never reject but might resolve to null if
- *         it couldn't get it's hands on the texture.
+ * @async
+ * @param {string} url is the url to load the texture from.
+ * @return {Promise<fish.graphics.Texture>} the loaded texture.
  */
 fish.graphics.loadTexture = async function (gl, url) {
     return await new Promise((resolve, reject) => {
@@ -364,9 +364,9 @@ fish.graphics.loadTexture = async function (gl, url) {
 
 /**
  * Loads in the data part of a texture atlas.
+ * @async
  * @param {string} url is the url to load it from.
- * @return the created atlas or null if it couldn't load the text or
- *         something.
+ * @return {Promise<fish.graphics.Atlas>} the created atlas.
  */
 fish.graphics.loadAtlas = async function (url) {
     let text = await fish.util.loadText(url);
@@ -692,7 +692,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     /**
      * Loads a texture using this graphics thing's gl context.
      * @param {string} url is the url of the texture to load.
-     * @return the texture if it worked.
+     * @return {Promise<fish.graphics.Texture>} the texture if it worked.
      */
     this.loadTexture = async function (url) {
         return await fish.graphics.loadTexture(gl, url);
@@ -719,19 +719,34 @@ fish.graphics.SpriteRenderer = function (gl) {
     };
 };
 
-/** @constant */
+/**
+ * @constant
+ * @type fish.graphics.Colour
+ */
 fish.graphics.BLACK = new fish.graphics.Colour(0, 0, 0, 1);
 
-/** @constant */
+/**
+ * @constant
+ * @type fish.graphics.Colour
+ */
 fish.graphics.WHITE = new fish.graphics.Colour(1, 1, 1, 1);
 
-/** @constant */
+/**
+ * @constant
+ * @type fish.graphics.Colour
+ */
 fish.graphics.RED = new fish.graphics.Colour(1, 0, 0, 1);
 
-/** @constant */
+/**
+ * @constant
+ * @type fish.graphics.Colour
+ */
 fish.graphics.GREEN = new fish.graphics.Colour(0, 1, 0, 1);
 
-/** @constant */
+/**
+ * @constant
+ * @type fish.graphics.Colour
+ */
 fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
 
 var fish = fish || {};

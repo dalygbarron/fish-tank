@@ -21,7 +21,7 @@ fish.util.Vector = function (x, y) {
      * Adds another vector or value to this vector and returns the result
      * without changing this object.
      * @param {fish.util.Vector|number} other is the one to add.
-     * @return a new vector that is the result.
+     * @return {fish.util.Vector} a new vector that is the result.
      */
     this.plus = other => {
         return (other instanceof fish.util.Vector) ?
@@ -33,7 +33,7 @@ fish.util.Vector = function (x, y) {
      * Subtracts another vector or value from this vector and returns the
      * result without changing this object.
      * @param {fish.util.Vector|number} other is the one to subtract.
-     * @return a new vector that is the result.
+     * @return {fish.util.Vector} a new vector that is the result.
      */
     this.minus = other => {
         return (other instanceof fish.util.Vector) ?
@@ -45,7 +45,7 @@ fish.util.Vector = function (x, y) {
      * Multiplies another vector or value with this vector and returns the
      * result without changing this object.
      * @param {fish.util.Vector|number} other is the one to multiply.
-     * @return a new vector that is the result.
+     * @return {fish.util.Vector} a new vector that is the result.
      */
     this.times = other => {
         return (other instanceof fish.util.Vector) ?
