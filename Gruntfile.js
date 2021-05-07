@@ -29,10 +29,22 @@ module.exports = function(grunt) {
                     'build/fish-tank.min.js': ['build/fish-tank.js']
                 }
             }
+        },
+        jsdoc: {
+            dist: {
+                src: ['src/*.js', 'package.json', 'README.md'],
+                options: {
+                    destination: 'doc'
+                }
+            }
         }
     });
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-terser');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.registerTask('default', ['jshint', 'concat', 'terser:main']);
+    grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.registerTask(
+        'default',
+        ['jshint', 'concat', 'terser:main', 'jsdoc']
+    );
 };

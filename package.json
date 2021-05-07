@@ -15,7 +15,7 @@
     "immediate-mode"
   ],
   "author": "Daly G Barron <dalygbarron@gmail.com>",
-  "license": "MIT",
+  "license": "GPL-2.0",
   "bugs": {
     "url": "https://github.com/dalygbarron/fish-tank/issues"
   },
@@ -24,6 +24,7 @@
     "grunt": "^1.3.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "^3.0.0",
+    "grunt-jsdoc": "^2.4.1",
     "grunt-terser": "^1.0.0"
   }
 }

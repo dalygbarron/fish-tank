@@ -1,4 +1,10 @@
 var fish = fish || {};
+
+/**
+ * Provides some basic utility stuff. Maths classes and whatever the hell ya
+ * know.
+ * @namespace
+ */
 fish.util = {};
 
 /**
@@ -12,12 +18,49 @@ fish.util.Vector = function (x, y) {
     this.y = y;
 
     /**
-     * Adds another vector to this vector, modifying this one.
-     * @param {fish.util.Vector} other is the other vector.
+     * Adds another vector or value to this vector and returns the result
+     * without changing this object.
+     * @param {fish.util.Vector|number} other is the one to add.
+     * @return a new vector that is the result.
      */
-    this.add = (other) => {
-        this.x += other.x;
-        this.y += other.y;
+    this.plus = other => {
+        return (other instanceof fish.util.Vector) ?
+            new fish.util.Vector(this.x + other.x, this.y + other.y) :
+            new fish.util.Vector(this.x + other, this.y + other);
+    };
+
+    /**
+     * Subtracts another vector or value from this vector and returns the
+     * result without changing this object.
+     * @param {fish.util.Vector|number} other is the one to subtract.
+     * @return a new vector that is the result.
+     */
+    this.minus = other => {
+        return (other instanceof fish.util.Vector) ?
+            new fish.util.Vector(this.x - other.x, this.y - other.y) :
+            new fish.util.Vector(this.x - other, this.y - other);
+    };
+
+    /**
+     * Multiplies another vector or value with this vector and returns the
+     * result without changing this object.
+     * @param {fish.util.Vector|number} other is the one to multiply.
+     * @return a new vector that is the result.
+     */
+    this.times = other => {
+        return (other instanceof fish.util.Vector) ?
+            new fish.util.Vector(this.x - other.x, this.y - other.y) :
+            new fish.util.Vector(this.x - other, this.y - other);
+    };
+
+    /**
+     * Adds another vector to this vector, modifying this one.
+     * @param {fish.util.Vector|number} other is the other value or vector.
+     */
+    this.add = other => {
+        let thingy = this.plus(other);
+        this.x = thingy.x;
+        this.y = thingy.y;
     };
 
     /**
@@ -106,8 +149,8 @@ fish.util.Rect = class {
 
 /**
  * Asynchronously loads a text file in.
- * @param url is the url to load the file from.
- * @return a promise that resolves to the loaded file.
+ * @param {string} url is the url to load the file from.
+ * @return {Promise<string>} that resolves to the loaded file content.
  */
 fish.util.loadText = async function (url) {
     return await new Promise((resolve, reject) => {
@@ -125,6 +168,8 @@ fish.util.loadText = async function (url) {
     });
 };
 
+var fish = fish || {};
+
 /**
  * This file provides functionality for doing graphics stuff. A lot of it is
  * made publically accessible so that if you don't like the SpriteRenderer
@@ -133,9 +178,8 @@ fish.util.loadText = async function (url) {
  * different rendering classes as interoperable as practical.
  * So, unless you want to make your own rendering class, probably the only
  * thing you are going to use from this file is SpriteRenderer.
+ * @namespace
  */
-
-var fish = fish || {};
 fish.graphics = {};
 
 /**
@@ -235,9 +279,28 @@ fish.graphics.Atlas = function () {
  * @param {number} a is the transparancy part.
  */
 fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
+    /** 
+     * Red component of the colour from 0 to 1.
+     * @member {number}
+     */
     this.r = r;
+
+    /**
+     * Green component of the colour from 0 to 1.
+     * @member {number}
+     */
     this.g = g;
+
+    /**
+     * Blue component of the colour from 0 to 1.
+     * @member {number}
+     */
     this.b = b;
+
+    /**
+     * The transparancy part of the colour from 0 to 1.
+     * @member {number}
+     */
     this.a = a;
 };
 
@@ -297,9 +360,11 @@ fish.graphics.loadTexture = async function (gl, url) {
     });
 };
 
+
+
 /**
  * Loads in the data part of a texture atlas.
- * @param url is the url to load it from.
+ * @param {string} url is the url to load it from.
  * @return the created atlas or null if it couldn't load the text or
  *         something.
  */
@@ -445,6 +510,7 @@ fish.graphics.Patch = class {
 /**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
+ * @constructor
  * @param gl is the opengl context.
  */
 fish.graphics.SpriteRenderer = function (gl) {
@@ -458,8 +524,10 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * A thing that batches draw calls.
-     * @param texture is the texture all the draws must be from.
-     * @param max     is the max things to draw in one go.
+     * @constructor
+     * @param {fish.graphics.Texture} texture is the texture all the draws must
+     *                                        be from.
+     * @param {number}                max     is the max things to draw.
      */
     this.Batch = function (texture, max) {
         let items = new Float32Array(max * 12);
@@ -474,11 +542,14 @@ fish.graphics.SpriteRenderer = function (gl) {
         gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
 
         /**
-         * Adds a thingy to draw.
-         * @param src is the source rectangle on the batch texture.
-         * @param dst is where to draw it on the screen.
+         * Adds a sprite to the list of those to draw.
+         * @param {fish.util.Rect} src is the src rectangle from the texture.
+         * @param {fish.util.Rect|fish.util.Vector} dst is where to draw it on
+         * the screen. If it's a vector then that is the centre.
+         * @param {number} scale is used to scale the sprite if you used
+         * a vector. If you used a rect it does nothing.
          */
-        this.add = (src, dst) => {
+        this.add = (src, dst, scale=1) => {
             if (n >= max) return;
             const offset = n * 12;
             items[offset] = dst.x;
@@ -620,7 +691,7 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * Loads a texture using this graphics thing's gl context.
-     * @param url is the url of the texture to load.
+     * @param {string} url is the url of the texture to load.
      * @return the texture if it worked.
      */
     this.loadTexture = async function (url) {
@@ -629,10 +700,10 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * Same as clear but uses components of the colour instead of an object.
-     * @param r is the red part.
-     * @param g is the green part.
-     * @param b is the blue part.
-     * @param a is the transparancy part.
+     * @param {number} r is the red part.
+     * @param {number} g is the green part.
+     * @param {number} b is the blue part.
+     * @param {number} a is the transparancy part.
      */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);
@@ -641,18 +712,29 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /**
      * Clears the screen with a colour object.
-     * @param colour is the colour to clear with.
+     * @param {fish.graphics.Colour} colour is the colour to clear with.
      */
     this.clearColour = colour => {
         this.clear(colour.r, colour.g, colour.b, colour.a);
     };
 };
 
+/** @constant */
 fish.graphics.BLACK = new fish.graphics.Colour(0, 0, 0, 1);
+
+/** @constant */
 fish.graphics.WHITE = new fish.graphics.Colour(1, 1, 1, 1);
+
+/** @constant */
 fish.graphics.RED = new fish.graphics.Colour(1, 0, 0, 1);
+
+/** @constant */
 fish.graphics.GREEN = new fish.graphics.Colour(0, 1, 0, 1);
+
+/** @constant */
 fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
+
+var fish = fish || {};
 
 /**
  * This file provides audio playing and loading functionality and a basic sound
@@ -661,15 +743,15 @@ fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
  * suck.
  * If you need more flexible audio playing then feel free to create your own
  * class that does what you need.
+ * @namespace
  */
-
-var fish = fish || {};
 fish.audio = {};
 
 /**
  * Nice little sample object that stores it's name so we can use that for
  * stuff. You probably don't want to create one of these directly unless you
  * are creating your own audio system.
+ * @constructor
  * @param name   is the name / url of the samepl.
  * @param buffer is the actual audio data.
  */
@@ -681,6 +763,9 @@ fish.audio.Sample = function (name, buffer) {
 /**
  * A basic audio handler that has a music channel, a looping background sound
  * channel, and a couple of channels for playing sound effects.
+ * @constructor
+ * @param {AudioContext} context is the audio context.
+ * @param {number} players is the number of samples that can play at once.
  */
 fish.audio.BasicAudio = function (context, players=3) {
     let songPlayer = context.createBufferSource();
@@ -695,6 +780,8 @@ fish.audio.BasicAudio = function (context, players=3) {
     /**
      * Little thing that holds an audio buffer source and keeps track of what
      * it is being used for.
+     * @private
+     * @constructor
      */
     let SamplePlayer = function () {
         let source = context.createBufferSource();
@@ -780,9 +867,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Plays a sample as long as it has not played since the last refresh.
-     * @param sample   is the sample to play.
-     * @param priority is it's priority so it can play over things of lesser
-     *                 importance.
+     * @param {fish.audio.Sample} sample   is the sample to play.
+     * @param {number}            priority is it's priority so it can play
+     *                            over things of lesser importance.
      */
     this.playSample = (sample, priority=0) => {
         let chosen = -1;
@@ -806,7 +893,7 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Play the given song and if it is already playing then do nothing.
-     * @param sample is the audio to play.
+     * @param {fish.audio.Sample} sample is the audio to play.
      */
     this.playSong = sample => {
         if (playingSong == sample.name) {
@@ -819,9 +906,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Load a song from the store and then play it right away.
-     * @param store is the store to load from.
-     * @param name  is the key to the song as you would normally use to load it
-     *              from the store.
+     * @param {fish.Store} store is the store to load from.
+     * @param {string}     name  is the key to the song as you would normally
+     *                           use to load it from the store.
      */
     this.loadSong = async function (store, name) {
         let sample = await store.getSample(name);
@@ -830,7 +917,7 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Play the given noise and if it is already playing then do nothing.
-     * @param sample is the audio to play.
+     * @param {fish.audio.Sample} sample is the audio to play.
      */
     this.playNoise = sample => {
         if (playingNoise == sample.name) {
@@ -843,9 +930,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Load a noise from the store and then play it right away.
-     * @param store is the store to load from.
-     * @param name  is the key to the noise as you would normally use to load
-     *              it from the store.
+     * @param {fish.Store} store is the store to load from.
+     * @param {string}     name  is the key to the noise as you would normally
+     *                           use to load it from the store.
      */
     this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
@@ -854,9 +941,9 @@ fish.audio.BasicAudio = function (context, players=3) {
 
     /**
      * Loads a piece of audio into memory from soem url.
-     * @param url is the joint to load from.
-     * @return the sound I guess assuming it didn't fuck up, then it return
-     * a promise? hmmm.
+     * @param {strimg} url is the joint to load from.
+     * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
+     *                                      didn't fuck up.
      */
     this.loadSample = async function (url) {
         let request = new XMLHttpRequest();
@@ -879,27 +966,44 @@ fish.audio.BasicAudio = function (context, players=3) {
     };
 };
 
+var fish = fish || {};
+
 /**
  * Contains the base input handler and a couple of button constants that are
  * required to be handled by the gui system. If you create your input handler
  * you just need to make sure you implement uiDown and uiJustDown so that it
  * will work with the gui system.
+ * @namespace
  */
-
-var fish = fish || {};
 fish.input = {};
 
+/** @constant */
 fish.input.UI_UP = 'UI_UP';
+
+/** @constant */
 fish.input.UI_DOWN = 'UI_DOWN';
+
+/** @constant */
 fish.input.UI_LEFT = 'UI_LEFT';
+
+/** @constant */
 fish.input.UI_RIGHT = 'UI_RIGHT';
+
+/** @constant */
 fish.input.UI_ACCEPT = 'UI_ACCEPT';
+
+/** @constant */
 fish.input.UI_CANCEL = 'UI_CANCEL';
 
 /**
  * An input handler that unifies all input from gamepads / keyboard into one
  * abstract input which is supposed to work like a gamepad basically. It only
  * works with 1 player games for that reason.
+ * @constructor
+ * @param {Object.<string, string>} keymap is a mapping from html key names to
+ *                                         button on the virtual controller.
+ * @param {number}                         is the threshold beyond which a
+ *                                         gamepad axis is considered pressed.
  */
 fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     if (!keymap.UP) keymap.UP = 'ArrowUp';
@@ -948,8 +1052,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     /**
      * Tells you if the given button is pressed whether it is a number or
      * a button object thing.
-     * @param button is either a number or a button object thingo.
-     * @return true iff it is pressed.
+     * @param {string|number} button is either a number or a button object thingo.
+     * @return {boolean} true iff it is pressed.
      */
     let pressed = function (button) {
         if (typeof(button) == 'object') {
@@ -961,8 +1065,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     /**
      * Sets a button to the correct value based on whether it is pressed or not
      * rn.
-     * @param button is the button to update.
-     * @param value  is whether or not it is pressed right now.
+     * @param {string}  button is the button to update.
+     * @param {boolean} value  is whether or not it is pressed right now.
      */
     let updateButton = function (button, value, include=false) {
         if (include) value = value || buttonStates[button] > 0;
@@ -972,8 +1076,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Converts a ui button to an actual button on this controller thing.
-     * @param uiCode is the code to convert.
-     * @return the corresponding actual button.
+     * @param {string} uiCode is the code to convert.
+     * @return {string} the corresponding actual button.
      */
     let uiToButton = (uiCode) => {
         switch (uiCode) {
@@ -1040,8 +1144,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given input is pressed.
-     * @param code represents the iinput button thing.
-     * @return true if it is pressed.
+     * @param {string} code represents the iinput button thing.
+     * @return {boolean} true if it is pressed.
      */
     this.down = function (code) {
         if (!(code in buttonStates)) throw code;
@@ -1050,8 +1154,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given input was pressed this frame I think.
-     * @param code is the code to represent or whatever.
-     * @return true if it was pressed this frame.
+     * @param {string} code is the code to represent or whatever.
+     * @return {boolean} true if it was pressed this frame.
      */
     this.justDown = function (code) {
         if (!(code in buttonStates)) throw code;
@@ -1060,8 +1164,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given ui button is down.
-     * @param uiCode is the ui button in question.
-     * @return true if it is down now.
+     * @param {string} uiCode is the ui button in question.
+     * @return {boolean} true if it is down now.
      */
     this.uiDown = (uiCode) => {
         return this.down(uiToButton(uiCode));
@@ -1069,8 +1173,8 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
 
     /**
      * Tells you if the given ui button just went down last frame.
-     * @param uiCode is the ui button in question.
-     * @return true if it just went down.
+     * @param {string} uiCode is the ui button in question.
+     * @return {boolean} true if it just went down.
      */
     this.uiJustDown = (uiCode) => {
         return this.justDown(uiToButton(uiCode));
@@ -1081,6 +1185,10 @@ var fish = fish || {};
 
 /**
  * Class that stores assets.
+ * @constructor
+ * @param graphics is the graphics system which loads textures.
+ * @param audio    is the audio system which loads samples.
+ * @param {string} prefix   is a prefix appended to urls.
  */
 fish.Store = function (graphics, audio, prefix) {
     let assets = {};
@@ -1093,17 +1201,14 @@ fish.Store = function (graphics, audio, prefix) {
     /**
      * Gets a thing of arbitrary type from the asset store, or creates and adds
      * it if it cannot be found.
-     * @param name is the name of the thing to find.
-     * @param type is the type of the thing to find.
+     * @param {string} name is the name of the thing to find.
+     * @param {string} type is the type of the thing to find.
      * @return the thing if it is found or null.
      */
     let get = async function (name, type) {
         if (!(name in assets)) {
             if (type in loaders) {
                 let item = await loaders[type](prefix + name);
-                if (item == null) {
-                    console.error(`loading ${prefix}${name} failed`);
-                }
                 assets[name] = item;
             } else {
                 console.error(`${type} is a not a valid asset type`);
@@ -1115,8 +1220,9 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Gets a texture.
-     * @param name is the name of the texture to get.
-     * @return whatever it finds which could be null if it failed.
+     * @async
+     * @param {string} name is the name of the texture to get.
+     * @return {fish.graphics.Texture} the texture it got.
      */
     this.getTexture = async function (name) {
         return await get(name, 'texture');
@@ -1124,8 +1230,9 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Gets a texture atlas thingy.
-     * @param name is the name of the atlas to get.
-     * @return whatever it finds which could be null if it failed.
+     * @async
+     * @param {string} name is the name of the atlas to get.
+     * @return {fish.graphics.Atlas} the thingy.
      */
     this.getAtlas = async function (name) {
         return await get(name, 'atlas');
@@ -1133,8 +1240,9 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Loads a sound sample.
-     * @param name is the name of the sample to g4et.
-     * @return the sample or null if it screwed up.
+     * @async
+     * @param {string} name is the name of the sample to g4et.
+     * @return {fish.audio.Sample} the sample or null if it screwed up.
      */
     this.getSample = async function (name) {
         return await get(name, 'sample');
@@ -1247,10 +1355,17 @@ fish.shader = (() => {
 })();
 
 var fish = fish || {};
+
+/**
+ * Contains the screen class and some generic types of screen that you can use
+ * yourself if you want to.
+ * @namespace
+ */
 fish.screen = {};
 
 /**
  * Creates a screen object by taking the four things a screen needs.
+ * @constructor
  * @param refresh  is a function that gets called every time the screen either
  *                 gets put on top of the screen stack, or is revealed at the
  *                 top of the screen stack.
@@ -1278,6 +1393,8 @@ fish.screen.Screen = function (refresh, input, update, render, evaluate) {
 /**
  * Creates a screen that only updates and renders, absorbs all input without
  * using it, and evaluates to nothing when completed.
+ * @constructor
+ * @implements fish.screen.Screen
  * @param refresh is the refresh function.
  * @param update  is the update coroutine.
  * @param render  is the render function.
@@ -1295,6 +1412,8 @@ fish.screen.DullScreen = function (refresh, update, render) {
 
 /**
  * Creates a loading screen that waits for a bunch of promises to evaluate.
+ * @constructor
+ * @implements fish.screen.Screen
  * @param graphics    is the game graphics object used to render stuff.
  * @param after       is a function called with all the evaluated promises
  *                    which should itself evaluate to a replacement screen.
@@ -1327,7 +1446,16 @@ fish.screen.LoadScreen = function (graphics, after, ...promises) {
     );
 };
 
+/** @namespace */
 var fish = fish || {};
+
+/**
+ * Init callback which creates the game's starting screen.
+ * @callback fish~init
+ * @param {Object}         cont   is the game context with all the subsystems
+ *                                and stuff.
+ * @return {fish.screen.Screen} the screen created.
+ */
 
 /**
  * Real function that starts the application running. Just takes all of the
@@ -1336,12 +1464,12 @@ var fish = fish || {};
  * @param rate     is the number of logic frames per second to aim for. If you
  *                 give a number less than 1 you are asking for variable frame
  *                 rate.
- * @param graphics is the graphics system.
- * @param audio    is the audio system.
- * @param input    is the input system.
- * @param store    is the asset store system.
- * @param init     is the initialisation function that generates the starting
- *                 screen.
+ * @param graphics    is the graphics system.
+ * @param audio       is the audio system.
+ * @param input       is the input system.
+ * @param store       is the asset store system.
+ * @param {fish~init} init is the initialisation function that generates the
+ *                    starting screen.
  */
 fish.start = async function (rate, graphics, audio, input, store, init) {
     const FRAME_LENGTH = 1 / rate;
@@ -1398,7 +1526,7 @@ fish.start = async function (rate, graphics, audio, input, store, init) {
  * @param audio        is the audio context.
  * @param assetsPrefix is the prefix under which assets are found by the assets
  *                     store.
- * @param init         is a function to generate the starting screen.
+ * @param {fish~init} init         is a function to generate the starting screen.
  */
 fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
     let graphics = new fish.graphics.SpriteRenderer(gl);

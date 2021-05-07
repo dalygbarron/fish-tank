@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: fish.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: fish.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** @namespace */
+var fish = fish || {};
+
+/**
+ * Init callback which creates the game's starting screen.
+ * @callback fish~init
+ * @param {Object}         cont   is the game context with all the subsystems
+ *                                and stuff.
+ * @return {fish.screen.Screen} the screen created.
+ */
+
+/**
+ * Real function that starts the application running. Just takes all of the
+ * subsystems like graphics and audio rather than building them, so that you
+ * can create different ones to your heart's content.
+ * @param rate     is the number of logic frames per second to aim for. If you
+ *                 give a number less than 1 you are asking for variable frame
+ *                 rate.
+ * @param graphics    is the graphics system.
+ * @param audio       is the audio system.
+ * @param input       is the input system.
+ * @param store       is the asset store system.
+ * @param {fish~init} init is the initialisation function that generates the
+ *                    starting screen.
+ */
+fish.start = async function (rate, graphics, audio, input, store, init) {
+    const FRAME_LENGTH = 1 / rate;
+    let cont = {
+        graphics: graphics,
+        audio: audio,
+        input: input,
+        store: store
+    };
+    let screen = await init(cont);
+    if (screen == null) {
+        console.err("No Starting Screen. Game Cannot Start.");
+        return;
+    }
+    let screens = [screen];
+    screen.refresh();
+    const updateScreens = (message=null) => {
+        const response = screens[screens.length - 1].update.next(message);
+        if (response.done) {
+            const evaluation = screens[screens.length - 1].evaluate();
+            screens.pop();
+            if (screens.length > 0) {
+                screens[screens.length - 1].refresh();
+                updateScreens(evaluation);
+            }
+        }
+        if (response.value) {
+            screens.push(response.value);
+            screens[screens.length - 1].refresh();
+        }
+    };
+    setInterval(() => {
+        if (screens.length > 0) {
+            // TODO: calculate the passage of time.
+            cont.audio.update();
+            cont.input.update();
+            updateScreens();
+            graphics.clear(0, 0, 0, 1);
+            for (screen of screens) {
+                screen.render(graphics);
+            }
+        }
+    }, 20);
+};
+
+
+/**
+ * Starts the thing's main loop ticking along by passing to it the rendering
+ * canvas, and the starting screen.
+ * @param rate         is the number of logic frames per second to aim for. If
+ *                     you give a number less than 1 you are asking for
+ *                     variable frame rate.
+ * @param gl           is a html canvas.
+ * @param audio        is the audio context.
+ * @param assetsPrefix is the prefix under which assets are found by the assets
+ *                     store.
+ * @param {fish~init} init         is a function to generate the starting screen.
+ */
+fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
+    let graphics = new fish.graphics.SpriteRenderer(gl);
+    let fishAudio = new fish.audio.BasicAudio(audio);
+    await fish.start(
+        rate,
+        graphics,
+        fishAudio,
+        new fish.input.BasicInput(),
+        new fish.Store(graphics, fishAudio, assetsPrefix),
+        init
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 19:33:30 GMT+0100 (British Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
