@@ -400,7 +400,9 @@ fish.graphics.SpriteRenderer = function (gl) {
         gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
 
         /**
-         * Adds a sprite to the list of those to draw.
+         * Adds a sprite to the list of those to draw. I guess rotating would
+         * be good but I would have to do it in software and I dunno what the
+         * performance would be like.
          * @param {fish.util.Rect} src is the src rectangle from the texture.
          * @param {fish.util.Rect|fish.util.Vector} dst is where to draw it on
          * the screen. If it's a vector then that is the centre.
@@ -410,18 +412,35 @@ fish.graphics.SpriteRenderer = function (gl) {
         this.add = (src, dst, scale=1) => {
             if (n >= max) return;
             const offset = n * 12;
-            items[offset] = dst.x;
-            items[offset + 1] = dst.y;
-            items[offset + 2] = dst.r;
-            items[offset + 3] = dst.y;
-            items[offset + 4] = dst.x;
-            items[offset + 5] = dst.b;
-            items[offset + 6] = dst.r;
-            items[offset + 7] = dst.y;
-            items[offset + 8] = dst.r;
-            items[offset + 9] = dst.b;
-            items[offset + 10] = dst.x;
-            items[offset + 11] = dst.b;
+            let l, r, t, b;
+            if (dst instanceof fish.util.Rect) {
+                l = dst.x;
+                r = dst.r;
+                t = dst.y;
+                b = dst.b;
+            } else if (dst instanceof fish.util.Vector) {
+                let halfScale = scale * 0.5;
+                l = dst.x - src.w * halfScale;
+                r = dst.x + src.w * halfScale;
+                t = dst.y - src.h * halfScale;
+                b = dst.y + src.h * halfScale;
+            } else {
+                throw new TypeError(
+                    'SpriteRenderer.Batch.add requres a Vector or a Rect'
+                );
+            }
+            items[offset] = l;
+            items[offset + 1] = t;
+            items[offset + 2] = r;
+            items[offset + 3] = t;
+            items[offset + 4] = l;
+            items[offset + 5] = b;
+            items[offset + 6] = r;
+            items[offset + 7] = t;
+            items[offset + 8] = r;
+            items[offset + 9] = b;
+            items[offset + 10] = l;
+            items[offset + 11] = b;
             textureItems[offset] = src.x;
             textureItems[offset + 1] = src.b;
             textureItems[offset + 2] = src.r;
@@ -616,13 +635,13 @@ fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 19:51:44 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 23:23:32 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

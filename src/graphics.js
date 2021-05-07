@@ -372,7 +372,9 @@ fish.graphics.SpriteRenderer = function (gl) {
         gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
 
         /**
-         * Adds a sprite to the list of those to draw.
+         * Adds a sprite to the list of those to draw. I guess rotating would
+         * be good but I would have to do it in software and I dunno what the
+         * performance would be like.
          * @param {fish.util.Rect} src is the src rectangle from the texture.
          * @param {fish.util.Rect|fish.util.Vector} dst is where to draw it on
          * the screen. If it's a vector then that is the centre.
@@ -382,18 +384,35 @@ fish.graphics.SpriteRenderer = function (gl) {
         this.add = (src, dst, scale=1) => {
             if (n >= max) return;
             const offset = n * 12;
-            items[offset] = dst.x;
-            items[offset + 1] = dst.y;
-            items[offset + 2] = dst.r;
-            items[offset + 3] = dst.y;
-            items[offset + 4] = dst.x;
-            items[offset + 5] = dst.b;
-            items[offset + 6] = dst.r;
-            items[offset + 7] = dst.y;
-            items[offset + 8] = dst.r;
-            items[offset + 9] = dst.b;
-            items[offset + 10] = dst.x;
-            items[offset + 11] = dst.b;
+            let l, r, t, b;
+            if (dst instanceof fish.util.Rect) {
+                l = dst.x;
+                r = dst.r;
+                t = dst.y;
+                b = dst.b;
+            } else if (dst instanceof fish.util.Vector) {
+                let halfScale = scale * 0.5;
+                l = dst.x - src.w * halfScale;
+                r = dst.x + src.w * halfScale;
+                t = dst.y - src.h * halfScale;
+                b = dst.y + src.h * halfScale;
+            } else {
+                throw new TypeError(
+                    'SpriteRenderer.Batch.add requres a Vector or a Rect'
+                );
+            }
+            items[offset] = l;
+            items[offset + 1] = t;
+            items[offset + 2] = r;
+            items[offset + 3] = t;
+            items[offset + 4] = l;
+            items[offset + 5] = b;
+            items[offset + 6] = r;
+            items[offset + 7] = t;
+            items[offset + 8] = r;
+            items[offset + 9] = b;
+            items[offset + 10] = l;
+            items[offset + 11] = b;
             textureItems[offset] = src.x;
             textureItems[offset + 1] = src.b;
             textureItems[offset + 2] = src.r;

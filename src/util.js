@@ -54,13 +54,12 @@ fish.util.Vector = function (x, y) {
     };
 
     /**
-     * Adds another vector to this vector, modifying this one.
-     * @param {fish.util.Vector|number} other is the other value or vector.
+     * Adds another vector onto this one component wise.
+     * @param {fish.util.Vector} other is the other vector.
      */
     this.add = other => {
-        let thingy = this.plus(other);
-        this.x = thingy.x;
-        this.y = thingy.y;
+        this.x += other.x;
+        this.y += other.y;
     };
 
     /**
@@ -77,10 +76,6 @@ fish.util.Vector = function (x, y) {
     };
 };
 
-// TODO: might be useful to have an immutable vector class that wraps around an
-// existing vector but only gives you an immutable view of it. hmmm or it would
-// be a big wank for no reason.
-
 /**
  * Represents an axis aligned rectangle and it should be immutable I think.
  * wait no. But I should make it immutable maybe.
@@ -88,10 +83,10 @@ fish.util.Vector = function (x, y) {
 fish.util.Rect = class {
     /**
      * Creates the rectangle.
-     * @param x is the horizontal position of the rectangle.
-     * @param y is the vertical position of the rectangle.
-     * @param w is the width of the rectangle.
-     * @param h is the height of the rectangle.
+     * @param {number} x is the horizontal position of the rectangle.
+     * @param {number} y is the vertical position of the rectangle.
+     * @param {number} w is the width of the rectangle.
+     * @param {number} h is the height of the rectangle.
      */
     constructor(x, y, w, h) {
         this.pos = new fish.util.Vector(x, y);
@@ -100,7 +95,7 @@ fish.util.Rect = class {
 
     /**
      * Gets the horizontal position of the rectangle.
-     * @return x
+     * @return {number} x
      */
     get x() {
         return this.pos.x;
@@ -108,7 +103,7 @@ fish.util.Rect = class {
 
     /**
      * Gets the vertical position of the rectangle.
-     * @return y.
+     * @return {number} y
      */
     get y() {
         return this.pos.y;
@@ -116,7 +111,7 @@ fish.util.Rect = class {
 
     /**
      * Gets the width of the rectangle.
-     * @return w.
+     * @return {number} w
      */
     get w() {
         return this.size.x;
@@ -124,7 +119,7 @@ fish.util.Rect = class {
 
     /**
      * Gets the height of the rectangle.
-     * @return h.
+     * @return {number} h
      */
     get h() {
         return this.size.y;
@@ -132,7 +127,7 @@ fish.util.Rect = class {
 
     /**
      * Gets the position of the right hand side of the rectangle.
-     * @return x + w
+     * @return {number} x + w
      */
     get r() {
         return this.pos.x + this.size.x;
@@ -140,7 +135,7 @@ fish.util.Rect = class {
 
     /**
      * Gets the position of the bottom of the rectangle.
-     * @return y + h
+     * @return {number} y + h
      */
     get b() {
         return this.pos.y + this.size.y;
