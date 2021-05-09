@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Screen</title>
+    <title>JSDoc: Class: PanelKnob</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Screen</h1>
+    <h1 class="page-title">Class: PanelKnob</h1>
 
     
 
@@ -29,7 +29,10 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.screen.html">.screen</a>.</span>Screen<span class="signature">(refresh, input, update, render, evaluate)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.gui.html">.gui</a>.</span>PanelKnob<span class="signature">(style, vertical)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Creates a panel that can stack contents vertically or horizontally in a nice
+box.</div>
         
     
 </header>
@@ -40,9 +43,11 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
     
-    <h4 class="name" id="Screen"><span class="type-signature"></span>new Screen<span class="signature">(refresh, input, update, render, evaluate)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="PanelKnob"><span class="type-signature"></span>new PanelKnob<span class="signature">(style, vertical)</span><span class="type-signature"></span></h4>
     
 
     
@@ -50,7 +55,7 @@
 
 
 <div class="description">
-    Creates a screen object by taking the four things a screen needs.
+    Creates a panel and says whether it is vertical or horizontal.
 </div>
 
 
@@ -76,6 +81,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -86,100 +93,57 @@
 
         <tr>
             
-                <td class="name"><code>refresh</code></td>
+                <td class="name"><code>style</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type"><a href="fish.gui.Style.html">fish.gui.Style</a></span>
+
+
             
             </td>
 
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">is a function that gets called every time the screen either
-                gets put on top of the screen stack, or is revealed at the
-                top of the screen stack.</td>
+            <td class="description last">is used to style it.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>input</code></td>
+                <td class="name"><code>vertical</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
             
             </td>
 
             
 
             
-
-            <td class="description last">is a function called when input is received, which returns
-                a boolean telling you whether the input was used.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>update</code></td>
+                <td class="default">
+                
+                    true
+                
+                </td>
             
 
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an instantiated coroutine which can assume to be called 60
-                times per second, and yields/returns other screens that it can
-                assume will be placed on top of the screen stack. If it
-                returns, it can assume itself to be removed from the stack,
-                which happens before any are added.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>render</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">just renders the screen and is called whenever.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>evaluate</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">returns a value that can be passed to a screen below when
-                this one's update coroutine has ended. It doesn't need to
-                be able to return a valid value until the update thing has
-                ended.</td>
+            <td class="description last">is whether it is vertical. If not it is
+horizontal.</td>
         </tr>
 
     
@@ -220,7 +184,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line29">line 29</a>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -267,6 +231,231 @@
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="addChild"><span class="type-signature"></span>addChild<span class="signature">(child)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Adds a child to the panel.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>child</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.gui.Knob.html">fish.gui.Knob</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the thing to add.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line89">line 89</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="fit"><span class="type-signature"></span>fit<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

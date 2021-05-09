@@ -29,7 +29,7 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.input.html">.input</a>.</span>BasicInput<span class="signature">(keymap, is)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.input.html">.input</a>.</span>BasicInput<span class="signature">(keymap, threshold)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -42,7 +42,7 @@
     
 
     
-    <h4 class="name" id="BasicInput"><span class="type-signature"></span>new BasicInput<span class="signature">(keymap, is)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BasicInput"><span class="type-signature"></span>new BasicInput<span class="signature">(keymap, threshold)</span><span class="type-signature"></span></h4>
     
 
     
@@ -50,9 +50,9 @@
 
 
 <div class="description">
-    An input handler that unifies all input from gamepads / keyboard into one
-abstract input which is supposed to work like a gamepad basically. It only
-works with 1 player games for that reason.
+    An input handler system that unifies all input from gamepads / keyboard
+into one abstract input which is supposed to work like a gamepad basically.
+It only works with 1 player games for that reason.
 </div>
 
 
@@ -104,15 +104,15 @@ works with 1 player games for that reason.
 
             
 
-            <td class="description last">is a mapping from html key names to
-                                        button on the virtual controller.</td>
+            <td class="description last">a mapping from html key names to
+       button on the virtual controller.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>is</code></td>
+                <td class="name"><code>threshold</code></td>
             
 
             <td class="type">
@@ -128,8 +128,8 @@ works with 1 player games for that reason.
 
             
 
-            <td class="description last">the threshold beyond which a
-                                        gamepad axis is considered pressed.</td>
+            <td class="description last">the threshold beyond which a gamepad axis is
+       considered pressed.</td>
         </tr>
 
     
@@ -154,6 +154,13 @@ works with 1 player games for that reason.
     
 
     
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+        
+    </ul></dd>
+    
 
     
 
@@ -170,7 +177,7 @@ works with 1 player games for that reason.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line40">line 40</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line59">line 59</a>
     </li></ul></dd>
     
 
@@ -215,6 +222,387 @@ works with 1 player games for that reason.
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="BUTTONS"><span class="type-signature">(readonly) </span>BUTTONS<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    The buttons that this imaginary controller provides.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>UP</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Left axis on controller pointed up.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>DOWN</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Left axis on controller pointed down.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>LEFT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Left axis on controller pointed left.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>RIGHT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Left axis on controller pointed right.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>X</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">X button like on xbox controller.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Y button like on xbox controller.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>A</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">A button like on xbox controller.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>B</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">B button like on xbox controller.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>L</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">left trigger button.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>R</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">right trigger button.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>SELECT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">left menu button.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>START</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">right menu button thing. Generally the pause button.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line65">line 65</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -327,7 +715,7 @@ works with 1 player games for that reason.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line182">line 182</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line202">line 202</a>
     </li></ul></dd>
     
 
@@ -486,7 +874,7 @@ works with 1 player games for that reason.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line192">line 192</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line212">line 212</a>
     </li></ul></dd>
     
 
@@ -544,7 +932,7 @@ works with 1 player games for that reason.
     
 
     
-    <h4 class="name" id="uiDown"><span class="type-signature"></span>uiDown<span class="signature">(uiCode)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="uiDown"><span class="type-signature"></span>uiDown<span class="signature">(button)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
 
     
@@ -552,7 +940,7 @@ works with 1 player games for that reason.
 
 
 <div class="description">
-    Tells you if the given ui button is down.
+    Tells you if the given ui button is currently down.
 </div>
 
 
@@ -588,13 +976,13 @@ works with 1 player games for that reason.
 
         <tr>
             
-                <td class="name"><code>uiCode</code></td>
+                <td class="name"><code>button</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="fish.input.html#.UI_BUTTON">fish.input.UI_BUTTON</a></span>
 
 
             
@@ -604,7 +992,7 @@ works with 1 player games for that reason.
 
             
 
-            <td class="description last">is the ui button in question.</td>
+            <td class="description last">is the button to check on.</td>
         </tr>
 
     
@@ -629,6 +1017,13 @@ works with 1 player games for that reason.
     
 
     
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.input.UiInput.html#uiDown">fish.input.UiInput#uiDown</a></li>
+        
+    </ul></dd>
+    
 
     
 
@@ -645,7 +1040,7 @@ works with 1 player games for that reason.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line202">line 202</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -674,166 +1069,7 @@ works with 1 player games for that reason.
 
         
 <div class="param-desc">
-    true if it is down now.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="uiJustDown"><span class="type-signature"></span>uiJustDown<span class="signature">(uiCode)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Tells you if the given ui button just went down last frame.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>uiCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the ui button in question.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line211">line 211</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    true if it just went down.
+    true iff it is down.
 </div>
 
 
@@ -914,7 +1150,7 @@ works with 1 player games for that reason.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line129">line 129</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line160">line 160</a>
     </li></ul></dd>
     
 
@@ -1055,7 +1291,7 @@ a button object thing.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line90">line 90</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -1214,7 +1450,7 @@ a button object thing.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line114">line 114</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -1272,7 +1508,7 @@ a button object thing.
     
 
     
-    <h4 class="name" id="~updateButton"><span class="type-signature">(inner) </span>updateButton<span class="signature">(button, value)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~updateButton"><span class="type-signature">(inner) </span>updateButton<span class="signature">(button, value, include)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1307,6 +1543,8 @@ rn.
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1332,6 +1570,10 @@ rn.
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">is the button to update.</td>
         </tr>
@@ -1355,8 +1597,42 @@ rn.
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">is whether or not it is pressed right now.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>include</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">is whether to keep the value that is already
+       there.</td>
         </tr>
 
     
@@ -1397,7 +1673,7 @@ rn.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line103">line 103</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -1443,13 +1719,13 @@ rn.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 23:23:32 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun May 09 2021 21:26:57 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

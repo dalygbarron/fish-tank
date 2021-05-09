@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Screen</title>
+    <title>JSDoc: Interface: UiInput</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Screen</h1>
+    <h1 class="page-title">Interface: UiInput</h1>
 
     
 
@@ -28,8 +28,10 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.screen.html">.screen</a>.</span>Screen<span class="signature">(refresh, input, update, render, evaluate)</span><span class="type-signature"></span></h2>
+        <h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.input.html">.input</a>.</span>UiInput</h2>
+        
+            <div class="class-description">Basic ui operations required by the engine for an input system.</div>
         
     
 </header>
@@ -39,10 +41,78 @@
     
         
 
+        
+
+
+<dl class="details">
+
     
 
     
-    <h4 class="name" id="Screen"><span class="type-signature"></span>new Screen<span class="signature">(refresh, input, update, render, evaluate)</span><span class="type-signature"></span></h4>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line37">line 37</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="uiDown"><span class="type-signature"></span>uiDown<span class="signature">(button)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
     
 
     
@@ -50,7 +120,7 @@
 
 
 <div class="description">
-    Creates a screen object by taking the four things a screen needs.
+    Tells you if the given ui button is currently down.
 </div>
 
 
@@ -86,10 +156,15 @@
 
         <tr>
             
-                <td class="name"><code>refresh</code></td>
+                <td class="name"><code>button</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type"><a href="fish.input.html#.UI_BUTTON">fish.input.UI_BUTTON</a></span>
+
+
             
             </td>
 
@@ -97,89 +172,7 @@
 
             
 
-            <td class="description last">is a function that gets called every time the screen either
-                gets put on top of the screen stack, or is revealed at the
-                top of the screen stack.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>input</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is a function called when input is received, which returns
-                a boolean telling you whether the input was used.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>update</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an instantiated coroutine which can assume to be called 60
-                times per second, and yields/returns other screens that it can
-                assume will be placed on top of the screen stack. If it
-                returns, it can assume itself to be removed from the stack,
-                which happens before any are added.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>render</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">just renders the screen and is called whenever.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>evaluate</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">returns a value that can be passed to a screen below when
-                this one's update coroutine has ended. It doesn't need to
-                be able to return a valid value until the update thing has
-                ended.</td>
+            <td class="description last">is the button to check on.</td>
         </tr>
 
     
@@ -220,7 +213,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line29">line 29</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line43">line 43</a>
     </li></ul></dd>
     
 
@@ -245,28 +238,34 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    true iff it is down.
+</div>
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
 
+
+    </dd>
+</dl>
 
     
-    </div>
 
-    
 
-    
 
-    
 
-    
 
-    
-
-    
-
-    
-
+        
     
 
     

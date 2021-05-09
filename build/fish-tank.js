@@ -503,6 +503,24 @@ fish.graphics.Patch = class {
 };
 
 /**
+ * Base rendering interface required by the engine internally. Must be
+ * implemented by any rendering system.
+ * @interface
+ */
+fish.graphics.PatchRenderer = class {
+    /**
+     * Renders a 9 patch to the given spot.
+     * @param {fish.graphics.Patch} patch is the 9patch to draw.
+     * @param {fish.util.Rect} dst is the place on the screen to draw it.
+     */
+    renderPatch(patch, dst) {
+        throw new Error (
+            'fish.graphics.PatchRenderer.renderPatch must be implemented'
+        );
+    }
+};
+
+/**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
  * @constructor
@@ -520,6 +538,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     /**
      * A thing that batches draw calls.
      * @constructor
+     * @implements {fish.graphics.PatchRenderer}
      * @param {fish.graphics.Texture} texture is the texture all the draws must
      *                                        be from.
      * @param {number}                max     is the max things to draw.
@@ -655,6 +674,13 @@ fish.graphics.SpriteRenderer = function (gl) {
                 patch.border,
                 patch.border
             ));
+        };
+
+        /**
+         * @inheritDoc
+         */
+        this.renderPatch = (patch, dst) => {
+            this.addPatch(patch, dst);
         };
 
         /**
@@ -1006,35 +1032,86 @@ var fish = fish || {};
  */
 fish.input = {};
 
-/** @constant */
-fish.input.UI_UP = 'UI_UP';
-
-/** @constant */
-fish.input.UI_DOWN = 'UI_DOWN';
-
-/** @constant */
-fish.input.UI_LEFT = 'UI_LEFT';
-
-/** @constant */
-fish.input.UI_RIGHT = 'UI_RIGHT';
-
-/** @constant */
-fish.input.UI_ACCEPT = 'UI_ACCEPT';
-
-/** @constant */
-fish.input.UI_CANCEL = 'UI_CANCEL';
+/**
+ * UI buttons that all input handling subsystems have to handle (but they can
+ * be mapped into your control scheme however you want).
+ * @readonly
+ * @enum {string}
+ */
+fish.input.UI_BUTTON = {
+    /** move up in menus etc */
+    UP: 'UP',
+    /** move down in menus etc */
+    DOWN: 'DOWN',
+    /** move left in menus etc */
+    LEFT: 'LEFT',
+    /** move right in menus etc */
+    RIGHT: 'RIGHT',
+    /** accept dialogs and things */
+    ACCEPT: 'ACCEPT',
+    /** go back and cancel things etc */
+    CANCEL: 'CANCEL'
+};
 
 /**
- * An input handler that unifies all input from gamepads / keyboard into one
- * abstract input which is supposed to work like a gamepad basically. It only
- * works with 1 player games for that reason.
+ * Basic ui operations required by the engine for an input system.
+ * @interface
+ */
+fish.input.UiInput = class {
+    /**
+     * Tells you if the given ui button is currently down.
+     * @param {fish.input.UI_BUTTON} button is the button to check on.
+     * @return {boolean} true iff it is down.
+     */
+    uiDown(button) {
+        throw new Error('fish.input.UiInput.uiDown must be implemented');
+    }
+};
+
+/**
+ * An input handler system that unifies all input from gamepads / keyboard
+ * into one abstract input which is supposed to work like a gamepad basically.
+ * It only works with 1 player games for that reason.
  * @constructor
- * @param {Object.<string, string>} keymap is a mapping from html key names to
- *                                         button on the virtual controller.
- * @param {number}                         is the threshold beyond which a
- *                                         gamepad axis is considered pressed.
+ * @implements {fish.input.UiInput}
+ * @param {Object.<string, string>} keymap a mapping from html key names to
+ *        button on the virtual controller.
+ * @param {number} threshold the threshold beyond which a gamepad axis is
+ *        considered pressed.
  */
 fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
+    /**
+     * The buttons that this imaginary controller provides.
+     * @readonly
+     * @enum {string}
+     */
+    this.BUTTONS = {
+        /** Left axis on controller pointed up. */
+        UP: 'UP',
+        /** Left axis on controller pointed down. */
+        DOWN: 'DOWN',
+        /** Left axis on controller pointed left. */
+        LEFT: 'LEFT',
+        /** Left axis on controller pointed right. */
+        RIGHT: 'RIGHT',
+        /** X button like on xbox controller. */
+        X: 'X',
+        /** Y button like on xbox controller. */
+        Y: 'Y',
+        /** A button like on xbox controller. */
+        A: 'A',
+        /** B button like on xbox controller. */
+        B: 'B',
+        /** left trigger button. */
+        L: 'L',
+        /** right trigger button. */
+        R: 'R',
+        /** left menu button. */
+        SELECT: 'SELECT',
+        /** right menu button thing. Generally the pause button. */
+        START: 'START'
+    };
+
     if (!keymap.UP) keymap.UP = 'ArrowUp';
     if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
     if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
@@ -1049,32 +1126,10 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     if (!keymap.START) keymap.START = 'Enter';
     let frame = 0;
     let keys = {};
-    let buttonStates = {
-        UP: false,
-        DOWN: false,
-        LEFT: false,
-        RIGHT: false,
-        X: false,
-        Y: false,
-        A: false,
-        B: false,
-        L: false,
-        R: false,
-        SELECT: false,
-        START: false
-    };
-    this.UP = 'UP';
-    this.DOWN = 'DOWN';
-    this.LEFT = 'LEFT';
-    this.RIGHT = 'RIGHT';
-    this.X = 'X';
-    this.Y = 'Y';
-    this.A = 'A';
-    this.B = 'B';
-    this.L = 'L';
-    this.R = 'R';
-    this.SELECT = 'SELECT';
-    this.START = 'START';
+    let buttonStates = {};
+    for (let button in this.BUTTONS) {
+        buttonStates[button] = false;
+    }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
     document.addEventListener('keyup', (e) => {keys[e.key] = false;});
 
@@ -1084,7 +1139,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string|number} button is either a number or a button object thingo.
      * @return {boolean} true iff it is pressed.
      */
-    let pressed = function (button) {
+    let pressed = button => {
         if (typeof(button) == 'object') {
             return button.pressed;
         }
@@ -1096,8 +1151,10 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * rn.
      * @param {string}  button is the button to update.
      * @param {boolean} value  is whether or not it is pressed right now.
+     * @param {boolean} include is whether to keep the value that is already
+     *        there.
      */
-    let updateButton = function (button, value, include=false) {
+    let updateButton = (button, value, include=false) => {
         if (include) value = value || buttonStates[button] > 0;
         if (!value) buttonStates[button] = 0;
         else if (buttonStates[button] == 0) buttonStates[button] = frame;
@@ -1108,7 +1165,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string} uiCode is the code to convert.
      * @return {string} the corresponding actual button.
      */
-    let uiToButton = (uiCode) => {
+    let uiToButton = uiCode => {
         switch (uiCode) {
             case fish.input.UI_UP: return this.UP;
             case fish.input.UI_DOWN: return this.DOWN;
@@ -1127,44 +1184,33 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        updateButton(this.A, keys[keymap.A]);
-        updateButton(this.B, keys[keymap.B]);
-        updateButton(this.X, keys[keymap.X]);
-        updateButton(this.Y, keys[keymap.Y]);
-        updateButton(this.L, keys[keymap.L]);
-        updateButton(this.R, keys[keymap.R]);
-        updateButton(this.SELECT, keys[keymap.SELECT]);
-        updateButton(this.START, keys[keymap.START]);
-        updateButton(this.UP, keys[keymap.UP]);
-        updateButton(this.DOWN, keys[keymap.DOWN]);
-        updateButton(this.LEFT, keys[keymap.LEFT]);
-        updateButton(this.RIGHT, keys[keymap.RIGHT]);
+        for (let button in this.BUTTONS) updateButton(button, keys[button]);
         for (let pad of gamepads) {
-            updateButton(this.A, pressed(pad.buttons[0]), true);
-            updateButton(this.B, pressed(pad.buttons[1]), true);
-            updateButton(this.X, pressed(pad.buttons[2]), true);
-            updateButton(this.Y, pressed(pad.buttons[3]), true);
-            updateButton(this.L, pressed(pad.buttons[4]), true);
-            updateButton(this.R, pressed(pad.buttons[5]), true);
-            updateButton(this.SELECT, pressed(pad.buttons[8]), true);
-            updateButton(this.START, pressed(pad.buttons[9]), true);
+            updateButton(this.BUTTONS.A, pressed(pad.buttons[0]), true);
+            updateButton(this.BUTTONS.B, pressed(pad.buttons[1]), true);
+            updateButton(this.BUTTONS.X, pressed(pad.buttons[2]), true);
+            updateButton(this.BUTTONS.Y, pressed(pad.buttons[3]), true);
+            updateButton(this.BUTTONS.L, pressed(pad.buttons[4]), true);
+            updateButton(this.BUTTONS.R, pressed(pad.buttons[5]), true);
+            updateButton(this.BUTTONS.SELECT, pressed(pad.buttons[8]), true);
+            updateButton(this.BUTTONS.START, pressed(pad.buttons[9]), true);
             updateButton(
-                this.UP,
+                this.BUTTONS.UP,
                 pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
                 true
             );
             updateButton(
-                this.DOWN,
+                this.BUTTONS.DOWN,
                 pressed(pad.buttons[13]) || pad.axes[1] > threshold,
                 true
             );
             updateButton(
-                this.LEFT,
+                this.BUTTONS.LEFT,
                 pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
                 true
             );
             updateButton(
-                this.RIGHT,
+                this.BUTTONS.RIGHT,
                 pressed(pad.buttons[15]) || pad.axes[0] > threshold,
                 true
             );
@@ -1192,23 +1238,177 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     };
 
     /**
-     * Tells you if the given ui button is down.
-     * @param {string} uiCode is the ui button in question.
-     * @return {boolean} true if it is down now.
+     * @inheritDoc
      */
     this.uiDown = (uiCode) => {
         return this.down(uiToButton(uiCode));
     };
+};
+
+var fish = fish || {};
+
+/**
+ * This file provides a kinda basic gui system for the user to interact with.
+ * It only uses button input by default but it should be able to do menu type
+ * stuff as well as game dialogue and basic hud if need be etc.
+ * In the future I might add mouse support to the default input system in which
+ * case I will also make the gui be able to use mouse at least if you want it
+ * to.
+ * @namespace
+ */
+fish.gui = {};
+
+/**
+ * Stores all the style info that is used to draw gui elements.
+ */
+fish.gui.Style = class {
+
+};
+
+/**
+ * Base gui knob class. Yeah I call it knob instead of element or something
+ * because element is long as hell and gay.
+ */
+fish.gui.Knob = class {
+    /**
+     * Creates the knob.
+     * @param {fish.gui.Style} style is used to style it.
+     */
+    constructor(style) {
+        this.fitted = false;
+        this.bounds = null;
+        this.style = style;
+    }
+    
+    /**
+     * Fits the gui knob to the given area. Probably needs to be extended to be
+     * useful a lot of the time.
+     * @param {fish.util.Rect} bounds is the area to fit the element into.
+     */
+    fit(bounds) {
+        this.bounds = bounds;
+        this.fitted = true;
+    }
 
     /**
-     * Tells you if the given ui button just went down last frame.
-     * @param {string} uiCode is the ui button in question.
-     * @return {boolean} true if it just went down.
+     * Updates the knob so that it can react to user input and potentially
+     * return some stuff. Should recurse for nested elements.
+     * @return {?Object} whatever you want to return, this is handled by user
+     * code. If you return from a nested gui element the outer ones should just
+     * return it recursively. If you return null that is considered to mean
+     * nothing happened.
      */
-    this.uiJustDown = (uiCode) => {
-        return this.justDown(uiToButton(uiCode));
-    };
+    update(input) {
+        return null;
+    }
+
+    /**
+     * Renders the gui element using the given patch renderer.
+     * @abstract
+     * @param {fish.graphics.PatchRenderer} patchRenderer does the rendering.
+     */
+    render(patchRenderer) {
+        throw new Error('fish.gui.knob.render must be implemented');
+    }
 };
+
+/**
+ * Creates a panel that can stack contents vertically or horizontally in a nice
+ * box.
+ */
+fish.gui.PanelKnob = class extends fish.gui.Knob {
+    /**
+     * Creates a panel and says whether it is vertical or horizontal.
+     * @param {fish.gui.Style} style is used to style it.
+     * @param {boolean} vertical is whether it is vertical. If not it is
+     * horizontal.
+     */
+    constructor(style, vertical=true) {
+        super.constructor(style);
+        this.children = [];
+        this.vertical = vertical;
+    }
+
+    /**
+     * Adds a child to the panel.
+     * @param {fish.gui.Knob} child is the thing to add.
+     */
+    addChild(child) {
+        this.children.push(child);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    fit(bounds) {
+        super.fit(bounds);
+        // TODO: iterate over the contents, take into account the padding of
+        // the patch thingy, and fit them into some spaces, also need to figure
+        // out how much space is left after.
+    }
+};
+
+fish.gui.ButtonKnob = class extends fish.gui.Knob {
+    /**
+     * Creates the button.
+     * @param {fish.gui.Style} style is the style to draw it with.
+     * @param {fish.gui.Knob} child is the child to put inside the button.
+     */
+    constructor(style, child) {
+        super.constructor(style);
+        this.child = child;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    fit(bounds) {
+        super.fit(bounds);
+    }
+};
+
+/*
+ * Ok so how the hell am I gonna do this? The gui system needs to be set up so
+ * that it can work with any renderer. Well, actually so it doesn't need to
+ * work with the overall renderer in the case of the sprite renderer, it needs
+ * to work with the sprite batch, and it also needs to know which sprites are
+ * used for what parts of itself.
+ * For sound it just needs to have a sound and be able to play it on the sound
+ * player.
+ * For input it needs to query a couple of things which I have already set up.
+ * So yeah, main thing is graphics. Basically, I think I should make it that
+ * you can only have one sprite atlas per sprite renderer because it's gonna be
+ * a massive pain otherwise. eh but you need the renderer object to load
+ * textures rn so that would suck.
+ * So no, you can have as many as you want, but when you create guis you need
+ * to pass them some kind of theme object which defines the sounds to play and
+ * the sprites to draw with etc, and these sprites are obviously going to
+ * presume that you are using some certain texture so if you ain't it's gonna
+ * look pretty fucked up.
+ * Yeah so then each frame you have to call update on your gui like you
+ * generally would and in the render function you will call render on it while
+ * passing it the batch that it will draw with.
+ *
+ * There are some other questions like what widgets there will be and how it
+ * will be arranged etc etc but that is for antoher time.
+ *
+ *
+ * Ok so how are we going to do the other part? First lets think about what the
+ * use cases are so we can think of an idea that fits all of them.
+ *
+ * We need to be able to make passive windows that show the value of some
+ * variable in like a bar graph or a number or something.
+ * We need to be able to make text boxes and dialogs in games.
+ * We need to be able to create menus where the user can change settings and
+ * whatever the fuck else.
+ * We need to be able to create level editors and tools like that.
+ *
+ * Uhhhhh yeah basically I think the usual shit will be fine. We need to make
+ * it that there are buttons that can actually end the gui thing and evaluate
+ * to something and there are some that just modify some variable without
+ * changing anything. We also need some ones that can do some arbitrary shit or
+ * render some arbitrary shit.
+ */
 
 var fish = fish || {};
 

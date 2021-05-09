@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Texture</title>
+    <title>JSDoc: Class: Knob</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Texture</h1>
+    <h1 class="page-title">Class: Knob</h1>
 
     
 
@@ -29,7 +29,10 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>Texture<span class="signature">(glTexture, width, height)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.gui.html">.gui</a>.</span>Knob<span class="signature">(style)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Base gui knob class. Yeah I call it knob instead of element or something
+because element is long as hell and gay.</div>
         
     
 </header>
@@ -40,9 +43,11 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
     
-    <h4 class="name" id="Texture"><span class="type-signature"></span>new Texture<span class="signature">(glTexture, width, height)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Knob"><span class="type-signature"></span>new Knob<span class="signature">(style)</span><span class="type-signature"></span></h4>
     
 
     
@@ -50,9 +55,7 @@
 
 
 <div class="description">
-    Creates a texture object out of a gl texture. You probably don't want to
-instantiate one of these directly unless you are creating your own graphics
-system.
+    Creates the knob.
 </div>
 
 
@@ -88,13 +91,13 @@ system.
 
         <tr>
             
-                <td class="name"><code>glTexture</code></td>
+                <td class="name"><code>style</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><a href="fish.gui.Style.html">fish.gui.Style</a></span>
 
 
             
@@ -104,53 +107,7 @@ system.
 
             
 
-            <td class="description last">is the open gl reference to the texture.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the width of the texture.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the height of the texture.</td>
+            <td class="description last">is used to style it.</td>
         </tr>
 
     
@@ -191,7 +148,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line24">line 24</a>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -247,7 +204,7 @@ system.
     
 
     
-    <h4 class="name" id="getGlTexture"><span class="type-signature"></span>getGlTexture<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="fit"><span class="type-signature"></span>fit<span class="signature">(bounds)</span><span class="type-signature"></span></h4>
     
 
     
@@ -255,7 +212,8 @@ system.
 
 
 <div class="description">
-    Gives you the opengl texture.
+    Fits the gui knob to the given area. Probably needs to be extended to be
+useful a lot of the time.
 </div>
 
 
@@ -264,6 +222,55 @@ system.
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bounds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the area to fit the element into.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -299,7 +306,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line29">line 29</a>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -324,28 +331,6 @@ system.
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the opengl reference to the texture.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -357,7 +342,7 @@ system.
     
 
     
-    <h4 class="name" id="getHeight"><span class="type-signature"></span>getHeight<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="render"><span class="type-signature">(abstract) </span>render<span class="signature">(patchRenderer)</span><span class="type-signature"></span></h4>
     
 
     
@@ -365,7 +350,7 @@ system.
 
 
 <div class="description">
-    Gives you the height of the texture.
+    Renders the gui element using the given patch renderer.
 </div>
 
 
@@ -374,6 +359,55 @@ system.
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>patchRenderer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">does the rendering.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -409,7 +443,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line45">line 45</a>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -434,28 +468,6 @@ system.
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the height.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -467,7 +479,7 @@ system.
     
 
     
-    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">()</span><span class="type-signature"> &rarr; (nullable) {Object}</span></h4>
     
 
     
@@ -475,7 +487,8 @@ system.
 
 
 <div class="description">
-    Gives you the width of the texture.
+    Updates the knob so that it can react to user input and potentially
+return some stuff. Should recurse for nested elements.
 </div>
 
 
@@ -519,7 +532,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line37">line 37</a>
+        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line54">line 54</a>
     </li></ul></dd>
     
 
@@ -548,7 +561,10 @@ system.
 
         
 <div class="param-desc">
-    the width.
+    whatever you want to return, this is handled by user
+code. If you return from a nested gui element the outer ones should just
+return it recursively. If you return null that is considered to mean
+nothing happened.
 </div>
 
 
@@ -559,7 +575,7 @@ system.
     </dt>
     <dd>
         
-<span class="param-type">number</span>
+<span class="param-type">Object</span>
 
 
     </dd>

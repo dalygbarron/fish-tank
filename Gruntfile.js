@@ -14,6 +14,7 @@ module.exports = function(grunt) {
                     'src/graphics.js',
                     'src/audio.js',
                     'src/input.js',
+                    'src/gui.js',
                     'src/store.js',
                     'src/shader.js',
                     'src/screen.js',

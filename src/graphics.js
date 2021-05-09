@@ -338,6 +338,24 @@ fish.graphics.Patch = class {
 };
 
 /**
+ * Base rendering interface required by the engine internally. Must be
+ * implemented by any rendering system.
+ * @interface
+ */
+fish.graphics.PatchRenderer = class {
+    /**
+     * Renders a 9 patch to the given spot.
+     * @param {fish.graphics.Patch} patch is the 9patch to draw.
+     * @param {fish.util.Rect} dst is the place on the screen to draw it.
+     */
+    renderPatch(patch, dst) {
+        throw new Error (
+            'fish.graphics.PatchRenderer.renderPatch must be implemented'
+        );
+    }
+};
+
+/**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
  * @constructor
@@ -355,6 +373,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     /**
      * A thing that batches draw calls.
      * @constructor
+     * @implements {fish.graphics.PatchRenderer}
      * @param {fish.graphics.Texture} texture is the texture all the draws must
      *                                        be from.
      * @param {number}                max     is the max things to draw.
@@ -490,6 +509,13 @@ fish.graphics.SpriteRenderer = function (gl) {
                 patch.border,
                 patch.border
             ));
+        };
+
+        /**
+         * @inheritDoc
+         */
+        this.renderPatch = (patch, dst) => {
+            this.addPatch(patch, dst);
         };
 
         /**

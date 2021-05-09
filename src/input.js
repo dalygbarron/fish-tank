@@ -9,35 +9,86 @@ var fish = fish || {};
  */
 fish.input = {};
 
-/** @constant */
-fish.input.UI_UP = 'UI_UP';
-
-/** @constant */
-fish.input.UI_DOWN = 'UI_DOWN';
-
-/** @constant */
-fish.input.UI_LEFT = 'UI_LEFT';
-
-/** @constant */
-fish.input.UI_RIGHT = 'UI_RIGHT';
-
-/** @constant */
-fish.input.UI_ACCEPT = 'UI_ACCEPT';
-
-/** @constant */
-fish.input.UI_CANCEL = 'UI_CANCEL';
+/**
+ * UI buttons that all input handling subsystems have to handle (but they can
+ * be mapped into your control scheme however you want).
+ * @readonly
+ * @enum {string}
+ */
+fish.input.UI_BUTTON = {
+    /** move up in menus etc */
+    UP: 'UP',
+    /** move down in menus etc */
+    DOWN: 'DOWN',
+    /** move left in menus etc */
+    LEFT: 'LEFT',
+    /** move right in menus etc */
+    RIGHT: 'RIGHT',
+    /** accept dialogs and things */
+    ACCEPT: 'ACCEPT',
+    /** go back and cancel things etc */
+    CANCEL: 'CANCEL'
+};
 
 /**
- * An input handler that unifies all input from gamepads / keyboard into one
- * abstract input which is supposed to work like a gamepad basically. It only
- * works with 1 player games for that reason.
+ * Basic ui operations required by the engine for an input system.
+ * @interface
+ */
+fish.input.UiInput = class {
+    /**
+     * Tells you if the given ui button is currently down.
+     * @param {fish.input.UI_BUTTON} button is the button to check on.
+     * @return {boolean} true iff it is down.
+     */
+    uiDown(button) {
+        throw new Error('fish.input.UiInput.uiDown must be implemented');
+    }
+};
+
+/**
+ * An input handler system that unifies all input from gamepads / keyboard
+ * into one abstract input which is supposed to work like a gamepad basically.
+ * It only works with 1 player games for that reason.
  * @constructor
- * @param {Object.<string, string>} keymap is a mapping from html key names to
- *                                         button on the virtual controller.
- * @param {number}                         is the threshold beyond which a
- *                                         gamepad axis is considered pressed.
+ * @implements {fish.input.UiInput}
+ * @param {Object.<string, string>} keymap a mapping from html key names to
+ *        button on the virtual controller.
+ * @param {number} threshold the threshold beyond which a gamepad axis is
+ *        considered pressed.
  */
 fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
+    /**
+     * The buttons that this imaginary controller provides.
+     * @readonly
+     * @enum {string}
+     */
+    this.BUTTONS = {
+        /** Left axis on controller pointed up. */
+        UP: 'UP',
+        /** Left axis on controller pointed down. */
+        DOWN: 'DOWN',
+        /** Left axis on controller pointed left. */
+        LEFT: 'LEFT',
+        /** Left axis on controller pointed right. */
+        RIGHT: 'RIGHT',
+        /** X button like on xbox controller. */
+        X: 'X',
+        /** Y button like on xbox controller. */
+        Y: 'Y',
+        /** A button like on xbox controller. */
+        A: 'A',
+        /** B button like on xbox controller. */
+        B: 'B',
+        /** left trigger button. */
+        L: 'L',
+        /** right trigger button. */
+        R: 'R',
+        /** left menu button. */
+        SELECT: 'SELECT',
+        /** right menu button thing. Generally the pause button. */
+        START: 'START'
+    };
+
     if (!keymap.UP) keymap.UP = 'ArrowUp';
     if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
     if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
@@ -52,32 +103,10 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     if (!keymap.START) keymap.START = 'Enter';
     let frame = 0;
     let keys = {};
-    let buttonStates = {
-        UP: false,
-        DOWN: false,
-        LEFT: false,
-        RIGHT: false,
-        X: false,
-        Y: false,
-        A: false,
-        B: false,
-        L: false,
-        R: false,
-        SELECT: false,
-        START: false
-    };
-    this.UP = 'UP';
-    this.DOWN = 'DOWN';
-    this.LEFT = 'LEFT';
-    this.RIGHT = 'RIGHT';
-    this.X = 'X';
-    this.Y = 'Y';
-    this.A = 'A';
-    this.B = 'B';
-    this.L = 'L';
-    this.R = 'R';
-    this.SELECT = 'SELECT';
-    this.START = 'START';
+    let buttonStates = {};
+    for (let button in this.BUTTONS) {
+        buttonStates[button] = false;
+    }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
     document.addEventListener('keyup', (e) => {keys[e.key] = false;});
 
@@ -87,7 +116,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string|number} button is either a number or a button object thingo.
      * @return {boolean} true iff it is pressed.
      */
-    let pressed = function (button) {
+    let pressed = button => {
         if (typeof(button) == 'object') {
             return button.pressed;
         }
@@ -99,8 +128,10 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * rn.
      * @param {string}  button is the button to update.
      * @param {boolean} value  is whether or not it is pressed right now.
+     * @param {boolean} include is whether to keep the value that is already
+     *        there.
      */
-    let updateButton = function (button, value, include=false) {
+    let updateButton = (button, value, include=false) => {
         if (include) value = value || buttonStates[button] > 0;
         if (!value) buttonStates[button] = 0;
         else if (buttonStates[button] == 0) buttonStates[button] = frame;
@@ -111,7 +142,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string} uiCode is the code to convert.
      * @return {string} the corresponding actual button.
      */
-    let uiToButton = (uiCode) => {
+    let uiToButton = uiCode => {
         switch (uiCode) {
             case fish.input.UI_UP: return this.UP;
             case fish.input.UI_DOWN: return this.DOWN;
@@ -130,44 +161,33 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        updateButton(this.A, keys[keymap.A]);
-        updateButton(this.B, keys[keymap.B]);
-        updateButton(this.X, keys[keymap.X]);
-        updateButton(this.Y, keys[keymap.Y]);
-        updateButton(this.L, keys[keymap.L]);
-        updateButton(this.R, keys[keymap.R]);
-        updateButton(this.SELECT, keys[keymap.SELECT]);
-        updateButton(this.START, keys[keymap.START]);
-        updateButton(this.UP, keys[keymap.UP]);
-        updateButton(this.DOWN, keys[keymap.DOWN]);
-        updateButton(this.LEFT, keys[keymap.LEFT]);
-        updateButton(this.RIGHT, keys[keymap.RIGHT]);
+        for (let button in this.BUTTONS) updateButton(button, keys[button]);
         for (let pad of gamepads) {
-            updateButton(this.A, pressed(pad.buttons[0]), true);
-            updateButton(this.B, pressed(pad.buttons[1]), true);
-            updateButton(this.X, pressed(pad.buttons[2]), true);
-            updateButton(this.Y, pressed(pad.buttons[3]), true);
-            updateButton(this.L, pressed(pad.buttons[4]), true);
-            updateButton(this.R, pressed(pad.buttons[5]), true);
-            updateButton(this.SELECT, pressed(pad.buttons[8]), true);
-            updateButton(this.START, pressed(pad.buttons[9]), true);
+            updateButton(this.BUTTONS.A, pressed(pad.buttons[0]), true);
+            updateButton(this.BUTTONS.B, pressed(pad.buttons[1]), true);
+            updateButton(this.BUTTONS.X, pressed(pad.buttons[2]), true);
+            updateButton(this.BUTTONS.Y, pressed(pad.buttons[3]), true);
+            updateButton(this.BUTTONS.L, pressed(pad.buttons[4]), true);
+            updateButton(this.BUTTONS.R, pressed(pad.buttons[5]), true);
+            updateButton(this.BUTTONS.SELECT, pressed(pad.buttons[8]), true);
+            updateButton(this.BUTTONS.START, pressed(pad.buttons[9]), true);
             updateButton(
-                this.UP,
+                this.BUTTONS.UP,
                 pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
                 true
             );
             updateButton(
-                this.DOWN,
+                this.BUTTONS.DOWN,
                 pressed(pad.buttons[13]) || pad.axes[1] > threshold,
                 true
             );
             updateButton(
-                this.LEFT,
+                this.BUTTONS.LEFT,
                 pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
                 true
             );
             updateButton(
-                this.RIGHT,
+                this.BUTTONS.RIGHT,
                 pressed(pad.buttons[15]) || pad.axes[0] > threshold,
                 true
             );
@@ -195,20 +215,9 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     };
 
     /**
-     * Tells you if the given ui button is down.
-     * @param {string} uiCode is the ui button in question.
-     * @return {boolean} true if it is down now.
+     * @inheritDoc
      */
     this.uiDown = (uiCode) => {
         return this.down(uiToButton(uiCode));
-    };
-
-    /**
-     * Tells you if the given ui button just went down last frame.
-     * @param {string} uiCode is the ui button in question.
-     * @return {boolean} true if it just went down.
-     */
-    this.uiJustDown = (uiCode) => {
-        return this.justDown(uiToButton(uiCode));
     };
 };

@@ -106,6 +106,13 @@ will work with the gui system.</div>
     
 
     
+        <h3 class="subsection-title">Interfaces</h3>
+
+        <dl>
+            <dt><a href="fish.input.UiInput.html">UiInput</a></dt>
+            <dd></dd>
+        </dl>
+    
 
     
 
@@ -116,129 +123,195 @@ will work with the gui system.</div>
 
         
             
-<h4 class="name" id=".UI_ACCEPT"><span class="type-signature">(static, constant) </span>UI_ACCEPT<span class="type-signature"></span></h4>
+<h4 class="name" id=".UI_BUTTON"><span class="type-signature">(static, readonly) </span>UI_BUTTON<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    UI buttons that all input handling subsystems have to handle (but they can
+be mapped into your control scheme however you want).
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
 
 
 
 
 
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+    <h5 class="subsection-title">Properties:</h5>
 
     
 
-    
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line25">line 25</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
+        <th>Type</th>
 
         
-            
-<h4 class="name" id=".UI_CANCEL"><span class="type-signature">(static, constant) </span>UI_CANCEL<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line28">line 28</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<h4 class="name" id=".UI_DOWN"><span class="type-signature">(static, constant) </span>UI_DOWN<span class="type-signature"></span></h4>
+                <td class="name"><code>UP</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">move up in menus etc</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>DOWN</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">move down in menus etc</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>LEFT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">move left in menus etc</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>RIGHT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">move right in menus etc</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ACCEPT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">accept dialogs and things</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CANCEL</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">go back and cancel things etc</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -272,181 +345,7 @@ will work with the gui system.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line16">line 16</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".UI_LEFT"><span class="type-signature">(static, constant) </span>UI_LEFT<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line19">line 19</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".UI_RIGHT"><span class="type-signature">(static, constant) </span>UI_RIGHT<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line22">line 22</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".UI_UP"><span class="type-signature">(static, constant) </span>UI_UP<span class="type-signature"></span></h4>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="input.js.html">input.js</a>, <a href="input.js.html#line13">line 13</a>
+        <a href="input.js.html">input.js</a>, <a href="input.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -480,13 +379,13 @@ will work with the gui system.</div>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Fri May 07 2021 23:23:32 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun May 09 2021 21:26:57 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
