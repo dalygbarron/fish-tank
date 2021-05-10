@@ -412,7 +412,7 @@ unless you are creating your own graphics system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line98">line 98</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line123">line 123</a>
     </li></ul></dd>
     
 
@@ -607,6 +607,224 @@ unless you are creating your own graphics system.
     
 
     
+    <h4 class="name" id="getPatch"><span class="type-signature"></span>getPatch<span class="signature">(name, border<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="fish.graphics.Patch.html">fish.graphics.Patch</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Gets a 9-patch out of the atlas and makes it for you. If you pass the
+border argument then it is used to create the patch, but if you leave it
+as 0 then it tries to use the name to discern the border size of the
+patch by looking for a number at the end of the name. If neither of
+those things are present then an error will be thrown.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">name of the sprite the patch is made of.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>border</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last">the width of the borders of the patch.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line88">line 88</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created patch.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="n"><span class="type-signature"></span>n<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
@@ -659,7 +877,7 @@ unless you are creating your own graphics system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line82">line 82</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line107">line 107</a>
     </li></ul></dd>
     
 
@@ -848,7 +1066,7 @@ the atlas.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line86">line 86</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -892,13 +1110,13 @@ the atlas.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun May 09 2021 21:26:57 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 18:52:29 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

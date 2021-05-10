@@ -1,91 +1,124 @@
 var fish = fish || {};
 
 /**
- * Contains the screen class and some generic types of screen that you can use
- * yourself if you want to.
+ * Contains the screen class and the context class which holds the subsystem
+ * for screens.
  * @namespace
  */
 fish.screen = {};
 
 /**
- * Creates a screen object by taking the four things a screen needs.
- * @constructor
- * @param refresh  is a function that gets called every time the screen either
- *                 gets put on top of the screen stack, or is revealed at the
- *                 top of the screen stack.
- * @param input    is a function called when input is received, which returns
- *                 a boolean telling you whether the input was used.
- * @param update   is an instantiated coroutine which can assume to be called 60
- *                 times per second, and yields/returns other screens that it can
- *                 assume will be placed on top of the screen stack. If it
- *                 returns, it can assume itself to be removed from the stack,
- *                 which happens before any are added.
- * @param render   just renders the screen and is called whenever.
- * @param evaluate returns a value that can be passed to a screen below when
- *                 this one's update coroutine has ended. It doesn't need to
- *                 be able to return a valid value until the update thing has
- *                 ended.
+ * Stores all the game's subsystems. Now, you will notice that these are all
+ * interface types that the engine provides. You will control what the
+ * implementing type is and for god's sake don't try to do any static type
+ * crazy bullshit with this. Just accept that the actual implementing types of
+ * these are the ones you asked for in your game.
+ * These interfaces are just the basic amount of functionality that the engine
+ * requires from each subsystem.
+ * @interface fish.screen.Context
  */
-fish.screen.Screen = function (refresh, input, update, render, evaluate) {
-    this.refresh = refresh;
-    this.input = input;
-    this.update = update;
-    this.render = render;
-    this.evaluate = evaluate;
+
+/**
+ * The game's renderer subsystem.
+ * @member fish.screen.Context#gfx
+ * @type fish.graphics.PatchRenderer
+ */
+
+/**
+ * The game's audio subsystem.
+ * @member fish.screen.Context#snd
+ * @type fish.audio.SamplePlayer
+ */
+
+/**
+ * The game's input subsystem.
+ * @member fish.screen.Context#in
+ * @type fish.input.UiInput
+ */
+
+/**
+ * The game's asset store.
+ * @member fish.screen.Context#str
+ * @type fish.store.Store
+ */
+
+/**
+ * Basically a namespace under which you can place your own things that
+ * you want to keep in the context object if you have any. This way, if I add
+ * more things to the context later it won't possibly break your code.
+ * @member fish.screen.Context#usr
+ * @type Object
+ */
+
+/**
+ * Represents a transition between screens on the screen stack.
+ */
+fish.screen.Transition = class {
+    /**
+     * There are three different configurations that this constructor allows.
+     * When pop is true the current screen is removed, when screen is not null
+     * then that screen is placed on the stack. Thus, you can push a screen on
+     * this screen, replace this screen with another, or you can just pop this
+     * screen. If you set pop to false and screen to null then nothing will
+     * happen.
+     * @param {boolean} pop whether to pop the returning screen from the screen
+     *        stack.
+     * @param {?fish.screen.Screen} screen is a screen to add to the screen
+     *        stack if given.
+     * @param {?Object} message a message that will be given to whatever screen
+     *        is going to next have reveal called on it.
+     */
+    constructor(pop, screen=null, message=null) {
+        this.pop = pop;
+        this.screen = screen;
+        this.message = message;
+    }
 };
 
 /**
- * Creates a screen that only updates and renders, absorbs all input without
- * using it, and evaluates to nothing when completed.
- * @constructor
- * @implements fish.screen.Screen
- * @param refresh is the refresh function.
- * @param update  is the update coroutine.
- * @param render  is the render function.
+ * Basic screen class which does nothing and should be extended.
  */
-fish.screen.DullScreen = function (refresh, update, render) {
-    fish.screen.Screen.call(
-        this,
-        refresh,
-        key => {return true;},
-        update,
-        render,
-        () => {return null;}
-    );
-};
+fish.screen.Screen = class {
+    /**
+     * Creates the screen and gives it the context object that contains all the
+     * subsystems and stuff.
+     * @param {Context} ctx is stored by the base screen class so you
+     *        always have access to it.
+     */
+    constructor(ctx) {
+        this.ctx = ctx;
+    }
 
-/**
- * Creates a loading screen that waits for a bunch of promises to evaluate.
- * @constructor
- * @implements fish.screen.Screen
- * @param graphics    is the game graphics object used to render stuff.
- * @param after       is a function called with all the evaluated promises
- *                    which should itself evaluate to a replacement screen.
- * @param ...promises is all the promises.
- */
-fish.screen.LoadScreen = function (graphics, after, ...promises) {
-    let newScreen = null;
-    Promise.all(promises).then(
-        values => {
-            
-        },
-        reason => {
+    /**
+     * Called by the engine whenever the screen gets onto the top of the screen
+     * stack.
+     * @param {?Object} message something sent from the screen that allowed
+     *        this screen to be revealed. Could be a return value from a screen
+     *        this one pushed on top of itself or whatever you want.
+     */
+    refresh(message) {
+        // by default does nothing.
+    }
 
-        }
-    );
-    fish.screen.DullScreen.call(
-        this,
-        () => {},
-        () => {
+    /**
+     * Updates the screen.
+     * @param {number} delta is the amount of time passage to update for in
+     *        seconds.
+     * @return {?fish.screen.Transition} the update thing that tells the engine
+     *         what to do next with regards to the screen stack. If null is
+     *         returned then nothing is done.
+     */
+    update(delta) {
+        // by default does nothing.
+        return null;
+    }
 
-        },
-        () => {
-            graphics.clearf(
-                Math.random(),
-                Math.random(),
-                math.random(),
-                1
-            );
-        }
-    );
+    /**
+     * Renders the screen.
+     * @param {boolean} front is whether this screen is the top one being
+     *        rendered.
+     */
+    render(front) {
+        // does nothing by default.
+    }
 };

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: audio</title>
+    <title>JSDoc: Interface: SamplePlayer</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: audio</h1>
+    <h1 class="page-title">Interface: SamplePlayer</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="fish.html">fish</a>.</span>audio</h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.audio.html">.audio</a>.</span>SamplePlayer</h2>
         
     
 </header>
@@ -38,12 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description">This file provides audio playing and loading functionality and a basic sound
-player class. This player only supports playing audio files that are fully
-loaded into memory, there is no audio streaming because it would lag and
-suck.
-If you need more flexible audio playing then feel free to create your own
-class that does what you need.</div>
+            <div class="description">Audio player which can play samples, which is the minimum required by the
+engine.</div>
         
 
         
@@ -78,7 +74,7 @@ class that does what you need.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audio.js.html">audio.js</a>, <a href="audio.js.html#line12">line 12</a>
+        <a href="audio.js.html">audio.js</a>, <a href="audio.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -99,32 +95,180 @@ class that does what you need.</div>
     
 
     
-        <h3 class="subsection-title">Classes</h3>
 
-        <dl>
-            <dt><a href="fish.audio.BasicAudio.html">BasicAudio</a></dt>
-            <dd></dd>
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
         
-            <dt><a href="fish.audio.Sample.html">Sample</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Interfaces</h3>
-
-        <dl>
-            <dt><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></dt>
-            <dd></dd>
-        </dl>
-    
+            
 
     
 
     
+    <h4 class="name" id="playSample"><span class="type-signature"></span>playSample<span class="signature">(sample, priority)</span><span class="type-signature"></span></h4>
+    
 
     
 
+
+
+<div class="description">
+    Plays a sample.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sample</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.audio.Sample.html">fish.audio.Sample</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the sample to play.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">determines if this sample can override others if
+       there are limited resources.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="audio.js.html">audio.js</a>, <a href="audio.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

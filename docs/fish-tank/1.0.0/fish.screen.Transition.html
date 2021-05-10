@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ButtonKnob</title>
+    <title>JSDoc: Class: Transition</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: ButtonKnob</h1>
+    <h1 class="page-title">Class: Transition</h1>
 
     
 
@@ -28,7 +28,10 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>ButtonKnob<span class="signature">(style, child)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.screen.html">.screen</a>.</span>Transition<span class="signature">(pop, screen<span class="signature-attributes">nullable</span>, message<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Represents a transition between screens on the screen stack.</div>
         
     
 </header>
@@ -39,9 +42,11 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
     
-    <h4 class="name" id="ButtonKnob"><span class="type-signature"></span>new ButtonKnob<span class="signature">(style, child)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Transition"><span class="type-signature"></span>new Transition<span class="signature">(pop, screen<span class="signature-attributes">nullable</span>, message<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -49,7 +54,12 @@
 
 
 <div class="description">
-    Creates the button.
+    There are three different configurations that this constructor allows.
+When pop is true the current screen is removed, when screen is not null
+then that screen is placed on the stack. Thus, you can push a screen on
+this screen, replace this screen with another, or you can just pop this
+screen. If you set pop to false and screen to null then nothing will
+happen.
 </div>
 
 
@@ -73,7 +83,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -85,46 +99,116 @@
 
         <tr>
             
-                <td class="name"><code>style</code></td>
+                <td class="name"><code>pop</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="fish.gui.Style.html">fish.gui.Style</a></span>
+<span class="param-type">boolean</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last">is the style to draw it with.</td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">whether to pop the returning screen from the screen
+       stack.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>child</code></td>
+                <td class="name"><code>screen</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="fish.gui.Knob.html">fish.gui.Knob</a></span>
+<span class="param-type"><a href="fish.screen.Screen.html">fish.screen.Screen</a></span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
             
 
-            <td class="description last">is the child to put inside the button.</td>
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">is a screen to add to the screen
+       stack if given.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last">a message that will be given to whatever screen
+       is going to next have reveal called on it.</td>
         </tr>
 
     
@@ -165,7 +249,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="gui.js.html">gui.js</a>, <a href="gui.js.html#line110">line 110</a>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line56">line 56</a>
     </li></ul></dd>
     
 

@@ -105,7 +105,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     let keys = {};
     let buttonStates = {};
     for (let button in this.BUTTONS) {
-        buttonStates[button] = false;
+        buttonStates[button] = 0;
     }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
     document.addEventListener('keyup', (e) => {keys[e.key] = false;});
@@ -161,7 +161,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        for (let button in this.BUTTONS) updateButton(button, keys[button]);
+        for (let button in this.BUTTONS) updateButton(button, keys[keymap[button]]);
         for (let pad of gamepads) {
             updateButton(this.BUTTONS.A, pressed(pad.buttons[0]), true);
             updateButton(this.BUTTONS.B, pressed(pad.buttons[1]), true);

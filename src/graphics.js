@@ -69,10 +69,35 @@ fish.graphics.Atlas = function () {
      * @param {string} name is the name of the sprite to get.
      * @return {fish.util.Rect} the sprite found or an empty one if it lacks it.
      */
-    this.get = (name) => {
-        if (name in this.sprites) return this.sprites[name];
+    this.get = name => {
+        if (name in sprites) return sprites[name];
         console.error(`unknown sprite name ${name}`);
         return new fish.util.Rect(0, 0, 0, 0);
+    };
+
+    /**
+     * Gets a 9-patch out of the atlas and makes it for you. If you pass the
+     * border argument then it is used to create the patch, but if you leave it
+     * as 0 then it tries to use the name to discern the border size of the
+     * patch by looking for a number at the end of the name. If neither of
+     * those things are present then an error will be thrown.
+     * @param {string} name name of the sprite the patch is made of.
+     * @param {number} [border=0] the width of the borders of the patch.
+     * @return {fish.graphics.Patch} the created patch.
+     */
+    this.getPatch = (name, border=0) => {
+        let sprite = this.get(name);
+        if (border <= 0) {
+            let match = name.match(/\d+/);
+            if (!match) {
+                throw new Error(
+                    'fish.graphics.Atlas.getPatch requires a border number ' +
+                    'or a sprite with a name that ends with a number'
+                );
+            }
+            border = parseInt(match[0]);
+        }
+        return new fish.graphics.Patch(sprite, border);
     };
 
     /**
@@ -207,7 +232,7 @@ fish.graphics.loadAtlas = async function (url) {
         let rect = data[frame];
         atlas.add(
             frame,
-            new fish.util.Rect(rect.x, rect.y, rect.w, rect.h)
+            new fish.util.Rect(rect.x, rect.y, rect.width, rect.height)
         );
     }
     return atlas;
@@ -221,8 +246,10 @@ fish.graphics.Patch = class {
     /**
      * Creates it by giving a sprite and a border around the outside which
      * becomes the non middle parts.
-     * @param rect is the overall sprite to make the patch from.
-     * @param born is the width of the border of the patch.
+     * @param {fish.util.Rect} rect is the overall sprite to make the patch
+     *        from.
+     * @param {number} bord is the number of pixels from the outer edge to the
+     *        interior.
      */
     constructor(rect, bord) {
         let hMid = rect.w - bord * 2;
@@ -230,116 +257,113 @@ fish.graphics.Patch = class {
         if (hMid < 1 || vMid < 1) {
             throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
         }
-        let tl = fish.util.Rect(rect.x, rect.y, bord, bord);
-        let t = fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
-        let tr = fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
-        let ml = fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
-        let m = fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
-        let mr = fish.util.Rect(
+
+        /**
+         * Border width of the patch.
+         * @readonly
+         * @member {number}
+         */
+        this.BORDER = bord;
+
+        /**
+         * Top left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.TL = new fish.util.Rect(rect.x, rect.y, bord, bord);
+
+        /**
+         * Top part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.T = new fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
+
+        /**
+         * Top right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.TR = new fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
+
+        /**
+         * mid left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.ML = new fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
+
+        /**
+         * middle part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.M = new fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
+
+        /**
+         * mid right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.MR = new fish.util.Rect(
             rect.x + bord + hMid,
             rect.y + bord,
             bord,
             vMid
         );
-        let bl = fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
-        let b = fish.util.Rect(
+
+        /**
+         * bottom left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.BL = new fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
+
+        /**
+         * bottom part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.B = new fish.util.Rect(
             rect.x + bord,
             rect.y + bord + vMid,
             hMid,
             bord
         );
-        let br = fish.util.Rect(
+
+        /**
+         * bottom right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.BR = new fish.util.Rect(
             rect.x + bord + hMid,
             rect.y + bord + vMid,
             bord,
             bord
         );
     }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get tl() {
-        return tl;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get t() {
-        return t;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get tr() {
-        return tr;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get ml() {
-        return ml;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get m() {
-        return m;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get mr() {
-        return mr;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get bl() {
-        return bl;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get b() {
-        return b;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get br() {
-        return br;
-    }
-
-    /**
-     * Gives you the rect's border size.
-     * @return the border size as in perpendicular distance from the outside.
-     */
-    get border() {
-        return border;
-    }
 };
 
 /**
- * Base rendering interface required by the engine internally. Must be
- * implemented by any rendering system.
+ * Core functionality required by the engine for the graphics subsystem to
+ * have.
+ * @interface fish.graphics.BaseRenderer
+ */
+
+/**
+ * Fill the screen with a colour.
+ * @method fish.graphics.BaseRenderer#clear
+ * @param {number} r the red component from 0 to 1.
+ * @param {number} g the green component from 0 to 1.
+ * @param {number} b the blue component from 0 to 1.
+ * @param {number} a the transparent component from 0 to 1.
+ */
+
+/**
+ * Base rendering interface required by the engine internally for gui stuff.
+ * Must be implemented by something in order to use the gui but does not need
+ * to be implemented by the graphics subsystem itself.
  * @interface
  */
 fish.graphics.PatchRenderer = class {
@@ -349,7 +373,7 @@ fish.graphics.PatchRenderer = class {
      * @param {fish.util.Rect} dst is the place on the screen to draw it.
      */
     renderPatch(patch, dst) {
-        throw new Error (
+        throw new Error(
             'fish.graphics.PatchRenderer.renderPatch must be implemented'
         );
     }
@@ -358,6 +382,7 @@ fish.graphics.PatchRenderer = class {
 /**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
+ * @implements fish.graphics.BaseRenderer
  * @constructor
  * @param gl is the opengl context.
  */
@@ -369,14 +394,13 @@ fish.graphics.SpriteRenderer = function (gl) {
     this.width = gl.canvas.clientWidth;
     this.height = gl.canvas.clientHeight;
 
-
     /**
      * A thing that batches draw calls.
      * @constructor
      * @implements {fish.graphics.PatchRenderer}
      * @param {fish.graphics.Texture} texture is the texture all the draws must
-     *                                        be from.
-     * @param {number}                max     is the max things to draw.
+     *        be from.
+     * @param {number} max the max things to draw.
      */
     this.Batch = function (texture, max) {
         let items = new Float32Array(max * 12);
@@ -391,6 +415,44 @@ fish.graphics.SpriteRenderer = function (gl) {
         gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
 
         /**
+         * Adds the given sprite onto the given spot.
+         * @param {fish.util.Rect} src is the sprite to draw.
+         * @param {number} l the distance from left of screen to draw.
+         * @param {number} b the distance from bottom of screen to draw.
+         * @param {number} r the distance from right of screen to stop draw.
+         * @param {number} t the distance from top of screen to stop draw.
+         */
+        this.addComp = (src, l, b, r, t) => {
+            if (n >= max) return;
+            const offset = n * 12;
+            items[offset] = l;
+            items[offset + 1] = b;
+            items[offset + 2] = r;
+            items[offset + 3] = b;
+            items[offset + 4] = l;
+            items[offset + 5] = t;
+            items[offset + 6] = r;
+            items[offset + 7] = b;
+            items[offset + 8] = r;
+            items[offset + 9] = t;
+            items[offset + 10] = l;
+            items[offset + 11] = t;
+            textureItems[offset] = src.x;
+            textureItems[offset + 1] = src.t;
+            textureItems[offset + 2] = src.r;
+            textureItems[offset + 3] = src.t;
+            textureItems[offset + 4] = src.x;
+            textureItems[offset + 5] = src.y;
+            textureItems[offset + 6] = src.r;
+            textureItems[offset + 7] = src.t;
+            textureItems[offset + 8] = src.r;
+            textureItems[offset + 9] = src.y;
+            textureItems[offset + 10] = src.x;
+            textureItems[offset + 11] = src.y;
+            n++;
+        };
+
+        /**
          * Adds a sprite to the list of those to draw. I guess rotating would
          * be good but I would have to do it in software and I dunno what the
          * performance would be like.
@@ -401,51 +463,26 @@ fish.graphics.SpriteRenderer = function (gl) {
          * a vector. If you used a rect it does nothing.
          */
         this.add = (src, dst, scale=1) => {
-            if (n >= max) return;
-            const offset = n * 12;
             let l, r, t, b;
             if (dst instanceof fish.util.Rect) {
                 l = dst.x;
                 r = dst.r;
-                t = dst.y;
-                b = dst.b;
+                b = dst.y;
+                t = dst.t;
             } else if (dst instanceof fish.util.Vector) {
                 let halfScale = scale * 0.5;
                 l = dst.x - src.w * halfScale;
                 r = dst.x + src.w * halfScale;
-                t = dst.y - src.h * halfScale;
-                b = dst.y + src.h * halfScale;
+                b = dst.y - src.h * halfScale;
+                t = dst.y + src.h * halfScale;
             } else {
                 throw new TypeError(
                     'SpriteRenderer.Batch.add requres a Vector or a Rect'
                 );
             }
-            items[offset] = l;
-            items[offset + 1] = t;
-            items[offset + 2] = r;
-            items[offset + 3] = t;
-            items[offset + 4] = l;
-            items[offset + 5] = b;
-            items[offset + 6] = r;
-            items[offset + 7] = t;
-            items[offset + 8] = r;
-            items[offset + 9] = b;
-            items[offset + 10] = l;
-            items[offset + 11] = b;
-            textureItems[offset] = src.x;
-            textureItems[offset + 1] = src.b;
-            textureItems[offset + 2] = src.r;
-            textureItems[offset + 3] = src.b;
-            textureItems[offset + 4] = src.x;
-            textureItems[offset + 5] = src.y;
-            textureItems[offset + 6] = src.r;
-            textureItems[offset + 7] = src.b;
-            textureItems[offset + 8] = src.r;
-            textureItems[offset + 9] = src.y;
-            textureItems[offset + 10] = src.x;
-            textureItems[offset + 11] = src.y;
-            n++;
+            this.addComp(src, l, t, r, b);
         };
+
 
         /**
          * Draws a 9 patch at the given place. If you give an area that is too
@@ -454,61 +491,69 @@ fish.graphics.SpriteRenderer = function (gl) {
          * @param dst   is the place to draw it.
          */
         this.addPatch = (patch, dst) => {
-            let rect = new fish.util.Rect(0, 0, 0, 0);
-            this.add(patch.tl, new fish.util.Rect(
+            this.addComp(
+                patch.BL,
                 dst.x,
                 dst.y,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.t, new fish.util.Rect(
-                dst.x + patch.border,
+                dst.x + patch.BORDER,
+                dst.y + patch.BORDER
+            );
+            this.addComp(
+                patch.B,
+                dst.x + patch.BORDER,
                 dst.y,
-                dst.w - patch.border * 2,
-                patch.border
-            ));
-            this.add(patch.tr, new fish.util.Rect(
-                dst.x + dst.w - patch.border,
+                dst.r - patch.BORDER,
+                dst.y + patch.BORDER
+            );
+            this.addComp(
+                patch.BR,
+                dst.r - patch.BORDER,
                 dst.y,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.ml, new fish.util.Rect(
+                dst.r,
+                dst.y + patch.BORDER
+            );
+            this.addComp(
+                patch.ML,
                 dst.x,
-                dst.y + patch.border,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.m, new fish.util.Rect(
-                dst.x + patch.border,
-                dst.y + patch.border,
-                dst.w - patch.border * 2,
-                patch.border
-            ));
-            this.add(patch.mr, new fish.util.Rect(
-                dst.x + dst.w - patch.border,
-                dst.y + patch.border,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.bl, new fish.util.Rect(
+                dst.y + patch.BORDER,
+                dst.x + patch.BORDER,
+                dst.t - patch.BORDER
+            );
+            this.addComp(
+                patch.M,
+                dst.x + patch.BORDER,
+                dst.y + patch.BORDER,
+                dst.r - patch.BORDER,
+                dst.t - patch.BORDER
+            );
+            this.addComp(
+                patch.MR,
+                dst.r - patch.BORDER,
+                dst.y + patch.BORDER,
+                dst.r,
+                dst.t - patch.BORDER
+            );
+            this.addComp(
+                patch.TL,
                 dst.x,
-                dst.y + dst.h - patch.border,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.b, new fish.util.Rect(
-                dst.x + patch.border,
-                dst.y + dst.h - patch.border,
-                dst.w - patch.border * 2,
-                patch.border
-            ));
-            this.add(patch.br, new fish.util.Rect(
-                dst.x + dst.w - patch.border,
-                dst.y + dst.h - patch.border,
-                patch.border,
-                patch.border
-            ));
+                dst.t - patch.BORDER,
+                dst.x + patch.BORDER,
+                dst.t
+            );
+            this.addComp(
+                patch.T,
+                dst.x + patch.BORDER,
+                dst.t - patch.BORDER,
+                dst.r - patch.BORDER,
+                dst.t
+            );
+            this.addComp(
+                patch.TR,
+                dst.r - patch.BORDER,
+                dst.t - patch.BORDER,
+                dst.r,
+                dst.t
+            );
         };
 
         /**
@@ -574,11 +619,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     };
 
     /**
-     * Same as clear but uses components of the colour instead of an object.
-     * @param {number} r is the red part.
-     * @param {number} g is the green part.
-     * @param {number} b is the blue part.
-     * @param {number} a is the transparancy part.
+     * @inheritDoc
      */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);

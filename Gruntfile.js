@@ -31,6 +31,13 @@ module.exports = function(grunt) {
                 }
             }
         },
+        sprite: {
+            all: {
+                src: 'testSprites/*.png',
+                dest: 'test/sprites.png',
+                destCss: 'test/sprites.json'
+            }
+        },
         jsdoc: {
             dist: {
                 src: [
@@ -49,8 +56,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-terser');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-spritesmith');
     grunt.registerTask(
         'default',
-        ['jshint', 'concat', 'terser:main', 'jsdoc']
+        ['jshint', 'concat', 'terser:main', 'jsdoc', 'sprite']
     );
 };

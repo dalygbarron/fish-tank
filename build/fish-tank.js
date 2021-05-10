@@ -14,8 +14,8 @@ fish.util = {};
  * @param {number} y is the vector part.
  */
 fish.util.Vector = function (x, y) {
-    this.x = x;
-    this.y = y;
+    this.x = x || 0;
+    this.y = y || 0;
 
     /**
      * Adds another vector or value to this vector and returns the result
@@ -83,12 +83,12 @@ fish.util.Vector = function (x, y) {
 fish.util.Rect = class {
     /**
      * Creates the rectangle.
-     * @param {number} x is the horizontal position of the rectangle.
-     * @param {number} y is the vertical position of the rectangle.
-     * @param {number} w is the width of the rectangle.
-     * @param {number} h is the height of the rectangle.
+     * @param {number} [x=0] is the horizontal position of the rectangle.
+     * @param {number} [y=0] is the vertical position of the rectangle.
+     * @param {number} [w=0] is the width of the rectangle.
+     * @param {number} [h=0] is the height of the rectangle.
      */
-    constructor(x, y, w, h) {
+    constructor(x=0, y=0, w=0, h=0) {
         this.pos = new fish.util.Vector(x, y);
         this.size = new fish.util.Vector(w, h);
     }
@@ -126,7 +126,8 @@ fish.util.Rect = class {
     }
 
     /**
-     * Gets the position of the right hand side of the rectangle.
+     * Gets the position of the right hand side of the rectangle. Or left
+     * depending on how you look at it. Essentially it's x + w.
      * @return {number} x + w
      */
     get r() {
@@ -134,10 +135,11 @@ fish.util.Rect = class {
     }
 
     /**
-     * Gets the position of the bottom of the rectangle.
+     * Gets the position of the top of the rectangle. Or bottom depending on
+     * how you are thinking about it. Point is it's y + h.
      * @return {number} y + h
      */
-    get b() {
+    get t() {
         return this.pos.y + this.size.y;
     }
 };
@@ -234,10 +236,35 @@ fish.graphics.Atlas = function () {
      * @param {string} name is the name of the sprite to get.
      * @return {fish.util.Rect} the sprite found or an empty one if it lacks it.
      */
-    this.get = (name) => {
-        if (name in this.sprites) return this.sprites[name];
+    this.get = name => {
+        if (name in sprites) return sprites[name];
         console.error(`unknown sprite name ${name}`);
         return new fish.util.Rect(0, 0, 0, 0);
+    };
+
+    /**
+     * Gets a 9-patch out of the atlas and makes it for you. If you pass the
+     * border argument then it is used to create the patch, but if you leave it
+     * as 0 then it tries to use the name to discern the border size of the
+     * patch by looking for a number at the end of the name. If neither of
+     * those things are present then an error will be thrown.
+     * @param {string} name name of the sprite the patch is made of.
+     * @param {number} [border=0] the width of the borders of the patch.
+     * @return {fish.graphics.Patch} the created patch.
+     */
+    this.getPatch = (name, border=0) => {
+        let sprite = this.get(name);
+        if (border <= 0) {
+            let match = name.match(/\d+/);
+            if (!match) {
+                throw new Error(
+                    'fish.graphics.Atlas.getPatch requires a border number ' +
+                    'or a sprite with a name that ends with a number'
+                );
+            }
+            border = parseInt(match[0]);
+        }
+        return new fish.graphics.Patch(sprite, border);
     };
 
     /**
@@ -372,7 +399,7 @@ fish.graphics.loadAtlas = async function (url) {
         let rect = data[frame];
         atlas.add(
             frame,
-            new fish.util.Rect(rect.x, rect.y, rect.w, rect.h)
+            new fish.util.Rect(rect.x, rect.y, rect.width, rect.height)
         );
     }
     return atlas;
@@ -386,8 +413,10 @@ fish.graphics.Patch = class {
     /**
      * Creates it by giving a sprite and a border around the outside which
      * becomes the non middle parts.
-     * @param rect is the overall sprite to make the patch from.
-     * @param born is the width of the border of the patch.
+     * @param {fish.util.Rect} rect is the overall sprite to make the patch
+     *        from.
+     * @param {number} bord is the number of pixels from the outer edge to the
+     *        interior.
      */
     constructor(rect, bord) {
         let hMid = rect.w - bord * 2;
@@ -395,116 +424,113 @@ fish.graphics.Patch = class {
         if (hMid < 1 || vMid < 1) {
             throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
         }
-        let tl = fish.util.Rect(rect.x, rect.y, bord, bord);
-        let t = fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
-        let tr = fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
-        let ml = fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
-        let m = fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
-        let mr = fish.util.Rect(
+
+        /**
+         * Border width of the patch.
+         * @readonly
+         * @member {number}
+         */
+        this.BORDER = bord;
+
+        /**
+         * Top left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.TL = new fish.util.Rect(rect.x, rect.y, bord, bord);
+
+        /**
+         * Top part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.T = new fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
+
+        /**
+         * Top right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.TR = new fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
+
+        /**
+         * mid left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.ML = new fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
+
+        /**
+         * middle part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.M = new fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
+
+        /**
+         * mid right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.MR = new fish.util.Rect(
             rect.x + bord + hMid,
             rect.y + bord,
             bord,
             vMid
         );
-        let bl = fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
-        let b = fish.util.Rect(
+
+        /**
+         * bottom left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.BL = new fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
+
+        /**
+         * bottom part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.B = new fish.util.Rect(
             rect.x + bord,
             rect.y + bord + vMid,
             hMid,
             bord
         );
-        let br = fish.util.Rect(
+
+        /**
+         * bottom right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.BR = new fish.util.Rect(
             rect.x + bord + hMid,
             rect.y + bord + vMid,
             bord,
             bord
         );
     }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get tl() {
-        return tl;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get t() {
-        return t;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get tr() {
-        return tr;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get ml() {
-        return ml;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get m() {
-        return m;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get mr() {
-        return mr;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get bl() {
-        return bl;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get b() {
-        return b;
-    }
-
-    /**
-     * Gets the rect for there.
-     * @return the rect.
-     */
-    get br() {
-        return br;
-    }
-
-    /**
-     * Gives you the rect's border size.
-     * @return the border size as in perpendicular distance from the outside.
-     */
-    get border() {
-        return border;
-    }
 };
 
 /**
- * Base rendering interface required by the engine internally. Must be
- * implemented by any rendering system.
+ * Core functionality required by the engine for the graphics subsystem to
+ * have.
+ * @interface fish.graphics.BaseRenderer
+ */
+
+/**
+ * Fill the screen with a colour.
+ * @method fish.graphics.BaseRenderer#clear
+ * @param {number} r the red component from 0 to 1.
+ * @param {number} g the green component from 0 to 1.
+ * @param {number} b the blue component from 0 to 1.
+ * @param {number} a the transparent component from 0 to 1.
+ */
+
+/**
+ * Base rendering interface required by the engine internally for gui stuff.
+ * Must be implemented by something in order to use the gui but does not need
+ * to be implemented by the graphics subsystem itself.
  * @interface
  */
 fish.graphics.PatchRenderer = class {
@@ -514,7 +540,7 @@ fish.graphics.PatchRenderer = class {
      * @param {fish.util.Rect} dst is the place on the screen to draw it.
      */
     renderPatch(patch, dst) {
-        throw new Error (
+        throw new Error(
             'fish.graphics.PatchRenderer.renderPatch must be implemented'
         );
     }
@@ -523,6 +549,7 @@ fish.graphics.PatchRenderer = class {
 /**
  * The default graphics handler which uses a sprite batch to draw nice
  * pictures.
+ * @implements fish.graphics.BaseRenderer
  * @constructor
  * @param gl is the opengl context.
  */
@@ -534,14 +561,13 @@ fish.graphics.SpriteRenderer = function (gl) {
     this.width = gl.canvas.clientWidth;
     this.height = gl.canvas.clientHeight;
 
-
     /**
      * A thing that batches draw calls.
      * @constructor
      * @implements {fish.graphics.PatchRenderer}
      * @param {fish.graphics.Texture} texture is the texture all the draws must
-     *                                        be from.
-     * @param {number}                max     is the max things to draw.
+     *        be from.
+     * @param {number} max the max things to draw.
      */
     this.Batch = function (texture, max) {
         let items = new Float32Array(max * 12);
@@ -556,6 +582,44 @@ fish.graphics.SpriteRenderer = function (gl) {
         gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
 
         /**
+         * Adds the given sprite onto the given spot.
+         * @param {fish.util.Rect} src is the sprite to draw.
+         * @param {number} l the distance from left of screen to draw.
+         * @param {number} b the distance from bottom of screen to draw.
+         * @param {number} r the distance from right of screen to stop draw.
+         * @param {number} t the distance from top of screen to stop draw.
+         */
+        this.addComp = (src, l, b, r, t) => {
+            if (n >= max) return;
+            const offset = n * 12;
+            items[offset] = l;
+            items[offset + 1] = b;
+            items[offset + 2] = r;
+            items[offset + 3] = b;
+            items[offset + 4] = l;
+            items[offset + 5] = t;
+            items[offset + 6] = r;
+            items[offset + 7] = b;
+            items[offset + 8] = r;
+            items[offset + 9] = t;
+            items[offset + 10] = l;
+            items[offset + 11] = t;
+            textureItems[offset] = src.x;
+            textureItems[offset + 1] = src.t;
+            textureItems[offset + 2] = src.r;
+            textureItems[offset + 3] = src.t;
+            textureItems[offset + 4] = src.x;
+            textureItems[offset + 5] = src.y;
+            textureItems[offset + 6] = src.r;
+            textureItems[offset + 7] = src.t;
+            textureItems[offset + 8] = src.r;
+            textureItems[offset + 9] = src.y;
+            textureItems[offset + 10] = src.x;
+            textureItems[offset + 11] = src.y;
+            n++;
+        };
+
+        /**
          * Adds a sprite to the list of those to draw. I guess rotating would
          * be good but I would have to do it in software and I dunno what the
          * performance would be like.
@@ -566,51 +630,26 @@ fish.graphics.SpriteRenderer = function (gl) {
          * a vector. If you used a rect it does nothing.
          */
         this.add = (src, dst, scale=1) => {
-            if (n >= max) return;
-            const offset = n * 12;
             let l, r, t, b;
             if (dst instanceof fish.util.Rect) {
                 l = dst.x;
                 r = dst.r;
-                t = dst.y;
-                b = dst.b;
+                b = dst.y;
+                t = dst.t;
             } else if (dst instanceof fish.util.Vector) {
                 let halfScale = scale * 0.5;
                 l = dst.x - src.w * halfScale;
                 r = dst.x + src.w * halfScale;
-                t = dst.y - src.h * halfScale;
-                b = dst.y + src.h * halfScale;
+                b = dst.y - src.h * halfScale;
+                t = dst.y + src.h * halfScale;
             } else {
                 throw new TypeError(
                     'SpriteRenderer.Batch.add requres a Vector or a Rect'
                 );
             }
-            items[offset] = l;
-            items[offset + 1] = t;
-            items[offset + 2] = r;
-            items[offset + 3] = t;
-            items[offset + 4] = l;
-            items[offset + 5] = b;
-            items[offset + 6] = r;
-            items[offset + 7] = t;
-            items[offset + 8] = r;
-            items[offset + 9] = b;
-            items[offset + 10] = l;
-            items[offset + 11] = b;
-            textureItems[offset] = src.x;
-            textureItems[offset + 1] = src.b;
-            textureItems[offset + 2] = src.r;
-            textureItems[offset + 3] = src.b;
-            textureItems[offset + 4] = src.x;
-            textureItems[offset + 5] = src.y;
-            textureItems[offset + 6] = src.r;
-            textureItems[offset + 7] = src.b;
-            textureItems[offset + 8] = src.r;
-            textureItems[offset + 9] = src.y;
-            textureItems[offset + 10] = src.x;
-            textureItems[offset + 11] = src.y;
-            n++;
+            this.addComp(src, l, t, r, b);
         };
+
 
         /**
          * Draws a 9 patch at the given place. If you give an area that is too
@@ -619,61 +658,69 @@ fish.graphics.SpriteRenderer = function (gl) {
          * @param dst   is the place to draw it.
          */
         this.addPatch = (patch, dst) => {
-            let rect = new fish.util.Rect(0, 0, 0, 0);
-            this.add(patch.tl, new fish.util.Rect(
+            this.addComp(
+                patch.BL,
                 dst.x,
                 dst.y,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.t, new fish.util.Rect(
-                dst.x + patch.border,
+                dst.x + patch.BORDER,
+                dst.y + patch.BORDER
+            );
+            this.addComp(
+                patch.B,
+                dst.x + patch.BORDER,
                 dst.y,
-                dst.w - patch.border * 2,
-                patch.border
-            ));
-            this.add(patch.tr, new fish.util.Rect(
-                dst.x + dst.w - patch.border,
+                dst.r - patch.BORDER,
+                dst.y + patch.BORDER
+            );
+            this.addComp(
+                patch.BR,
+                dst.r - patch.BORDER,
                 dst.y,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.ml, new fish.util.Rect(
+                dst.r,
+                dst.y + patch.BORDER
+            );
+            this.addComp(
+                patch.ML,
                 dst.x,
-                dst.y + patch.border,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.m, new fish.util.Rect(
-                dst.x + patch.border,
-                dst.y + patch.border,
-                dst.w - patch.border * 2,
-                patch.border
-            ));
-            this.add(patch.mr, new fish.util.Rect(
-                dst.x + dst.w - patch.border,
-                dst.y + patch.border,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.bl, new fish.util.Rect(
+                dst.y + patch.BORDER,
+                dst.x + patch.BORDER,
+                dst.t - patch.BORDER
+            );
+            this.addComp(
+                patch.M,
+                dst.x + patch.BORDER,
+                dst.y + patch.BORDER,
+                dst.r - patch.BORDER,
+                dst.t - patch.BORDER
+            );
+            this.addComp(
+                patch.MR,
+                dst.r - patch.BORDER,
+                dst.y + patch.BORDER,
+                dst.r,
+                dst.t - patch.BORDER
+            );
+            this.addComp(
+                patch.TL,
                 dst.x,
-                dst.y + dst.h - patch.border,
-                patch.border,
-                patch.border
-            ));
-            this.add(patch.b, new fish.util.Rect(
-                dst.x + patch.border,
-                dst.y + dst.h - patch.border,
-                dst.w - patch.border * 2,
-                patch.border
-            ));
-            this.add(patch.br, new fish.util.Rect(
-                dst.x + dst.w - patch.border,
-                dst.y + dst.h - patch.border,
-                patch.border,
-                patch.border
-            ));
+                dst.t - patch.BORDER,
+                dst.x + patch.BORDER,
+                dst.t
+            );
+            this.addComp(
+                patch.T,
+                dst.x + patch.BORDER,
+                dst.t - patch.BORDER,
+                dst.r - patch.BORDER,
+                dst.t
+            );
+            this.addComp(
+                patch.TR,
+                dst.r - patch.BORDER,
+                dst.t - patch.BORDER,
+                dst.r,
+                dst.t
+            );
         };
 
         /**
@@ -739,11 +786,7 @@ fish.graphics.SpriteRenderer = function (gl) {
     };
 
     /**
-     * Same as clear but uses components of the colour instead of an object.
-     * @param {number} r is the red part.
-     * @param {number} g is the green part.
-     * @param {number} b is the blue part.
-     * @param {number} a is the transparancy part.
+     * @inheritDoc
      */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);
@@ -816,8 +859,23 @@ fish.audio.Sample = function (name, buffer) {
 };
 
 /**
+ * Audio player which can play samples, which is the minimum required by the
+ * engine.
+ * @interface fish.audio.SamplePlayer
+ */
+
+/**
+ * Plays a sample.
+ * @method fish.audio.SamplePlayer#playSample
+ * @param {fish.audio.Sample} sample the sample to play.
+ * @param {number} priority determines if this sample can override others if
+ *        there are limited resources.
+ */
+
+/**
  * A basic audio handler that has a music channel, a looping background sound
  * channel, and a couple of channels for playing sound effects.
+ * @implements fish.audio.SamplePlayer
  * @constructor
  * @param {AudioContext} context is the audio context.
  * @param {number} players is the number of samples that can play at once.
@@ -921,10 +979,7 @@ fish.audio.BasicAudio = function (context, players=3) {
     };
 
     /**
-     * Plays a sample as long as it has not played since the last refresh.
-     * @param {fish.audio.Sample} sample   is the sample to play.
-     * @param {number}            priority is it's priority so it can play
-     *                            over things of lesser importance.
+     * @inheritDoc
      */
     this.playSample = (sample, priority=0) => {
         let chosen = -1;
@@ -1128,7 +1183,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     let keys = {};
     let buttonStates = {};
     for (let button in this.BUTTONS) {
-        buttonStates[button] = false;
+        buttonStates[button] = 0;
     }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
     document.addEventListener('keyup', (e) => {keys[e.key] = false;});
@@ -1184,7 +1239,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        for (let button in this.BUTTONS) updateButton(button, keys[button]);
+        for (let button in this.BUTTONS) updateButton(button, keys[keymap[button]]);
         for (let pad of gamepads) {
             updateButton(this.BUTTONS.A, pressed(pad.buttons[0]), true);
             updateButton(this.BUTTONS.B, pressed(pad.buttons[1]), true);
@@ -1324,7 +1379,7 @@ fish.gui.PanelKnob = class extends fish.gui.Knob {
      * horizontal.
      */
     constructor(style, vertical=true) {
-        super.constructor(style);
+        super(style);
         this.children = [];
         this.vertical = vertical;
     }
@@ -1355,7 +1410,7 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
      * @param {fish.gui.Knob} child is the child to put inside the button.
      */
     constructor(style, child) {
-        super.constructor(style);
+        super(style);
         this.child = child;
     }
 
@@ -1586,93 +1641,126 @@ fish.shader = (() => {
 var fish = fish || {};
 
 /**
- * Contains the screen class and some generic types of screen that you can use
- * yourself if you want to.
+ * Contains the screen class and the context class which holds the subsystem
+ * for screens.
  * @namespace
  */
 fish.screen = {};
 
 /**
- * Creates a screen object by taking the four things a screen needs.
- * @constructor
- * @param refresh  is a function that gets called every time the screen either
- *                 gets put on top of the screen stack, or is revealed at the
- *                 top of the screen stack.
- * @param input    is a function called when input is received, which returns
- *                 a boolean telling you whether the input was used.
- * @param update   is an instantiated coroutine which can assume to be called 60
- *                 times per second, and yields/returns other screens that it can
- *                 assume will be placed on top of the screen stack. If it
- *                 returns, it can assume itself to be removed from the stack,
- *                 which happens before any are added.
- * @param render   just renders the screen and is called whenever.
- * @param evaluate returns a value that can be passed to a screen below when
- *                 this one's update coroutine has ended. It doesn't need to
- *                 be able to return a valid value until the update thing has
- *                 ended.
+ * Stores all the game's subsystems. Now, you will notice that these are all
+ * interface types that the engine provides. You will control what the
+ * implementing type is and for god's sake don't try to do any static type
+ * crazy bullshit with this. Just accept that the actual implementing types of
+ * these are the ones you asked for in your game.
+ * These interfaces are just the basic amount of functionality that the engine
+ * requires from each subsystem.
+ * @interface fish.screen.Context
  */
-fish.screen.Screen = function (refresh, input, update, render, evaluate) {
-    this.refresh = refresh;
-    this.input = input;
-    this.update = update;
-    this.render = render;
-    this.evaluate = evaluate;
+
+/**
+ * The game's renderer subsystem.
+ * @member fish.screen.Context#gfx
+ * @type fish.graphics.PatchRenderer
+ */
+
+/**
+ * The game's audio subsystem.
+ * @member fish.screen.Context#snd
+ * @type fish.audio.SamplePlayer
+ */
+
+/**
+ * The game's input subsystem.
+ * @member fish.screen.Context#in
+ * @type fish.input.UiInput
+ */
+
+/**
+ * The game's asset store.
+ * @member fish.screen.Context#str
+ * @type fish.store.Store
+ */
+
+/**
+ * Basically a namespace under which you can place your own things that
+ * you want to keep in the context object if you have any. This way, if I add
+ * more things to the context later it won't possibly break your code.
+ * @member fish.screen.Context#usr
+ * @type Object
+ */
+
+/**
+ * Represents a transition between screens on the screen stack.
+ */
+fish.screen.Transition = class {
+    /**
+     * There are three different configurations that this constructor allows.
+     * When pop is true the current screen is removed, when screen is not null
+     * then that screen is placed on the stack. Thus, you can push a screen on
+     * this screen, replace this screen with another, or you can just pop this
+     * screen. If you set pop to false and screen to null then nothing will
+     * happen.
+     * @param {boolean} pop whether to pop the returning screen from the screen
+     *        stack.
+     * @param {?fish.screen.Screen} screen is a screen to add to the screen
+     *        stack if given.
+     * @param {?Object} message a message that will be given to whatever screen
+     *        is going to next have reveal called on it.
+     */
+    constructor(pop, screen=null, message=null) {
+        this.pop = pop;
+        this.screen = screen;
+        this.message = message;
+    }
 };
 
 /**
- * Creates a screen that only updates and renders, absorbs all input without
- * using it, and evaluates to nothing when completed.
- * @constructor
- * @implements fish.screen.Screen
- * @param refresh is the refresh function.
- * @param update  is the update coroutine.
- * @param render  is the render function.
+ * Basic screen class which does nothing and should be extended.
  */
-fish.screen.DullScreen = function (refresh, update, render) {
-    fish.screen.Screen.call(
-        this,
-        refresh,
-        key => {return true;},
-        update,
-        render,
-        () => {return null;}
-    );
-};
+fish.screen.Screen = class {
+    /**
+     * Creates the screen and gives it the context object that contains all the
+     * subsystems and stuff.
+     * @param {Context} ctx is stored by the base screen class so you
+     *        always have access to it.
+     */
+    constructor(ctx) {
+        this.ctx = ctx;
+    }
 
-/**
- * Creates a loading screen that waits for a bunch of promises to evaluate.
- * @constructor
- * @implements fish.screen.Screen
- * @param graphics    is the game graphics object used to render stuff.
- * @param after       is a function called with all the evaluated promises
- *                    which should itself evaluate to a replacement screen.
- * @param ...promises is all the promises.
- */
-fish.screen.LoadScreen = function (graphics, after, ...promises) {
-    let newScreen = null;
-    Promise.all(promises).then(
-        values => {
-            
-        },
-        reason => {
+    /**
+     * Called by the engine whenever the screen gets onto the top of the screen
+     * stack.
+     * @param {?Object} message something sent from the screen that allowed
+     *        this screen to be revealed. Could be a return value from a screen
+     *        this one pushed on top of itself or whatever you want.
+     */
+    refresh(message) {
+        // by default does nothing.
+    }
 
-        }
-    );
-    fish.screen.DullScreen.call(
-        this,
-        () => {},
-        () => {
+    /**
+     * Updates the screen.
+     * @param {number} delta is the amount of time passage to update for in
+     *        seconds.
+     * @return {?fish.screen.Transition} the update thing that tells the engine
+     *         what to do next with regards to the screen stack. If null is
+     *         returned then nothing is done.
+     */
+    update(delta) {
+        // by default does nothing.
+        return null;
+    }
 
-        },
-        () => {
-            graphics.clearf(
-                Math.random(),
-                Math.random(),
-                math.random(),
-                1
-            );
-        }
-    );
+    /**
+     * Renders the screen.
+     * @param {boolean} front is whether this screen is the top one being
+     *        rendered.
+     */
+    render(front) {
+        // does nothing by default.
+    }
 };
 
 /** @namespace */
@@ -1681,8 +1769,7 @@ var fish = fish || {};
 /**
  * Init callback which creates the game's starting screen.
  * @callback fish~init
- * @param {Object}         cont   is the game context with all the subsystems
- *                                and stuff.
+ * @param {Object} ctx is the game context with all the subsystems and stuff.
  * @return {fish.screen.Screen} the screen created.
  */
 
@@ -1702,46 +1789,40 @@ var fish = fish || {};
  */
 fish.start = async function (rate, graphics, audio, input, store, init) {
     const FRAME_LENGTH = 1 / rate;
-    let cont = {
-        graphics: graphics,
-        audio: audio,
-        input: input,
-        store: store
+    let ctx = {
+        gfx: graphics,
+        snd: audio,
+        in: input,
+        str: store
     };
-    let screen = await init(cont);
+    let screen = await init(ctx);
     if (screen == null) {
         console.err("No Starting Screen. Game Cannot Start.");
         return;
     }
     let screens = [screen];
     screen.refresh();
-    const updateScreens = (message=null) => {
-        const response = screens[screens.length - 1].update.next(message);
-        if (response.done) {
-            const evaluation = screens[screens.length - 1].evaluate();
-            screens.pop();
-            if (screens.length > 0) {
-                screens[screens.length - 1].refresh();
-                updateScreens(evaluation);
-            }
-        }
-        if (response.value) {
-            screens.push(response.value);
-            screens[screens.length - 1].refresh();
+    const updateScreens = () => {
+        const response = screens[screens.length - 1].update(FRAME_LENGTH);
+        if (response) {
+            if (response.pop) screens.pop();
+            if (response.screen) screens.push(response.screen);
+            screens[screens.length - 1].refresh(response.message);
         }
     };
     setInterval(() => {
         if (screens.length > 0) {
-            // TODO: calculate the passage of time.
-            cont.audio.update();
-            cont.input.update();
+            // TODO: calculate the passage of time better and desync rendering
+            // with updating.
+            ctx.snd.update();
+            ctx.in.update();
             updateScreens();
-            graphics.clear(0, 0, 0, 1);
+            ctx.gfx.clear(0, 0, 0, 1);
             for (screen of screens) {
-                screen.render(graphics);
+                screen.render();
             }
         }
-    }, 20);
+    }, FRAME_LENGTH);
 };
 
 

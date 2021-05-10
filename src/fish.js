@@ -4,8 +4,7 @@ var fish = fish || {};
 /**
  * Init callback which creates the game's starting screen.
  * @callback fish~init
- * @param {Object}         cont   is the game context with all the subsystems
- *                                and stuff.
+ * @param {Object} ctx is the game context with all the subsystems and stuff.
  * @return {fish.screen.Screen} the screen created.
  */
 
@@ -25,46 +24,40 @@ var fish = fish || {};
  */
 fish.start = async function (rate, graphics, audio, input, store, init) {
     const FRAME_LENGTH = 1 / rate;
-    let cont = {
-        graphics: graphics,
-        audio: audio,
-        input: input,
-        store: store
+    let ctx = {
+        gfx: graphics,
+        snd: audio,
+        in: input,
+        str: store
     };
-    let screen = await init(cont);
+    let screen = await init(ctx);
     if (screen == null) {
         console.err("No Starting Screen. Game Cannot Start.");
         return;
     }
     let screens = [screen];
     screen.refresh();
-    const updateScreens = (message=null) => {
-        const response = screens[screens.length - 1].update.next(message);
-        if (response.done) {
-            const evaluation = screens[screens.length - 1].evaluate();
-            screens.pop();
-            if (screens.length > 0) {
-                screens[screens.length - 1].refresh();
-                updateScreens(evaluation);
-            }
-        }
-        if (response.value) {
-            screens.push(response.value);
-            screens[screens.length - 1].refresh();
+    const updateScreens = () => {
+        const response = screens[screens.length - 1].update(FRAME_LENGTH);
+        if (response) {
+            if (response.pop) screens.pop();
+            if (response.screen) screens.push(response.screen);
+            screens[screens.length - 1].refresh(response.message);
         }
     };
     setInterval(() => {
         if (screens.length > 0) {
-            // TODO: calculate the passage of time.
-            cont.audio.update();
-            cont.input.update();
+            // TODO: calculate the passage of time better and desync rendering
+            // with updating.
+            ctx.snd.update();
+            ctx.in.update();
             updateScreens();
-            graphics.clear(0, 0, 0, 1);
+            ctx.gfx.clear(0, 0, 0, 1);
             for (screen of screens) {
-                screen.render(graphics);
+                screen.render();
             }
         }
-    }, 20);
+    }, FRAME_LENGTH);
 };
 
 

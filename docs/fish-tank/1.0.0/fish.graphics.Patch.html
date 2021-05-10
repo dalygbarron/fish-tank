@@ -29,7 +29,7 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>Patch<span class="signature">(rect, born)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>Patch<span class="signature">(rect, bord)</span><span class="type-signature"></span></h2>
         
             <div class="class-description">9 patch implementation that uses a sprite rectangle for each part of the
 patch. This is just the object that holds the data for the 9 patch.</div>
@@ -47,7 +47,7 @@ patch. This is just the object that holds the data for the 9 patch.</div>
     
 
     
-    <h4 class="name" id="Patch"><span class="type-signature"></span>new Patch<span class="signature">(rect, born)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Patch"><span class="type-signature"></span>new Patch<span class="signature">(rect, bord)</span><span class="type-signature"></span></h4>
     
 
     
@@ -97,23 +97,34 @@ becomes the non middle parts.
 
             <td class="type">
             
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+            
             </td>
 
             
 
             
 
-            <td class="description last">is the overall sprite to make the patch from.</td>
+            <td class="description last">is the overall sprite to make the patch
+       from.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>born</code></td>
+                <td class="name"><code>bord</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
             
             </td>
 
@@ -121,7 +132,8 @@ becomes the non middle parts.
 
             
 
-            <td class="description last">is the width of the border of the patch.</td>
+            <td class="description last">is the number of pixels from the outer edge to the
+       interior.</td>
         </tr>
 
     
@@ -162,7 +174,7 @@ becomes the non middle parts.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line220">line 220</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line245">line 245</a>
     </li></ul></dd>
     
 
@@ -212,202 +224,26 @@ becomes the non middle parts.
 
         
             
-<h4 class="name" id="b"><span class="type-signature"></span>b<span class="type-signature"></span></h4>
+<h4 class="name" id="B"><span class="type-signature">(readonly) </span>B<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
 
 
 
 
 <div class="description">
-    Gets the rect for there.
+    bottom part of the patch.
 </div>
 
 
 
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line319">line 319</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
+    <h5>Type:</h5>
+    <ul>
+        <li>
             
-<h4 class="name" id="bl"><span class="type-signature"></span>bl<span class="type-signature"></span></h4>
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
 
 
-
-
-<div class="description">
-    Gets the rect for there.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line311">line 311</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="border"><span class="type-signature"></span>border<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Gives you the rect's border size.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line335">line 335</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="br"><span class="type-signature"></span>br<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Gets the rect for there.
-</div>
-
-
+        </li>
+    </ul>
 
 
 
@@ -460,16 +296,26 @@ becomes the non middle parts.
 
         
             
-<h4 class="name" id="m"><span class="type-signature"></span>m<span class="type-signature"></span></h4>
+<h4 class="name" id="BL"><span class="type-signature">(readonly) </span>BL<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
 
 
 
 
 <div class="description">
-    Gets the rect for there.
+    bottom left part of the patch.
 </div>
 
 
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
 
 
 
@@ -504,7 +350,7 @@ becomes the non middle parts.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line295">line 295</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line320">line 320</a>
     </li></ul></dd>
     
 
@@ -522,16 +368,530 @@ becomes the non middle parts.
 
         
             
-<h4 class="name" id="ml"><span class="type-signature"></span>ml<span class="type-signature"></span></h4>
+<h4 class="name" id="BORDER"><span class="type-signature">(readonly) </span>BORDER<span class="type-signature"> :number</span></h4>
 
 
 
 
 <div class="description">
-    Gets the rect for there.
+    Border width of the patch.
 </div>
 
 
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line266">line 266</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="BR"><span class="type-signature">(readonly) </span>BR<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    bottom right part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line339">line 339</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="M"><span class="type-signature">(readonly) </span>M<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    middle part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line301">line 301</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="ML"><span class="type-signature">(readonly) </span>ML<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    mid left part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line294">line 294</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="MR"><span class="type-signature">(readonly) </span>MR<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    mid right part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line308">line 308</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="T"><span class="type-signature">(readonly) </span>T<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    Top part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line280">line 280</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="TL"><span class="type-signature">(readonly) </span>TL<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    Top left part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line273">line 273</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="TR"><span class="type-signature">(readonly) </span>TR<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    Top right part of the patch.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
 
 
 
@@ -583,254 +943,6 @@ becomes the non middle parts.
 
 
         
-            
-<h4 class="name" id="mr"><span class="type-signature"></span>mr<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Gets the rect for there.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line303">line 303</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="t"><span class="type-signature"></span>t<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Gets the rect for there.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line271">line 271</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="tl"><span class="type-signature"></span>tl<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Gets the rect for there.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line263">line 263</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="tr"><span class="type-signature"></span>tr<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    Gets the rect for there.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line279">line 279</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
     
 
     
@@ -848,13 +960,13 @@ becomes the non middle parts.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.DullScreen.html">DullScreen</a></li><li><a href="fish.screen.LoadScreen.html">LoadScreen</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Sun May 09 2021 21:26:57 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 18:52:29 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

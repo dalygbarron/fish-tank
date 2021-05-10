@@ -25,6 +25,7 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-jshint": "^3.0.0",
     "grunt-jsdoc": "^2.4.1",
+    "grunt-spritesmith": "^6.9.0",
     "grunt-terser": "^1.0.0"
   }
 }

@@ -77,7 +77,7 @@ fish.gui.PanelKnob = class extends fish.gui.Knob {
      * horizontal.
      */
     constructor(style, vertical=true) {
-        super.constructor(style);
+        super(style);
         this.children = [];
         this.vertical = vertical;
     }
@@ -108,7 +108,7 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
      * @param {fish.gui.Knob} child is the child to put inside the button.
      */
     constructor(style, child) {
-        super.constructor(style);
+        super(style);
         this.child = child;
     }
 

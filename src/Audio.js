@@ -25,8 +25,23 @@ fish.audio.Sample = function (name, buffer) {
 };
 
 /**
+ * Audio player which can play samples, which is the minimum required by the
+ * engine.
+ * @interface fish.audio.SamplePlayer
+ */
+
+/**
+ * Plays a sample.
+ * @method fish.audio.SamplePlayer#playSample
+ * @param {fish.audio.Sample} sample the sample to play.
+ * @param {number} priority determines if this sample can override others if
+ *        there are limited resources.
+ */
+
+/**
  * A basic audio handler that has a music channel, a looping background sound
  * channel, and a couple of channels for playing sound effects.
+ * @implements fish.audio.SamplePlayer
  * @constructor
  * @param {AudioContext} context is the audio context.
  * @param {number} players is the number of samples that can play at once.
@@ -130,10 +145,7 @@ fish.audio.BasicAudio = function (context, players=3) {
     };
 
     /**
-     * Plays a sample as long as it has not played since the last refresh.
-     * @param {fish.audio.Sample} sample   is the sample to play.
-     * @param {number}            priority is it's priority so it can play
-     *                            over things of lesser importance.
+     * @inheritDoc
      */
     this.playSample = (sample, priority=0) => {
         let chosen = -1;

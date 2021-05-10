@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Texture</title>
+    <title>JSDoc: Interface: Context</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Texture</h1>
+    <h1 class="page-title">Interface: Context</h1>
 
     
 
@@ -28,8 +28,8 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>Texture<span class="signature">(glTexture, width, height)</span><span class="type-signature"></span></h2>
+        <h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.screen.html">.screen</a>.</span>Context</h2>
         
     
 </header>
@@ -38,128 +38,16 @@
     <div class="container-overview">
     
         
-
-    
-
-    
-    <h4 class="name" id="Texture"><span class="type-signature"></span>new Texture<span class="signature">(glTexture, width, height)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Creates a texture object out of a gl texture. You probably don't want to
-instantiate one of these directly unless you are creating your own graphics
-system.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
+            <div class="description">Stores all the game's subsystems. Now, you will notice that these are all
+interface types that the engine provides. You will control what the
+implementing type is and for god's sake don't try to do any static type
+crazy bullshit with this. Just accept that the actual implementing types of
+these are the ones you asked for in your game.
+These interfaces are just the basic amount of functionality that the engine
+requires from each subsystem.</div>
         
 
         
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>glTexture</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the open gl reference to the texture.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the width of the texture.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>height</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the height of the texture.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
 
 
 <dl class="details">
@@ -191,7 +79,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line24">line 24</a>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -203,24 +91,7 @@ system.
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     
     </div>
 
@@ -237,34 +108,30 @@ system.
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         
             
+<h4 class="name" id="gfx"><span class="type-signature"></span>gfx<span class="type-signature"> :<a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></span></h4>
 
-    
-
-    
-    <h4 class="name" id="getGlTexture"><span class="type-signature"></span>getGlTexture<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    Gives you the opengl texture.
+    The game's renderer subsystem.
 </div>
 
 
 
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></span>
 
 
-
-
-
+        </li>
+    </ul>
 
 
 
@@ -299,7 +166,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line29">line 29</a>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -315,66 +182,28 @@ system.
 
 
 
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the opengl reference to the texture.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
         
             
+<h4 class="name" id="in"><span class="type-signature"></span>in<span class="type-signature"> :<a href="fish.input.UiInput.html">fish.input.UiInput</a></span></h4>
 
-    
-
-    
-    <h4 class="name" id="getHeight"><span class="type-signature"></span>getHeight<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    Gives you the height of the texture.
+    The game's input subsystem.
 </div>
 
 
 
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.input.UiInput.html">fish.input.UiInput</a></span>
 
 
-
-
-
+        </li>
+    </ul>
 
 
 
@@ -409,7 +238,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line45">line 45</a>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -425,66 +254,28 @@ system.
 
 
 
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the height.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
         
             
+<h4 class="name" id="snd"><span class="type-signature"></span>snd<span class="type-signature"> :<a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></span></h4>
 
-    
-
-    
-    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
-    
-
-    
 
 
 
 <div class="description">
-    Gives you the width of the texture.
+    The game's audio subsystem.
 </div>
 
 
 
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></span>
 
 
-
-
-
+        </li>
+    </ul>
 
 
 
@@ -519,7 +310,7 @@ system.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line37">line 37</a>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -535,43 +326,155 @@ system.
 
 
 
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
         
-<div class="param-desc">
-    the width.
+            
+<h4 class="name" id="str"><span class="type-signature"></span>str<span class="type-signature"> :fish.store.Store</span></h4>
+
+
+
+
+<div class="description">
+    The game's asset store.
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">fish.store.Store</span>
 
 
-    </dd>
-</dl>
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
 
 
 
 
         
+            
+<h4 class="name" id="usr"><span class="type-signature"></span>usr<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    Basically a namespace under which you can place your own things that
+you want to keep in the context object if you have any. This way, if I add
+more things to the context later it won't possibly break your code.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="screen.js.html">screen.js</a>, <a href="screen.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
     
 
     

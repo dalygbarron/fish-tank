@@ -14,8 +14,8 @@ fish.util = {};
  * @param {number} y is the vector part.
  */
 fish.util.Vector = function (x, y) {
-    this.x = x;
-    this.y = y;
+    this.x = x || 0;
+    this.y = y || 0;
 
     /**
      * Adds another vector or value to this vector and returns the result
@@ -83,12 +83,12 @@ fish.util.Vector = function (x, y) {
 fish.util.Rect = class {
     /**
      * Creates the rectangle.
-     * @param {number} x is the horizontal position of the rectangle.
-     * @param {number} y is the vertical position of the rectangle.
-     * @param {number} w is the width of the rectangle.
-     * @param {number} h is the height of the rectangle.
+     * @param {number} [x=0] is the horizontal position of the rectangle.
+     * @param {number} [y=0] is the vertical position of the rectangle.
+     * @param {number} [w=0] is the width of the rectangle.
+     * @param {number} [h=0] is the height of the rectangle.
      */
-    constructor(x, y, w, h) {
+    constructor(x=0, y=0, w=0, h=0) {
         this.pos = new fish.util.Vector(x, y);
         this.size = new fish.util.Vector(w, h);
     }
@@ -126,7 +126,8 @@ fish.util.Rect = class {
     }
 
     /**
-     * Gets the position of the right hand side of the rectangle.
+     * Gets the position of the right hand side of the rectangle. Or left
+     * depending on how you look at it. Essentially it's x + w.
      * @return {number} x + w
      */
     get r() {
@@ -134,10 +135,11 @@ fish.util.Rect = class {
     }
 
     /**
-     * Gets the position of the bottom of the rectangle.
+     * Gets the position of the top of the rectangle. Or bottom depending on
+     * how you are thinking about it. Point is it's y + h.
      * @return {number} y + h
      */
-    get b() {
+    get t() {
         return this.pos.y + this.size.y;
     }
 };
