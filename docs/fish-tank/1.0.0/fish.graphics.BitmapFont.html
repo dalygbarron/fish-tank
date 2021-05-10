@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: SpriteRenderer</title>
+    <title>JSDoc: Class: BitmapFont</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: SpriteRenderer</h1>
+    <h1 class="page-title">Class: BitmapFont</h1>
 
     
 
@@ -29,7 +29,10 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>SpriteRenderer<span class="signature">(gl)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>BitmapFont<span class="signature">(sprite)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description">Font that is drawn using an 16x16 grid of characters all having the same
+dimensions.</div>
         
     
 </header>
@@ -40,9 +43,11 @@
         
 
     
+    <h2>Constructor</h2>
+    
 
     
-    <h4 class="name" id="SpriteRenderer"><span class="type-signature"></span>new SpriteRenderer<span class="signature">(gl)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BitmapFont"><span class="type-signature"></span>new BitmapFont<span class="signature">(sprite)</span><span class="type-signature"></span></h4>
     
 
     
@@ -50,8 +55,7 @@
 
 
 <div class="description">
-    The default graphics handler which uses a sprite batch to draw nice
-pictures.
+    Creates it and adds the sprite to it yeah.
 </div>
 
 
@@ -87,10 +91,15 @@ pictures.
 
         <tr>
             
-                <td class="name"><code>gl</code></td>
+                <td class="name"><code>sprite</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
             
             </td>
 
@@ -98,7 +107,8 @@ pictures.
 
             
 
-            <td class="description last">is the opengl context.</td>
+            <td class="description last">is the sprite from which we get the
+       characters.</td>
         </tr>
 
     
@@ -126,7 +136,7 @@ pictures.
     <dt class="implements">Implements:</dt>
     <dd class="implements"><ul>
         
-            <li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li>
+            <li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li>
         
     </ul></dd>
     
@@ -146,7 +156,7 @@ pictures.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line468">line 468</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line196">line 196</a>
     </li></ul></dd>
     
 
@@ -184,12 +194,45 @@ pictures.
     
 
     
-        <h3 class="subsection-title">Classes</h3>
 
-        <dl>
-            <dt><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></dt>
-            <dd></dd>
-        </dl>
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="sprite"><span class="type-signature">(readonly) </span>sprite<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
+
+
+
+
+<div class="description">
+    The font's actual sprite.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
     
 
     
@@ -198,6 +241,42 @@ pictures.
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line209">line 209</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -209,141 +288,19 @@ pictures.
     
 
     
-    <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">(r, g, b, a)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getHorizontalPadding"><span class="type-signature"></span>getHorizontalPadding<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
     
 
 
 
-<div class="description">
-    Fill the screen with a colour.
-</div>
 
 
 
 
 
 
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>r</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the red component from 0 to 1.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>g</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the green component from 0 to 1.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>b</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the blue component from 0 to 1.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>a</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the transparent component from 0 to 1.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -366,7 +323,7 @@ pictures.
     <dt class="implements">Implements:</dt>
     <dd class="implements"><ul>
         
-            <li><a href="fish.graphics.BaseRenderer.html#clear">fish.graphics.BaseRenderer#clear</a></li>
+            <li><a href="fish.graphics.Font.html#getHorizontalPadding">fish.graphics.Font#getHorizontalPadding</a></li>
         
     </ul></dd>
     
@@ -386,281 +343,7 @@ pictures.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line433">line 433</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="clearColour"><span class="type-signature"></span>clearColour<span class="signature">(colour)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Clears the screen with a colour object.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>colour</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the colour to clear with.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line750">line 750</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="loadTexture"><span class="type-signature"></span>loadTexture<span class="signature">(url)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="fish.graphics.Texture.html">fish.graphics.Texture</a>>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Loads a texture using this graphics thing's gl context.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the url of the texture to load.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line734">line 734</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -689,7 +372,8 @@ pictures.
 
         
 <div class="param-desc">
-    the texture if it worked.
+    the number of pixels to put between characters
+        horizontally.
 </div>
 
 
@@ -700,7 +384,395 @@ pictures.
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;<a href="fish.graphics.Texture.html">fish.graphics.Texture</a>></span>
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getLineHeight"><span class="type-signature"></span>getLineHeight<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.graphics.Font.html#getLineHeight">fish.graphics.Font#getLineHeight</a></li>
+        
+    </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the height of lines drawn with this font.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getVerticalPadding"><span class="type-signature"></span>getVerticalPadding<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.graphics.Font.html#getVerticalPadding">fish.graphics.Font#getVerticalPadding</a></li>
+        
+    </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line28">line 28</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the number of pixels to put between lines of text.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">(c)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>c</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the character code to get the width of.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.graphics.Font.html#getWidth">fish.graphics.Font#getWidth</a></li>
+        
+    </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the width of the given character in pixels.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
 
 
     </dd>

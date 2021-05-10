@@ -41,6 +41,35 @@
 fish.graphics = {};
 
 /**
+ * Your graphics subsystem of choice can implement it's own font class which
+ * can basically do whatever it needs to, but there are some things the engine
+ * requires so that it can fit text.
+ * @interface fish.graphics.Font
+ */
+
+/**
+ * @method fish.graphics.Font#getHorizontalPadding
+ * @return {number} the number of pixels to put between characters
+ *         horizontally.
+ */
+
+/**
+ * @method fish.graphics.Font#getVerticalPadding
+ * @return {number} the number of pixels to put between lines of text.
+ */
+
+/**
+ * @method fish.graphics.Font#getWidth
+ * @param {number} c is the character code to get the width of.
+ * @return {number} the width of the given character in pixels.
+ */
+
+/**
+ * @method fish.graphics.Font#getLineHeight
+ * @return {number} the height of lines drawn with this font.
+ */
+
+/**
  * Creates a texture object out of a gl texture. You probably don't want to
  * instantiate one of these directly unless you are creating your own graphics
  * system.
@@ -185,6 +214,56 @@ fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
      * @member {number}
      */
     this.a = a;
+};
+
+/**
+ * Font that is drawn using an 16x16 grid of characters all having the same
+ * dimensions.
+ * @implements fish.graphics.Font
+ */
+fish.graphics.BitmapFont = class {
+    /**
+     * Creates it and adds the sprite to it yeah.
+     * @param {fish.util.Rect} sprite is the sprite from which we get the
+     *        characters.
+     */
+    constructor(sprite) {
+        /**
+         * The font's actual sprite.
+         * @member
+         * @type {fish.util.Rect}
+         * @readonly
+         */
+        this.sprite = sprite;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getHorizontalPadding() {
+        return 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getVerticalPadding() {
+        return 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getWidth(c) {
+        return this.sprite.w / 16;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getLineHeight() {
+        return this.sprite.h / 16;
+    }
 };
 
 /**
@@ -415,12 +494,14 @@ fish.graphics.PatchRenderer = class {
  * @param gl is the opengl context.
  */
 fish.graphics.SpriteRenderer = function (gl) {
+    let usefulRect = new fish.util.Rect();
     let usedTextures = [];
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    this.width = gl.canvas.clientWidth;
-    this.height = gl.canvas.clientHeight;
+    this.width = gl.drawingBufferWidth;
+    this.height = gl.drawingBufferHeight;
+    console.log(this.width, this.height);
 
     /**
      * A thing that batches draw calls.
@@ -585,6 +666,42 @@ fish.graphics.SpriteRenderer = function (gl) {
         };
 
         /**
+         * Draws text using a bitmap font.
+         * @param {fish.graphics.BitmapFont} font the font that has the text
+         *        graphics and drawing info.
+         * @param {string} text what to write including all newlines and stuff.
+         * @param {fish.util.Vector} dst is where on the screen to write the
+         *        text. Successive lines will decrease in y position.
+         */
+        this.addText = (font, text, dst) => {
+            let width = font.getWidth('n');
+            let height = font.getLineHeight();
+            let xOffset = 0;
+            let yOffset = 0;
+            fish.util.aRect.size.set(width, height);
+            for (let i = 0; i &lt; text.length; i++) {
+                let c = text.charCodeAt(i);
+                if (c == 10) {
+                    yOffset += height + font.getVerticalPadding();
+                    xOffset = 0;
+                } else {
+                    fish.util.aRect.pos.set(
+                        Math.floor(c % 16) * width,
+                        Math.floor(c / 16) * height
+                    );
+                    this.addComp(
+                        fish.util.aRect,
+                        dst.x + xOffset,
+                        dst.y - yOffset - height,
+                        dst.x + xOffset + width,
+                        dst.y - yOffset
+                    );
+                    xOffset += width + font.getHorizontalPadding();
+                }
+            }
+        };
+
+        /**
          * @inheritDoc
          */
         this.renderPatch = (patch, dst) => {
@@ -702,13 +819,13 @@ fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">BitmapFont</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.Font.html">Font</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 18:52:29 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 23:45:09 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

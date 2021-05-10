@@ -10,12 +10,22 @@ fish.util = {};
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
  * @constructor
- * @param {number} x is the horizontal part.
- * @param {number} y is the vector part.
+ * @param {number} [x=0] is the horizontal part.
+ * @param {number} [y=0] is the vector part.
  */
-fish.util.Vector = function (x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+fish.util.Vector = function (x=0, y=0) {
+    this.x = x;
+    this.y = y;
+
+    /**
+     * Sets both parts of the vector to new values.
+     * @param {number} [x=0] is the new x part.
+     * @param {number} [y=0] is the new y part.
+     */
+    this.set = (x=0, y=0) => {
+        this.x = x;
+        this.y = y;
+    };
 
     /**
      * Adds another vector or value to this vector and returns the result
@@ -165,6 +175,46 @@ fish.util.loadText = async function (url) {
     });
 };
 
+/**
+ * Takes a piece of text and fits it so that when drawn with a given font it
+ * will fit into a given width space. It ignores single newlines, and turns two
+ * or more newlines in a row into a single newline.
+ * @param {string} text the text to fit.
+ * @param {fish.graphics.Font} font the font to give size to the text.
+ * @param {number} width the width to fit the text into.
+ */
+fish.util.fitText = (text, font, width) => {
+    let fitted = '';
+    let lines = text.split(/\n\n+/);
+    for (let line of lines) {
+        let offset = 0;
+        let tokens = bit.split(/\s/);
+        for (let token of tokens) {
+            if (token.length == 0) continue;
+            let size = (token.length - 1) * font.getHorizontalPadding();
+            for (let i = 0; i < token.length; i++) {
+                size += font.getWidth(token.charAt(i));
+            }
+            if (size > width) {
+                fitted += `\n${token}`;
+                offset = size;
+            } else {
+                fitted += token;
+                offset += size;
+            }
+            offset += font.getWidth(' ');
+            fitted += ' ';
+        }
+    }
+    return fitted;
+};
+
+/**
+ * This is a rect that you can use for stuff when you don't want to instantiate
+ * one. Just know that in between uses it's value could be arbitrary.
+ */
+fish.util.aRect = new fish.util.Rect();
+
 var fish = fish || {};
 
 /**
@@ -178,6 +228,35 @@ var fish = fish || {};
  * @namespace
  */
 fish.graphics = {};
+
+/**
+ * Your graphics subsystem of choice can implement it's own font class which
+ * can basically do whatever it needs to, but there are some things the engine
+ * requires so that it can fit text.
+ * @interface fish.graphics.Font
+ */
+
+/**
+ * @method fish.graphics.Font#getHorizontalPadding
+ * @return {number} the number of pixels to put between characters
+ *         horizontally.
+ */
+
+/**
+ * @method fish.graphics.Font#getVerticalPadding
+ * @return {number} the number of pixels to put between lines of text.
+ */
+
+/**
+ * @method fish.graphics.Font#getWidth
+ * @param {number} c is the character code to get the width of.
+ * @return {number} the width of the given character in pixels.
+ */
+
+/**
+ * @method fish.graphics.Font#getLineHeight
+ * @return {number} the height of lines drawn with this font.
+ */
 
 /**
  * Creates a texture object out of a gl texture. You probably don't want to
@@ -324,6 +403,56 @@ fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
      * @member {number}
      */
     this.a = a;
+};
+
+/**
+ * Font that is drawn using an 16x16 grid of characters all having the same
+ * dimensions.
+ * @implements fish.graphics.Font
+ */
+fish.graphics.BitmapFont = class {
+    /**
+     * Creates it and adds the sprite to it yeah.
+     * @param {fish.util.Rect} sprite is the sprite from which we get the
+     *        characters.
+     */
+    constructor(sprite) {
+        /**
+         * The font's actual sprite.
+         * @member
+         * @type {fish.util.Rect}
+         * @readonly
+         */
+        this.sprite = sprite;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getHorizontalPadding() {
+        return 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getVerticalPadding() {
+        return 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getWidth(c) {
+        return this.sprite.w / 16;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    getLineHeight() {
+        return this.sprite.h / 16;
+    }
 };
 
 /**
@@ -554,12 +683,14 @@ fish.graphics.PatchRenderer = class {
  * @param gl is the opengl context.
  */
 fish.graphics.SpriteRenderer = function (gl) {
+    let usefulRect = new fish.util.Rect();
     let usedTextures = [];
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    this.width = gl.canvas.clientWidth;
-    this.height = gl.canvas.clientHeight;
+    this.width = gl.drawingBufferWidth;
+    this.height = gl.drawingBufferHeight;
+    console.log(this.width, this.height);
 
     /**
      * A thing that batches draw calls.
@@ -721,6 +852,42 @@ fish.graphics.SpriteRenderer = function (gl) {
                 dst.r,
                 dst.t
             );
+        };
+
+        /**
+         * Draws text using a bitmap font.
+         * @param {fish.graphics.BitmapFont} font the font that has the text
+         *        graphics and drawing info.
+         * @param {string} text what to write including all newlines and stuff.
+         * @param {fish.util.Vector} dst is where on the screen to write the
+         *        text. Successive lines will decrease in y position.
+         */
+        this.addText = (font, text, dst) => {
+            let width = font.getWidth('n');
+            let height = font.getLineHeight();
+            let xOffset = 0;
+            let yOffset = 0;
+            fish.util.aRect.size.set(width, height);
+            for (let i = 0; i < text.length; i++) {
+                let c = text.charCodeAt(i);
+                if (c == 10) {
+                    yOffset += height + font.getVerticalPadding();
+                    xOffset = 0;
+                } else {
+                    fish.util.aRect.pos.set(
+                        Math.floor(c % 16) * width,
+                        Math.floor(c / 16) * height
+                    );
+                    this.addComp(
+                        fish.util.aRect,
+                        dst.x + xOffset,
+                        dst.y - yOffset - height,
+                        dst.x + xOffset + width,
+                        dst.y - yOffset
+                    );
+                    xOffset += width + font.getHorizontalPadding();
+                }
+            }
         };
 
         /**
@@ -1608,8 +1775,8 @@ fish.shader = (() => {
             );
             return null;
         }
-        const width = gl.canvas.clientWidth;
-        const height = gl.canvas.clientHeight;
+        const width = gl.drawingBufferWidth;
+        const height = gl.drawingBufferHeight;
         gl.useProgram(program);
         const invCanvas = gl.getUniformLocation(program, 'invCanvas');
         gl.uniform4f(invCanvas, 1 / width, 1 / height, 1, 1);

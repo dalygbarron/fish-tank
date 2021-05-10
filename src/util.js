@@ -10,12 +10,22 @@ fish.util = {};
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
  * @constructor
- * @param {number} x is the horizontal part.
- * @param {number} y is the vector part.
+ * @param {number} [x=0] is the horizontal part.
+ * @param {number} [y=0] is the vector part.
  */
-fish.util.Vector = function (x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+fish.util.Vector = function (x=0, y=0) {
+    this.x = x;
+    this.y = y;
+
+    /**
+     * Sets both parts of the vector to new values.
+     * @param {number} [x=0] is the new x part.
+     * @param {number} [y=0] is the new y part.
+     */
+    this.set = (x=0, y=0) => {
+        this.x = x;
+        this.y = y;
+    };
 
     /**
      * Adds another vector or value to this vector and returns the result
@@ -164,3 +174,43 @@ fish.util.loadText = async function (url) {
         xhr.send();
     });
 };
+
+/**
+ * Takes a piece of text and fits it so that when drawn with a given font it
+ * will fit into a given width space. It ignores single newlines, and turns two
+ * or more newlines in a row into a single newline.
+ * @param {string} text the text to fit.
+ * @param {fish.graphics.Font} font the font to give size to the text.
+ * @param {number} width the width to fit the text into.
+ */
+fish.util.fitText = (text, font, width) => {
+    let fitted = '';
+    let lines = text.split(/\n\n+/);
+    for (let line of lines) {
+        let offset = 0;
+        let tokens = bit.split(/\s/);
+        for (let token of tokens) {
+            if (token.length == 0) continue;
+            let size = (token.length - 1) * font.getHorizontalPadding();
+            for (let i = 0; i < token.length; i++) {
+                size += font.getWidth(token.charAt(i));
+            }
+            if (size > width) {
+                fitted += `\n${token}`;
+                offset = size;
+            } else {
+                fitted += token;
+                offset += size;
+            }
+            offset += font.getWidth(' ');
+            fitted += ' ';
+        }
+    }
+    return fitted;
+};
+
+/**
+ * This is a rect that you can use for stuff when you don't want to instantiate
+ * one. Just know that in between uses it's value could be arbitrary.
+ */
+fish.util.aRect = new fish.util.Rect();

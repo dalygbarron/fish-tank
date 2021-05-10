@@ -28,6 +28,7 @@ class BasedScreen extends fish.screen.Screen {
         this.batch = new this.ctx.gfx.Batch(texture, 2000);
         this.boxes = [];
         this.patch = this.atlas.getPatch('outie8');
+        this.font = new fish.graphics.BitmapFont(this.atlas.get('font'));
         console.log(this.patch);
         this.region = new fish.util.Rect(50, 50, 500, 200);
         for (let i = 0; i < Math.floor(500 / atlas.n()); i++) {
@@ -62,6 +63,11 @@ class BasedScreen extends fish.screen.Screen {
             this.batch.add(this.boxes[i].sprite, this.boxes[i].pos);
         }
         this.batch.addPatch(this.patch, this.region);
+        this.batch.addText(
+            this.font,
+            'cunt CUNT CUNT cunr FUCKING PIG\nI am going to GUT you CUNT',
+            new fish.util.Vector(100, 100)
+        );
         this.batch.render();
     }
 }

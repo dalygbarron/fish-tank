@@ -5,7 +5,10 @@
         <script src="/test/test.js" defer></script>
         <script defer>
             window.onload = () => {
-                const gl = document.querySelector('#canvas').getContext('webgl');
+                const canvas = document.querySelector('#canvas');
+                canvas.width = 1024;
+                canvas.height = 600;
+                const gl = canvas.getContext('webgl');
                 const context = new AudioContext();
                 if (gl === null || context === null) {
                     alert('the police the FBI are coming in your window man');
@@ -14,6 +17,29 @@
                 go(gl, context);
             };
         </script>
+        <style>
+            body {
+                background-color: black;
+            }
+
+            #canvas {
+                position: fixed;
+                top: 0;
+            }
+
+            @media (max-aspect-ratio: 1024/600) {
+                #canvas {
+                    width: 100%;
+                }
+            }
+
+            @media (min-aspect-ratio: 1024/600) {
+                #canvas {
+                    margin: auto;
+                    height: 100%;
+                }
+            }
+        </style>
     </head>
     <body>
         <canvas id="canvas" width="1024" height="600"></canvas>

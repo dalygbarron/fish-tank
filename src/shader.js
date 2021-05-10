@@ -73,8 +73,8 @@ fish.shader = (() => {
             );
             return null;
         }
-        const width = gl.canvas.clientWidth;
-        const height = gl.canvas.clientHeight;
+        const width = gl.drawingBufferWidth;
+        const height = gl.drawingBufferHeight;
         gl.useProgram(program);
         const invCanvas = gl.getUniformLocation(program, 'invCanvas');
         gl.uniform4f(invCanvas, 1 / width, 1 / height, 1, 1);

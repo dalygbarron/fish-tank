@@ -38,12 +38,22 @@ fish.util = {};
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
  * @constructor
- * @param {number} x is the horizontal part.
- * @param {number} y is the vector part.
+ * @param {number} [x=0] is the horizontal part.
+ * @param {number} [y=0] is the vector part.
  */
-fish.util.Vector = function (x, y) {
-    this.x = x || 0;
-    this.y = y || 0;
+fish.util.Vector = function (x=0, y=0) {
+    this.x = x;
+    this.y = y;
+
+    /**
+     * Sets both parts of the vector to new values.
+     * @param {number} [x=0] is the new x part.
+     * @param {number} [y=0] is the new y part.
+     */
+    this.set = (x=0, y=0) => {
+        this.x = x;
+        this.y = y;
+    };
 
     /**
      * Adds another vector or value to this vector and returns the result
@@ -192,6 +202,46 @@ fish.util.loadText = async function (url) {
         xhr.send();
     });
 };
+
+/**
+ * Takes a piece of text and fits it so that when drawn with a given font it
+ * will fit into a given width space. It ignores single newlines, and turns two
+ * or more newlines in a row into a single newline.
+ * @param {string} text the text to fit.
+ * @param {fish.graphics.Font} font the font to give size to the text.
+ * @param {number} width the width to fit the text into.
+ */
+fish.util.fitText = (text, font, width) => {
+    let fitted = '';
+    let lines = text.split(/\n\n+/);
+    for (let line of lines) {
+        let offset = 0;
+        let tokens = bit.split(/\s/);
+        for (let token of tokens) {
+            if (token.length == 0) continue;
+            let size = (token.length - 1) * font.getHorizontalPadding();
+            for (let i = 0; i &lt; token.length; i++) {
+                size += font.getWidth(token.charAt(i));
+            }
+            if (size > width) {
+                fitted += `\n${token}`;
+                offset = size;
+            } else {
+                fitted += token;
+                offset += size;
+            }
+            offset += font.getWidth(' ');
+            fitted += ' ';
+        }
+    }
+    return fitted;
+};
+
+/**
+ * This is a rect that you can use for stuff when you don't want to instantiate
+ * one. Just know that in between uses it's value could be arbitrary.
+ */
+fish.util.aRect = new fish.util.Rect();
 </code></pre>
         </article>
     </section>
@@ -202,13 +252,13 @@ fish.util.loadText = async function (url) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">BitmapFont</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.Font.html">Font</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 18:52:29 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 23:45:09 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: util</title>
+    <title>JSDoc: Interface: Font</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: util</h1>
+    <h1 class="page-title">Interface: Font</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="fish.html">fish</a>.</span>util</h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>Font</h2>
         
     
 </header>
@@ -38,8 +38,9 @@
     <div class="container-overview">
     
         
-            <div class="description">Provides some basic utility stuff. Maths classes and whatever the hell ya
-know.</div>
+            <div class="description">Your graphics subsystem of choice can implement it's own font class which
+can basically do whatever it needs to, but there are some things the engine
+requires so that it can fit text.</div>
         
 
         
@@ -74,7 +75,7 @@ know.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line8">line 8</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -95,16 +96,6 @@ know.</div>
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="fish.util.Rect.html">Rect</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.util.Vector.html">Vector</a></dt>
-            <dd></dd>
-        </dl>
-    
 
     
 
@@ -112,73 +103,6 @@ know.</div>
 
     
 
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".aRect"><span class="type-signature">(static) </span>aRect<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    This is a rect that you can use for stuff when you don't want to instantiate
-one. Just know that in between uses it's value could be arbitrary.
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line216">line 216</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
     
 
     
@@ -190,120 +114,19 @@ one. Just know that in between uses it's value could be arbitrary.
     
 
     
-    <h4 class="name" id=".fitText"><span class="type-signature">(static) </span>fitText<span class="signature">(text, font, width)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getHorizontalPadding"><span class="type-signature"></span>getHorizontalPadding<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
     
 
     
 
 
 
-<div class="description">
-    Takes a piece of text and fits it so that when drawn with a given font it
-will fit into a given width space. It ignores single newlines, and turns two
-or more newlines in a row into a single newline.
-</div>
 
 
 
 
 
 
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the text to fit.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="fish.graphics.Font.html">fish.graphics.Font</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the font to give size to the text.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the width to fit the text into.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -339,144 +162,7 @@ or more newlines in a row into a single newline.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line186">line 186</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".loadText"><span class="type-signature">(static) </span>loadText<span class="signature">(url)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Asynchronously loads a text file in.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the url to load the file from.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="util.js.html">util.js</a>, <a href="util.js.html#line162">line 162</a>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -505,7 +191,8 @@ or more newlines in a row into a single newline.
 
         
 <div class="param-desc">
-    that resolves to the loaded file content.
+    the number of pixels to put between characters
+        horizontally.
 </div>
 
 
@@ -516,7 +203,374 @@ or more newlines in a row into a single newline.
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;string></span>
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getLineHeight"><span class="type-signature"></span>getLineHeight<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line39">line 39</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the height of lines drawn with this font.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getVerticalPadding"><span class="type-signature"></span>getVerticalPadding<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line28">line 28</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the number of pixels to put between lines of text.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getWidth"><span class="type-signature"></span>getWidth<span class="signature">(c)</span><span class="type-signature"> &rarr; {number}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>c</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the character code to get the width of.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the width of the given character in pixels.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
 
 
     </dd>
