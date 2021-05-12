@@ -9,6 +9,9 @@ fish.util = {};
 
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
+ * You will notice there is no functional style stuff and that is because it
+ * requires instantiating objects and in the kinds of contexts where a vector
+ * class is most used, that is not really acceptable so yeah.
  * @constructor
  * @param {number} [x=0] is the horizontal part.
  * @param {number} [y=0] is the vector part.
@@ -28,48 +31,15 @@ fish.util.Vector = function (x=0, y=0) {
     };
 
     /**
-     * Adds another vector or value to this vector and returns the result
-     * without changing this object.
-     * @param {fish.util.Vector|number} other is the one to add.
-     * @return {fish.util.Vector} a new vector that is the result.
-     */
-    this.plus = other => {
-        return (other instanceof fish.util.Vector) ?
-            new fish.util.Vector(this.x + other.x, this.y + other.y) :
-            new fish.util.Vector(this.x + other, this.y + other);
-    };
-
-    /**
-     * Subtracts another vector or value from this vector and returns the
-     * result without changing this object.
-     * @param {fish.util.Vector|number} other is the one to subtract.
-     * @return {fish.util.Vector} a new vector that is the result.
-     */
-    this.minus = other => {
-        return (other instanceof fish.util.Vector) ?
-            new fish.util.Vector(this.x - other.x, this.y - other.y) :
-            new fish.util.Vector(this.x - other, this.y - other);
-    };
-
-    /**
-     * Multiplies another vector or value with this vector and returns the
-     * result without changing this object.
-     * @param {fish.util.Vector|number} other is the one to multiply.
-     * @return {fish.util.Vector} a new vector that is the result.
-     */
-    this.times = other => {
-        return (other instanceof fish.util.Vector) ?
-            new fish.util.Vector(this.x - other.x, this.y - other.y) :
-            new fish.util.Vector(this.x - other, this.y - other);
-    };
-
-    /**
      * Adds another vector onto this one component wise.
      * @param {fish.util.Vector} other is the other vector.
+     * @param {number} [mag=1] is the amount to multiply the other one by
+     *        first. I know it's not really that relevant to adding but it is
+     *        the main use case so I might as well make it efficient and easy.
      */
-    this.add = other => {
-        this.x += other.x;
-        this.y += other.y;
+    this.add = (other, mag=1) => {
+        this.x += other.x * mag;
+        this.y += other.y * mag;
     };
 
     /**
@@ -101,6 +71,22 @@ fish.util.Rect = class {
     constructor(x=0, y=0, w=0, h=0) {
         this.pos = new fish.util.Vector(x, y);
         this.size = new fish.util.Vector(w, h);
+    }
+
+    copy() {
+        return new fish.util.Rect(this.x, this.y, this.w, this.h);
+    }
+
+    /**
+     * Shrinks the rectangle by a certain amount from each of it's former
+     * border lines.
+     * @param {number} amount the amount to shrink it from each side.
+     */
+    shrink(amount) {
+        this.pos.x += amount;
+        this.pos.y += amount;
+        this.size.x -= amount * 2;
+        this.size.y -= amount * 2;
     }
 
     /**
@@ -184,18 +170,19 @@ fish.util.loadText = async function (url) {
  * @param {number} width the width to fit the text into.
  */
 fish.util.fitText = (text, font, width) => {
+    console.log(width);
     let fitted = '';
     let lines = text.split(/\n\n+/);
     for (let line of lines) {
         let offset = 0;
-        let tokens = bit.split(/\s/);
+        let tokens = line.split(/\s/);
         for (let token of tokens) {
             if (token.length == 0) continue;
             let size = (token.length - 1) * font.getHorizontalPadding();
             for (let i = 0; i < token.length; i++) {
                 size += font.getWidth(token.charAt(i));
             }
-            if (size > width) {
+            if (offset + size > width) {
                 fitted += `\n${token}`;
                 offset = size;
             } else {
@@ -205,8 +192,22 @@ fish.util.fitText = (text, font, width) => {
             offset += font.getWidth(' ');
             fitted += ' ';
         }
+        fitted += '\n';
     }
     return fitted;
+};
+
+/**
+ * Takes a fitted piece of text and tells you how high it is gonna be in the
+ * given font.
+ * @param {string} text is text where every newline is taken seriously.
+ * @param {fish.graphics.Font} font is the font used to measure it.
+ * @return {number} the number of pixels high it will be.
+ */
+fish.util.textHeight = (text, font) => {
+    let lines = text.split(/\n(?=\S+)/).length;
+    return lines * font.getLineHeight() +
+        (lines - 1) * font.getVerticalPadding();
 };
 
 /**
@@ -426,30 +427,22 @@ fish.graphics.BitmapFont = class {
         this.sprite = sprite;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getHorizontalPadding() {
         return 0;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getVerticalPadding() {
         return 0;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getWidth(c) {
         return this.sprite.w / 16;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getLineHeight() {
         return this.sprite.h / 16;
     }
@@ -673,6 +666,20 @@ fish.graphics.PatchRenderer = class {
             'fish.graphics.PatchRenderer.renderPatch must be implemented'
         );
     }
+
+    /**
+     * Renders a piece of text onto the screen using a font.
+     * @param {fish.graphics.Font} font is the font to use to draw the text.
+     * @param {string} text is the text to draw. All it's newlines and stuff
+     *        are taken as written.
+     * @param {fish.util.Vector} dst is the top left corner of where the text
+     *        will appear on the screen.
+     */
+    renderText(font, text, dst) {
+        throw new Error(
+            'fish.graphics.PatchRenderer.renderText must be implemented'
+        );
+    }
 };
 
 /**
@@ -771,8 +778,8 @@ fish.graphics.SpriteRenderer = function (gl) {
                 let halfScale = scale * 0.5;
                 l = dst.x - src.w * halfScale;
                 r = dst.x + src.w * halfScale;
-                b = dst.y - src.h * halfScale;
-                t = dst.y + src.h * halfScale;
+                b = dst.y + src.h * halfScale;
+                t = dst.y - src.h * halfScale;
             } else {
                 throw new TypeError(
                     'SpriteRenderer.Batch.add requres a Vector or a Rect'
@@ -875,8 +882,8 @@ fish.graphics.SpriteRenderer = function (gl) {
                     xOffset = 0;
                 } else {
                     fish.util.aRect.pos.set(
-                        Math.floor(c % 16) * width,
-                        Math.floor(c / 16) * height
+                        font.sprite.x + Math.floor(c % 16) * width,
+                        font.sprite.y + Math.floor(c / 16) * height
                     );
                     this.addComp(
                         fish.util.aRect,
@@ -890,11 +897,14 @@ fish.graphics.SpriteRenderer = function (gl) {
             }
         };
 
-        /**
-         * @inheritDoc
-         */
+        /** @inheritDoc */
         this.renderPatch = (patch, dst) => {
             this.addPatch(patch, dst);
+        };
+
+        /** @inheritDoc */
+        this.renderText = (font, text, dst) => {
+            this.addText(font, text, dst);
         };
 
         /**
@@ -1109,7 +1119,10 @@ fish.audio.BasicAudio = function (context, players=3) {
             priority = priority;
             source.buffer = sample.buffer;
             source.start(0);
-            source.onended = () => {playing = false;};
+            source.onended = () => {
+                console.log('erg');
+                playing = false;
+            };
         };
 
         /**
@@ -1119,8 +1132,8 @@ fish.audio.BasicAudio = function (context, players=3) {
          * @return true if they are the same and this sample player is still
          *              playing.
          */
-        this.same = sample => {
-            return playing && sample && sample.name == this.sample.name;
+        this.same = other => {
+            return playing && sample && sample.name == other.name;
         };
 
         /**
@@ -1288,6 +1301,15 @@ fish.input.UiInput = class {
     uiDown(button) {
         throw new Error('fish.input.UiInput.uiDown must be implemented');
     }
+
+    /**
+     * Tells you if the given ui button just went down.
+     * @param {fish.input.UI_BUTTON} button is the button to check on.
+     * @return {boolean} true iff it is down.
+     */
+    uiJustDown(button) {
+        throw new Error('fish.input.UiInput.uiJustDown must be implemented');
+    }
 };
 
 /**
@@ -1296,18 +1318,18 @@ fish.input.UiInput = class {
  * It only works with 1 player games for that reason.
  * @constructor
  * @implements {fish.input.UiInput}
- * @param {Object.<string, string>} keymap a mapping from html key names to
- *        button on the virtual controller.
- * @param {number} threshold the threshold beyond which a gamepad axis is
+ * @param {Object.<string, string>} [keymap={}] a mapping from html key names
+ *        to button on the virtual controller.
+ * @param {number} [threshold=0.9] the threshold beyond which a gamepad axis is
  *        considered pressed.
  */
-fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
+fish.input.BasicInput = function (keymap={}, threshole=0.9) {
     /**
      * The buttons that this imaginary controller provides.
      * @readonly
      * @enum {string}
      */
-    this.BUTTONS = {
+    this.BUTTON = {
         /** Left axis on controller pointed up. */
         UP: 'UP',
         /** Left axis on controller pointed down. */
@@ -1349,7 +1371,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     let frame = 0;
     let keys = {};
     let buttonStates = {};
-    for (let button in this.BUTTONS) {
+    for (let button in this.BUTTON) {
         buttonStates[button] = 0;
     }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
@@ -1389,50 +1411,52 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      */
     let uiToButton = uiCode => {
         switch (uiCode) {
-            case fish.input.UI_UP: return this.UP;
-            case fish.input.UI_DOWN: return this.DOWN;
-            case fish.input.UI_LEFT: return this.LEFT;
-            case fish.input.UI_RIGHT: return this.RIGHT;
-            case fish.input.UI_ACCEPT: return this.A;
-            case fish.input.UI_CANCEL: return this.B;
+            case fish.input.UI_BUTTON.UP: return this.BUTTON.UP;
+            case fish.input.UI_BUTTON.DOWN: return this.BUTTON.DOWN;
+            case fish.input.UI_BUTTON.LEFT: return this.BUTTON.LEFT;
+            case fish.input.UI_BUTTON.RIGHT: return this.BUTTON.RIGHT;
+            case fish.input.UI_BUTTON.ACCEPT: return this.BUTTON.A;
+            case fish.input.UI_BUTTON.CANCEL: return this.BUTTON.B;
         }
-        return null;
+        throw uiCode;
     };
 
     /**
      * Just iterates the frame number.
      */
-    this.update = function () {
+    this.update = () => {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        for (let button in this.BUTTONS) updateButton(button, keys[keymap[button]]);
+        for (let button in this.BUTTON) {
+            updateButton(button, keys[keymap[button]]);
+        }
         for (let pad of gamepads) {
-            updateButton(this.BUTTONS.A, pressed(pad.buttons[0]), true);
-            updateButton(this.BUTTONS.B, pressed(pad.buttons[1]), true);
-            updateButton(this.BUTTONS.X, pressed(pad.buttons[2]), true);
-            updateButton(this.BUTTONS.Y, pressed(pad.buttons[3]), true);
-            updateButton(this.BUTTONS.L, pressed(pad.buttons[4]), true);
-            updateButton(this.BUTTONS.R, pressed(pad.buttons[5]), true);
-            updateButton(this.BUTTONS.SELECT, pressed(pad.buttons[8]), true);
-            updateButton(this.BUTTONS.START, pressed(pad.buttons[9]), true);
+            updateButton(this.BUTTON.A, pressed(pad.buttons[0]), true);
+            updateButton(this.BUTTON.B, pressed(pad.buttons[1]), true);
+            updateButton(this.BUTTON.X, pressed(pad.buttons[2]), true);
+            updateButton(this.BUTTON.Y, pressed(pad.buttons[3]), true);
+            updateButton(this.BUTTON.L, pressed(pad.buttons[4]), true);
+            updateButton(this.BUTTON.R, pressed(pad.buttons[5]), true);
+            updateButton(this.BUTTON.SELECT, pressed(pad.buttons[8]), true);
+            updateButton(this.BUTTON.START, pressed(pad.buttons[9]), true);
             updateButton(
-                this.BUTTONS.UP,
+                this.BUTTON.UP,
                 pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
                 true
             );
             updateButton(
-                this.BUTTONS.DOWN,
+                this.BUTTON.DOWN,
                 pressed(pad.buttons[13]) || pad.axes[1] > threshold,
                 true
             );
             updateButton(
-                this.BUTTONS.LEFT,
+                this.BUTTON.LEFT,
                 pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
                 true
             );
             updateButton(
-                this.BUTTONS.RIGHT,
+                this.BUTTON.RIGHT,
                 pressed(pad.buttons[15]) || pad.axes[0] > threshold,
                 true
             );
@@ -1444,7 +1468,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string} code represents the iinput button thing.
      * @return {boolean} true if it is pressed.
      */
-    this.down = function (code) {
+    this.down = code => {
         if (!(code in buttonStates)) throw code;
         return buttonStates[code] > 0;
     };
@@ -1454,16 +1478,19 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string} code is the code to represent or whatever.
      * @return {boolean} true if it was pressed this frame.
      */
-    this.justDown = function (code) {
+    this.justDown = code => {
         if (!(code in buttonStates)) throw code;
         return buttonStates[code] == frame;
     };
 
-    /**
-     * @inheritDoc
-     */
-    this.uiDown = (uiCode) => {
+    /** @inheritDoc */
+    this.uiDown = uiCode => {
         return this.down(uiToButton(uiCode));
+    };
+
+    /** @inheritDoc */
+    this.uiJustDown = uiCode => {
+        return this.justDown(uiToButton(uiCode));
     };
 };
 
@@ -1481,11 +1508,42 @@ var fish = fish || {};
 fish.gui = {};
 
 /**
- * Stores all the style info that is used to draw gui elements.
+ * Stores all the style information used to draw gui elements in one place.
+ * It's just an object so that if I add more style stuff later it won't break
+ * your code and you won't be using the new gui things that use the new stuff
+ * anyway.
+ * @interface fish.gui.Style
  */
-fish.gui.Style = class {
 
-};
+/**
+ * The font for writing text in the gui.
+ * @member fish.gui.Style#font
+ * @type fish.util.Rect
+ */
+
+/**
+ * The patch to draw panels with.
+ * @member fish.gui.Style#panel
+ * @type fish.graphics.Patch
+ */
+
+/**
+ * The patch to draw buttons with.
+ * @member fish.gui.Style#button
+ * @type fish.graphics.Patch
+ */
+
+/**
+ * The patch to draw depressed buttons with.
+ * @member fish.gui.Style#buttonDown
+ * @type fish.graphics.Patch
+ */
+
+/**
+ * The patch to draw over stuff that is selected.
+ * @member fish.gui.Style#select
+ * @type fish.graphics.Patch
+ */
 
 /**
  * Base gui knob class. Yeah I call it knob instead of element or something
@@ -1493,7 +1551,6 @@ fish.gui.Style = class {
  */
 fish.gui.Knob = class {
     /**
-     * Creates the knob.
      * @param {fish.gui.Style} style is used to style it.
      */
     constructor(style) {
@@ -1501,13 +1558,28 @@ fish.gui.Knob = class {
         this.bounds = null;
         this.style = style;
     }
+
+    /**
+     * Tells you if this type of gui knob is selectable. If not then you cannot
+     * interact with it.
+     * @return {boolean} true iff you can interact.
+     */
+    selectable() {
+        return false;
+    }
     
     /**
      * Fits the gui knob to the given area. Probably needs to be extended to be
      * useful a lot of the time.
      * @param {fish.util.Rect} bounds is the area to fit the element into.
+     * @param {boolean} greedy whether to fill all available space even if not
+     *        needed. This is what is wanted generally if user code calls fit,
+     *        and sometimes it's needed for inner gui bits, but you obviously
+     *        can't use it for every situation. Also, keep in mind it's more
+     *        like a guideline than a rule, some things really can't be
+     *        greedy, and some have no choice but to be greedy.
      */
-    fit(bounds) {
+    fit(bounds, greedy=true) {
         this.bounds = bounds;
         this.fitted = true;
     }
@@ -1515,12 +1587,16 @@ fish.gui.Knob = class {
     /**
      * Updates the knob so that it can react to user input and potentially
      * return some stuff. Should recurse for nested elements.
+     * @param {fish.input.UiInput} input is used to check if keys are pressed
+     *        or whatever.
+     * @param {fish.audio.SamplePlayer} audio is used to play sound effects 
+     *        like buttons clicking and shit.
      * @return {?Object} whatever you want to return, this is handled by user
-     * code. If you return from a nested gui element the outer ones should just
-     * return it recursively. If you return null that is considered to mean
-     * nothing happened.
+     *         code. If you return from a nested gui element the outer ones
+     *         should just return it recursively. If you return null that is
+     *         considered to mean nothing happened.
      */
-    update(input) {
+    update(input, audio) {
         return null;
     }
 
@@ -1528,109 +1604,310 @@ fish.gui.Knob = class {
      * Renders the gui element using the given patch renderer.
      * @abstract
      * @param {fish.graphics.PatchRenderer} patchRenderer does the rendering.
+     * @param {boolean} selected is whether the knob is currently selected.
      */
-    render(patchRenderer) {
+    render(patchRenderer, selected) {
         throw new Error('fish.gui.knob.render must be implemented');
+    }
+};
+
+/**
+ * Holds basic code for knobs that contain a bunch of other knobs so you don't
+ * have to write a million variations of the same basic functionality.
+ */
+fish.gui.ContainerKnob = class extends fish.gui.Knob {
+    /**
+     * @param {fish.gui.Style} styles the container.
+     * @param {Array.<fish.gui.Knob>} children is a list of children to add
+     *        stright away.
+     */
+    constructor(style, children) {
+        super(style);
+        this.hasSelectable = false;
+        this.selection = 0;
+        this.children = [];
+        for (let child of children) this.addChild(child);
+    }
+
+    /** @inheritDoc */
+    selectable() {
+        return this.hasSelectable;
+    }
+
+    /**
+     * Increases or decreases the currently selected child.
+     * @param {number} direction is whether to go forward (> 0) or back (< 0).
+     *        If you pass 0 nothing will happen.
+     */
+    incrementSelection(direction) {
+        if (direction == 0 || !this.hasSelectable) return;
+        let change = Math.sign(direction);
+        for (let i = 0; i < this.children.length && change != 0; i++) {
+            this.selection += change;
+            if (this.selection < 0) this.selection = this.children.length - 1;
+            if (this.selection >= this.children.length) this.selection = 0;
+            if (this.children[this.selection].selectable()) change = 0;
+        }
+    }
+
+    /**
+     * Adds a child to the container.
+     * @param {fish.gui.Knob} child is the thing to add.
+     */
+    addChild(child) {
+        this.children.push(child);
+        if (child.selectable() && !this.hasSelectable) {
+            this.hasSelectable = true;
+            this.selection = this.children.length - 1;
+        }
     }
 };
 
 /**
  * Creates a panel that can stack contents vertically or horizontally in a nice
  * box.
+ * @implements fish.gui.Knob
  */
-fish.gui.PanelKnob = class extends fish.gui.Knob {
+fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
     /**
-     * Creates a panel and says whether it is vertical or horizontal.
-     * @param {fish.gui.Style} style is used to style it.
-     * @param {boolean} vertical is whether it is vertical. If not it is
-     * horizontal.
+     * @param {fish.gui.Style} style used to style it.
+     * @param {boolean} [cancellable=false] is if pressing UI_BUTTON.CANCEL
+     *        will cause the panel to return null on the next update.
+     * @param {Array.<fish.gui.Knob>} [children=[]] is a list of knobs to add as
+     *        children to this panel.
      */
-    constructor(style, vertical=true) {
+    constructor(style, cancellable=false, children=[]) {
+        super(style, children);
+        this.cancellable = cancellable;
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        interior.shrink(this.style.panel.BORDER);
+        for (let i in this.children) {
+            this.children[i].fit(
+                interior.copy(),
+                i == this.children.length - 1 && greedy
+            );
+            interior.size.y -= this.children[i].bounds.h;
+        }
+        if (greedy) {
+            super.fit(bounds);
+        } else {
+            super.fit(new fish.util.Rect(
+                bounds.x,
+                bounds.y + interior.h,
+                bounds.w,
+                bounds.h - interior.h
+            ));
+        }
+    }
+
+    /** @inheritDoc */
+    update(input, audio) {
+        if (this.cancellable && input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
+            return null;
+        }
+        if (this.children.length == 0) return null;
+        if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
+            this.incrementSelection(-1);
+        } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
+            this.incrementSelection(1);
+        }
+        return this.children[this.selection].update(input, audio);
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        patchRenderer.renderPatch(this.style.panel, this.bounds);
+        for (let i in this.children) {
+            this.children[i].render(
+                patchRenderer,
+                selected && i == this.selection
+            );
+        }
+    }
+
+};
+
+/**
+ * Knob that just holds some text and does nothing.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextKnob = class extends fish.gui.Knob {
+    /**
+     * @param {fish.gui.Style} style the style used by the knob.
+     * @param {string} text the unwrapped text in which only multiple newlines
+     *        are counted as newlines.
+     */
+    constructor(style, text) {
         super(style);
-        this.children = [];
-        this.vertical = vertical;
+        this.text = text;
+        this.fittedText = '';
+        this.origin = new fish.util.Vector();
     }
 
-    /**
-     * Adds a child to the panel.
-     * @param {fish.gui.Knob} child is the thing to add.
-     */
-    addChild(child) {
-        this.children.push(child);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    fit(bounds) {
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        this.origin.x = bounds.x + 1;
+        this.origin.y = bounds.t - 1;
+        this.fittedText = fish.util.fitText(
+            this.text,
+            this.style.font,
+            bounds.w - 2
+        );
+        let height = fish.util.textHeight(this.fittedText, this.style.font) + 2;
+        bounds.pos.y += bounds.size.y - height;
+        bounds.size.y = height;
         super.fit(bounds);
-        // TODO: iterate over the contents, take into account the padding of
-        // the patch thingy, and fit them into some spaces, also need to figure
-        // out how much space is left after.
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        patchRenderer.renderText(
+            this.style.font,
+            this.fittedText,
+            this.origin
+        );
     }
 };
 
+/**
+ * A button that you can have a nice click of.
+ * @implements fish.gui.Knob
+ */
 fish.gui.ButtonKnob = class extends fish.gui.Knob {
     /**
-     * Creates the button.
      * @param {fish.gui.Style} style is the style to draw it with.
-     * @param {fish.gui.Knob} child is the child to put inside the button.
+     * @param {string|fish.gui.Knob} child is the child to put inside the
+     *        button. If you passed text it is assumed you want it to be made
+     *        into a text knob.
+     * @param {?mixed} result is the thing to return from update if the button
+     *        is pressed. Be warned, though, if this is a function it will be
+     *        executed and then it's return value will be returned instead.
      */
-    constructor(style, child) {
+    constructor(style, child, result=null) {
         super(style);
-        this.child = child;
+        this.down = false;
+        this.result = result;
+        if (typeof child == 'string') {
+            this.child = new fish.gui.TextKnob(style, child);
+        } else {
+            this.child = child;
+        }
     }
 
-    /**
-     * @inheritDoc
-     */
-    fit(bounds) {
+    /** @inheritDoc */
+    selectable() {
+        return true;
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        interior.shrink(this.style.button.BORDER);
+        this.child.fit(interior);
+        if (!greedy) {
+            bounds.size.y = this.child.bounds.size.y +
+                this.style.button.BORDER * 2;
+            bounds.pos.y = this.child.bounds.pos.y - this.style.button.BORDER;
+        }
         super.fit(bounds);
+    }
+
+    /** @inheritDoc */
+    update(input, audio) {
+        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) && !this.down) {
+            audio.playSample(this.style.click);
+            this.down = true;
+            if (typeof this.result == 'function') {
+                return this.result();
+            }
+            return this.result;
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        patchRenderer.renderPatch(
+            selected ? this.style.buttonSelected : this.style.button,
+            this.bounds
+        );
+        this.child.render(patchRenderer, selected);
     }
 };
 
-/*
- * Ok so how the hell am I gonna do this? The gui system needs to be set up so
- * that it can work with any renderer. Well, actually so it doesn't need to
- * work with the overall renderer in the case of the sprite renderer, it needs
- * to work with the sprite batch, and it also needs to know which sprites are
- * used for what parts of itself.
- * For sound it just needs to have a sound and be able to play it on the sound
- * player.
- * For input it needs to query a couple of things which I have already set up.
- * So yeah, main thing is graphics. Basically, I think I should make it that
- * you can only have one sprite atlas per sprite renderer because it's gonna be
- * a massive pain otherwise. eh but you need the renderer object to load
- * textures rn so that would suck.
- * So no, you can have as many as you want, but when you create guis you need
- * to pass them some kind of theme object which defines the sounds to play and
- * the sprites to draw with etc, and these sprites are obviously going to
- * presume that you are using some certain texture so if you ain't it's gonna
- * look pretty fucked up.
- * Yeah so then each frame you have to call update on your gui like you
- * generally would and in the render function you will call render on it while
- * passing it the batch that it will draw with.
- *
- * There are some other questions like what widgets there will be and how it
- * will be arranged etc etc but that is for antoher time.
- *
- *
- * Ok so how are we going to do the other part? First lets think about what the
- * use cases are so we can think of an idea that fits all of them.
- *
- * We need to be able to make passive windows that show the value of some
- * variable in like a bar graph or a number or something.
- * We need to be able to make text boxes and dialogs in games.
- * We need to be able to create menus where the user can change settings and
- * whatever the fuck else.
- * We need to be able to create level editors and tools like that.
- *
- * Uhhhhh yeah basically I think the usual shit will be fine. We need to make
- * it that there are buttons that can actually end the gui thing and evaluate
- * to something and there are some that just modify some variable without
- * changing anything. We also need some ones that can do some arbitrary shit or
- * render some arbitrary shit.
+/**
+ * Displays a picture nestled within the gui system.
  */
+fish.gui.PicKnob = class extends fish.gui.Knob {
+    /**
+     * @param {fish.gui.Style} style the style.
+     * @param {mixed} sprite the pic to draw.
+     * @param {number} [scale=1] is the scale to draw it at. If the knob ends
+     *        up being fitted greedily this will be ignored.
+     * @param {boolean} [stretch=false] is whether the image should eschew it's
+     *        aspect ratio to fill all the space it is given.
+     */
+    constructor(style, sprite, scale=1, stretch=false) {
+        super(style);
+        this.sprite = sprite;
+        this.scale = scale;
+        this.stretch = stretch;
+    }
+};
+
+/**
+ * Like a panel but it stores it's contents in equally sized areas separated
+ * by vertical lines.
+ */
+fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
+    /**
+     * @param {fish.gui.Style} style decides how stuff is displayed.
+     * @param {Array.<fish.gui.Knob>} [children=[]] is a list of children to
+     *        add to the hbox right away.
+     */
+    constructor(style, children=[]) {
+        super(style, children);
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        let maxHeight = 0;
+        interior.size.x /= this.children.length;
+        for (let child of this.children) {
+            child.fit(interior.copy(), greedy);
+            interior.pos.x += interior.size.x;
+            maxHeight = Math.max(maxHeight, child.bounds.size.y);
+        }
+        if (!greedy) bounds.size.y = maxHeight;
+        super.fit(bounds, greedy);
+    }
+
+    /** @inheritDoc */
+    update(input, audio) {
+        if (this.children.length == 0) return null;
+        if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
+            this.incrementSelection(-1);
+        } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
+            this.incrementSelection(1);
+        }
+        return this.children[this.selection].update(input, audio);
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        for (let i in this.children) {
+            this.children[i].render(
+                patchRenderer,
+                selected && i == this.selection
+            );
+        }
+    }
+};
 
 var fish = fish || {};
 
@@ -1822,39 +2099,13 @@ fish.screen = {};
  * these are the ones you asked for in your game.
  * These interfaces are just the basic amount of functionality that the engine
  * requires from each subsystem.
- * @interface fish.screen.Context
- */
-
-/**
- * The game's renderer subsystem.
- * @member fish.screen.Context#gfx
- * @type fish.graphics.PatchRenderer
- */
-
-/**
- * The game's audio subsystem.
- * @member fish.screen.Context#snd
- * @type fish.audio.SamplePlayer
- */
-
-/**
- * The game's input subsystem.
- * @member fish.screen.Context#in
- * @type fish.input.UiInput
- */
-
-/**
- * The game's asset store.
- * @member fish.screen.Context#str
- * @type fish.store.Store
- */
-
-/**
- * Basically a namespace under which you can place your own things that
- * you want to keep in the context object if you have any. This way, if I add
- * more things to the context later it won't possibly break your code.
- * @member fish.screen.Context#usr
- * @type Object
+ * @typedef {Object} fish.screen~Context
+ * @param {fish.graphics.BaseRenderer} gfx the graphics subsystem.
+ * @param {fish.audio.SamplePlayer} snd the audio subsystem.
+ * @param {fish.input.UiInput} in the input subsystem.
+ * @param {fish.store.Store} str the asset store.
+ * @param {Object} usr basically a namespace where you can store your own junk
+ *        without fear of future versions of the engine overwriting it.
  */
 
 /**
@@ -1889,7 +2140,7 @@ fish.screen.Screen = class {
     /**
      * Creates the screen and gives it the context object that contains all the
      * subsystems and stuff.
-     * @param {Context} ctx is stored by the base screen class so you
+     * @param {fish.screen~Context} ctx is stored by the base screen class so you
      *        always have access to it.
      */
     constructor(ctx) {
@@ -1936,8 +2187,18 @@ var fish = fish || {};
 /**
  * Init callback which creates the game's starting screen.
  * @callback fish~init
- * @param {Object} ctx is the game context with all the subsystems and stuff.
+ * @param {fish.screen.Context} ctx is the game context with all the subsystems
+ *        and stuff.
  * @return {fish.screen.Screen} the screen created.
+ */
+
+/**
+ * @typedef {Object} fish.start~Args
+ * @param {Object} usr copied to game context usr object.
+ * @param {Object} gfx graphics
+ * @param {Object} snd sound
+ * @param {Object} in input
+ * @param {Object} str store
  */
 
 /**

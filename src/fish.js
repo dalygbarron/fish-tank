@@ -4,8 +4,18 @@ var fish = fish || {};
 /**
  * Init callback which creates the game's starting screen.
  * @callback fish~init
- * @param {Object} ctx is the game context with all the subsystems and stuff.
+ * @param {fish.screen.Context} ctx is the game context with all the subsystems
+ *        and stuff.
  * @return {fish.screen.Screen} the screen created.
+ */
+
+/**
+ * @typedef {Object} fish.start~Args
+ * @param {Object} usr copied to game context usr object.
+ * @param {Object} gfx graphics
+ * @param {Object} snd sound
+ * @param {Object} in input
+ * @param {Object} str store
  */
 
 /**

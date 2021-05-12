@@ -35,7 +35,8 @@ module.exports = function(grunt) {
             all: {
                 src: 'testSprites/*.png',
                 dest: 'test/sprites.png',
-                destCss: 'test/sprites.json'
+                destCss: 'test/sprites.json',
+                padding: 1
             }
         },
         jsdoc: {
@@ -44,10 +45,12 @@ module.exports = function(grunt) {
                     'src/*.js',
                     'package.json',
                     'README.md',
-                    'tutorials/*.md'
+                    'logo.png'
                 ],
                 options: {
-                    destination: 'docs'
+                    destination: 'docs',
+                    template : 'node_modules/ink-docstrap/template',
+                    configure : 'node_modules/ink-docstrap/template/jsdoc.conf.json'
                 }
             }
         }

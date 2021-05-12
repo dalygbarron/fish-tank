@@ -118,8 +118,8 @@ fish.audio.BasicAudio = function (context, players=3) {
          * @return true if they are the same and this sample player is still
          *              playing.
          */
-        this.same = sample => {
-            return playing && sample && sample.name == this.sample.name;
+        this.same = other => {
+            return playing && sample && sample.name == other.name;
         };
 
         /**

@@ -9,6 +9,9 @@ fish.util = {};
 
 /**
  * Represents a two dimensional point / direction via cartesian coordinates.
+ * You will notice there is no functional style stuff and that is because it
+ * requires instantiating objects and in the kinds of contexts where a vector
+ * class is most used, that is not really acceptable so yeah.
  * @constructor
  * @param {number} [x=0] is the horizontal part.
  * @param {number} [y=0] is the vector part.
@@ -28,48 +31,15 @@ fish.util.Vector = function (x=0, y=0) {
     };
 
     /**
-     * Adds another vector or value to this vector and returns the result
-     * without changing this object.
-     * @param {fish.util.Vector|number} other is the one to add.
-     * @return {fish.util.Vector} a new vector that is the result.
-     */
-    this.plus = other => {
-        return (other instanceof fish.util.Vector) ?
-            new fish.util.Vector(this.x + other.x, this.y + other.y) :
-            new fish.util.Vector(this.x + other, this.y + other);
-    };
-
-    /**
-     * Subtracts another vector or value from this vector and returns the
-     * result without changing this object.
-     * @param {fish.util.Vector|number} other is the one to subtract.
-     * @return {fish.util.Vector} a new vector that is the result.
-     */
-    this.minus = other => {
-        return (other instanceof fish.util.Vector) ?
-            new fish.util.Vector(this.x - other.x, this.y - other.y) :
-            new fish.util.Vector(this.x - other, this.y - other);
-    };
-
-    /**
-     * Multiplies another vector or value with this vector and returns the
-     * result without changing this object.
-     * @param {fish.util.Vector|number} other is the one to multiply.
-     * @return {fish.util.Vector} a new vector that is the result.
-     */
-    this.times = other => {
-        return (other instanceof fish.util.Vector) ?
-            new fish.util.Vector(this.x - other.x, this.y - other.y) :
-            new fish.util.Vector(this.x - other, this.y - other);
-    };
-
-    /**
      * Adds another vector onto this one component wise.
      * @param {fish.util.Vector} other is the other vector.
+     * @param {number} [mag=1] is the amount to multiply the other one by
+     *        first. I know it's not really that relevant to adding but it is
+     *        the main use case so I might as well make it efficient and easy.
      */
-    this.add = other => {
-        this.x += other.x;
-        this.y += other.y;
+    this.add = (other, mag=1) => {
+        this.x += other.x * mag;
+        this.y += other.y * mag;
     };
 
     /**
@@ -101,6 +71,22 @@ fish.util.Rect = class {
     constructor(x=0, y=0, w=0, h=0) {
         this.pos = new fish.util.Vector(x, y);
         this.size = new fish.util.Vector(w, h);
+    }
+
+    copy() {
+        return new fish.util.Rect(this.x, this.y, this.w, this.h);
+    }
+
+    /**
+     * Shrinks the rectangle by a certain amount from each of it's former
+     * border lines.
+     * @param {number} amount the amount to shrink it from each side.
+     */
+    shrink(amount) {
+        this.pos.x += amount;
+        this.pos.y += amount;
+        this.size.x -= amount * 2;
+        this.size.y -= amount * 2;
     }
 
     /**
@@ -184,18 +170,19 @@ fish.util.loadText = async function (url) {
  * @param {number} width the width to fit the text into.
  */
 fish.util.fitText = (text, font, width) => {
+    console.log(width);
     let fitted = '';
     let lines = text.split(/\n\n+/);
     for (let line of lines) {
         let offset = 0;
-        let tokens = bit.split(/\s/);
+        let tokens = line.split(/\s/);
         for (let token of tokens) {
             if (token.length == 0) continue;
             let size = (token.length - 1) * font.getHorizontalPadding();
             for (let i = 0; i < token.length; i++) {
                 size += font.getWidth(token.charAt(i));
             }
-            if (size > width) {
+            if (offset + size > width) {
                 fitted += `\n${token}`;
                 offset = size;
             } else {
@@ -205,8 +192,22 @@ fish.util.fitText = (text, font, width) => {
             offset += font.getWidth(' ');
             fitted += ' ';
         }
+        fitted += '\n';
     }
     return fitted;
+};
+
+/**
+ * Takes a fitted piece of text and tells you how high it is gonna be in the
+ * given font.
+ * @param {string} text is text where every newline is taken seriously.
+ * @param {fish.graphics.Font} font is the font used to measure it.
+ * @return {number} the number of pixels high it will be.
+ */
+fish.util.textHeight = (text, font) => {
+    let lines = text.split(/\n(?=\S+)/).length;
+    return lines * font.getLineHeight() +
+        (lines - 1) * font.getVerticalPadding();
 };
 
 /**

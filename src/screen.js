@@ -15,39 +15,13 @@ fish.screen = {};
  * these are the ones you asked for in your game.
  * These interfaces are just the basic amount of functionality that the engine
  * requires from each subsystem.
- * @interface fish.screen.Context
- */
-
-/**
- * The game's renderer subsystem.
- * @member fish.screen.Context#gfx
- * @type fish.graphics.PatchRenderer
- */
-
-/**
- * The game's audio subsystem.
- * @member fish.screen.Context#snd
- * @type fish.audio.SamplePlayer
- */
-
-/**
- * The game's input subsystem.
- * @member fish.screen.Context#in
- * @type fish.input.UiInput
- */
-
-/**
- * The game's asset store.
- * @member fish.screen.Context#str
- * @type fish.store.Store
- */
-
-/**
- * Basically a namespace under which you can place your own things that
- * you want to keep in the context object if you have any. This way, if I add
- * more things to the context later it won't possibly break your code.
- * @member fish.screen.Context#usr
- * @type Object
+ * @typedef {Object} fish.screen~Context
+ * @param {fish.graphics.BaseRenderer} gfx the graphics subsystem.
+ * @param {fish.audio.SamplePlayer} snd the audio subsystem.
+ * @param {fish.input.UiInput} in the input subsystem.
+ * @param {fish.store.Store} str the asset store.
+ * @param {Object} usr basically a namespace where you can store your own junk
+ *        without fear of future versions of the engine overwriting it.
  */
 
 /**
@@ -82,7 +56,7 @@ fish.screen.Screen = class {
     /**
      * Creates the screen and gives it the context object that contains all the
      * subsystems and stuff.
-     * @param {Context} ctx is stored by the base screen class so you
+     * @param {fish.screen~Context} ctx is stored by the base screen class so you
      *        always have access to it.
      */
     constructor(ctx) {

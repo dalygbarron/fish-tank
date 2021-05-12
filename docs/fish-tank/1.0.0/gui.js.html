@@ -1,32 +1,91 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: gui.js</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>fish-tank Source: gui.js</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.dark.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.slate.css">
+
 </head>
 
 <body>
 
-<div id="main">
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html"><img class="branding-logo" src="logo.png"
+		alt="logo"/>fish-tank</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">fish.audio</a></li><li><a href="fish.graphics.html">fish.graphics</a></li><li><a href="fish.gui.html">fish.gui</a></li><li><a href="fish.input.html">fish.input</a></li><li><a href="fish.screen.html">fish.screen</a></li><li><a href="fish.util.html">fish.util</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li><li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li><li><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></li><li><a href="fish.gui.Style.html">fish.gui.Style</a></li><li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
 
-    <h1 class="page-title">Source: gui.js</h1>
+</div>
+</div>
 
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: gui.js</h1>
     
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>var fish = fish || {};
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">var fish = fish || {};
 
 /**
  * This file provides a kinda basic gui system for the user to interact with.
@@ -40,11 +99,42 @@
 fish.gui = {};
 
 /**
- * Stores all the style info that is used to draw gui elements.
+ * Stores all the style information used to draw gui elements in one place.
+ * It's just an object so that if I add more style stuff later it won't break
+ * your code and you won't be using the new gui things that use the new stuff
+ * anyway.
+ * @interface fish.gui.Style
  */
-fish.gui.Style = class {
 
-};
+/**
+ * The font for writing text in the gui.
+ * @member fish.gui.Style#font
+ * @type fish.util.Rect
+ */
+
+/**
+ * The patch to draw panels with.
+ * @member fish.gui.Style#panel
+ * @type fish.graphics.Patch
+ */
+
+/**
+ * The patch to draw buttons with.
+ * @member fish.gui.Style#button
+ * @type fish.graphics.Patch
+ */
+
+/**
+ * The patch to draw depressed buttons with.
+ * @member fish.gui.Style#buttonDown
+ * @type fish.graphics.Patch
+ */
+
+/**
+ * The patch to draw over stuff that is selected.
+ * @member fish.gui.Style#select
+ * @type fish.graphics.Patch
+ */
 
 /**
  * Base gui knob class. Yeah I call it knob instead of element or something
@@ -52,7 +142,6 @@ fish.gui.Style = class {
  */
 fish.gui.Knob = class {
     /**
-     * Creates the knob.
      * @param {fish.gui.Style} style is used to style it.
      */
     constructor(style) {
@@ -60,13 +149,28 @@ fish.gui.Knob = class {
         this.bounds = null;
         this.style = style;
     }
+
+    /**
+     * Tells you if this type of gui knob is selectable. If not then you cannot
+     * interact with it.
+     * @return {boolean} true iff you can interact.
+     */
+    selectable() {
+        return false;
+    }
     
     /**
      * Fits the gui knob to the given area. Probably needs to be extended to be
      * useful a lot of the time.
      * @param {fish.util.Rect} bounds is the area to fit the element into.
+     * @param {boolean} greedy whether to fill all available space even if not
+     *        needed. This is what is wanted generally if user code calls fit,
+     *        and sometimes it's needed for inner gui bits, but you obviously
+     *        can't use it for every situation. Also, keep in mind it's more
+     *        like a guideline than a rule, some things really can't be
+     *        greedy, and some have no choice but to be greedy.
      */
-    fit(bounds) {
+    fit(bounds, greedy=true) {
         this.bounds = bounds;
         this.fitted = true;
     }
@@ -74,12 +178,16 @@ fish.gui.Knob = class {
     /**
      * Updates the knob so that it can react to user input and potentially
      * return some stuff. Should recurse for nested elements.
+     * @param {fish.input.UiInput} input is used to check if keys are pressed
+     *        or whatever.
+     * @param {fish.audio.SamplePlayer} audio is used to play sound effects 
+     *        like buttons clicking and shit.
      * @return {?Object} whatever you want to return, this is handled by user
-     * code. If you return from a nested gui element the outer ones should just
-     * return it recursively. If you return null that is considered to mean
-     * nothing happened.
+     *         code. If you return from a nested gui element the outer ones
+     *         should just return it recursively. If you return null that is
+     *         considered to mean nothing happened.
      */
-    update(input) {
+    update(input, audio) {
         return null;
     }
 
@@ -87,129 +195,444 @@ fish.gui.Knob = class {
      * Renders the gui element using the given patch renderer.
      * @abstract
      * @param {fish.graphics.PatchRenderer} patchRenderer does the rendering.
+     * @param {boolean} selected is whether the knob is currently selected.
      */
-    render(patchRenderer) {
+    render(patchRenderer, selected) {
         throw new Error('fish.gui.knob.render must be implemented');
+    }
+};
+
+/**
+ * Holds basic code for knobs that contain a bunch of other knobs so you don't
+ * have to write a million variations of the same basic functionality.
+ */
+fish.gui.ContainerKnob = class extends fish.gui.Knob {
+    /**
+     * @param {fish.gui.Style} styles the container.
+     * @param {Array.&lt;fish.gui.Knob>} children is a list of children to add
+     *        stright away.
+     */
+    constructor(style, children) {
+        super(style);
+        this.hasSelectable = false;
+        this.selection = 0;
+        this.children = [];
+        for (let child of children) this.addChild(child);
+    }
+
+    /** @inheritDoc */
+    selectable() {
+        return this.hasSelectable;
+    }
+
+    /**
+     * Increases or decreases the currently selected child.
+     * @param {number} direction is whether to go forward (> 0) or back (&lt; 0).
+     *        If you pass 0 nothing will happen.
+     */
+    incrementSelection(direction) {
+        if (direction == 0 || !this.hasSelectable) return;
+        let change = Math.sign(direction);
+        for (let i = 0; i &lt; this.children.length &amp;&amp; change != 0; i++) {
+            this.selection += change;
+            if (this.selection &lt; 0) this.selection = this.children.length - 1;
+            if (this.selection >= this.children.length) this.selection = 0;
+            if (this.children[this.selection].selectable()) change = 0;
+        }
+    }
+
+    /**
+     * Adds a child to the container.
+     * @param {fish.gui.Knob} child is the thing to add.
+     */
+    addChild(child) {
+        this.children.push(child);
+        if (child.selectable() &amp;&amp; !this.hasSelectable) {
+            this.hasSelectable = true;
+            this.selection = this.children.length - 1;
+        }
     }
 };
 
 /**
  * Creates a panel that can stack contents vertically or horizontally in a nice
  * box.
+ * @implements fish.gui.Knob
  */
-fish.gui.PanelKnob = class extends fish.gui.Knob {
+fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
     /**
-     * Creates a panel and says whether it is vertical or horizontal.
-     * @param {fish.gui.Style} style is used to style it.
-     * @param {boolean} vertical is whether it is vertical. If not it is
-     * horizontal.
+     * @param {fish.gui.Style} style used to style it.
+     * @param {boolean} [cancellable=false] is if pressing UI_BUTTON.CANCEL
+     *        will cause the panel to return null on the next update.
+     * @param {Array.&lt;fish.gui.Knob>} [children=[]] is a list of knobs to add as
+     *        children to this panel.
      */
-    constructor(style, vertical=true) {
+    constructor(style, cancellable=false, children=[]) {
+        super(style, children);
+        this.cancellable = cancellable;
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        interior.shrink(this.style.panel.BORDER);
+        for (let i in this.children) {
+            this.children[i].fit(
+                interior.copy(),
+                i == this.children.length - 1 &amp;&amp; greedy
+            );
+            interior.size.y -= this.children[i].bounds.h;
+        }
+        if (greedy) {
+            super.fit(bounds);
+        } else {
+            super.fit(new fish.util.Rect(
+                bounds.x,
+                bounds.y + interior.h,
+                bounds.w,
+                bounds.h - interior.h
+            ));
+        }
+    }
+
+    /** @inheritDoc */
+    update(input, audio) {
+        if (this.cancellable &amp;&amp; input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
+            return null;
+        }
+        if (this.children.length == 0) return null;
+        if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
+            this.incrementSelection(-1);
+        } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
+            this.incrementSelection(1);
+        }
+        return this.children[this.selection].update(input, audio);
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        patchRenderer.renderPatch(this.style.panel, this.bounds);
+        for (let i in this.children) {
+            this.children[i].render(
+                patchRenderer,
+                selected &amp;&amp; i == this.selection
+            );
+        }
+    }
+
+};
+
+/**
+ * Knob that just holds some text and does nothing.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextKnob = class extends fish.gui.Knob {
+    /**
+     * @param {fish.gui.Style} style the style used by the knob.
+     * @param {string} text the unwrapped text in which only multiple newlines
+     *        are counted as newlines.
+     */
+    constructor(style, text) {
         super(style);
-        this.children = [];
-        this.vertical = vertical;
+        this.text = text;
+        this.fittedText = '';
+        this.origin = new fish.util.Vector();
     }
 
-    /**
-     * Adds a child to the panel.
-     * @param {fish.gui.Knob} child is the thing to add.
-     */
-    addChild(child) {
-        this.children.push(child);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    fit(bounds) {
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        this.origin.x = bounds.x + 1;
+        this.origin.y = bounds.t - 1;
+        this.fittedText = fish.util.fitText(
+            this.text,
+            this.style.font,
+            bounds.w - 2
+        );
+        let height = fish.util.textHeight(this.fittedText, this.style.font) + 2;
+        bounds.pos.y += bounds.size.y - height;
+        bounds.size.y = height;
         super.fit(bounds);
-        // TODO: iterate over the contents, take into account the padding of
-        // the patch thingy, and fit them into some spaces, also need to figure
-        // out how much space is left after.
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        patchRenderer.renderText(
+            this.style.font,
+            this.fittedText,
+            this.origin
+        );
     }
 };
 
+/**
+ * A button that you can have a nice click of.
+ * @implements fish.gui.Knob
+ */
 fish.gui.ButtonKnob = class extends fish.gui.Knob {
     /**
-     * Creates the button.
      * @param {fish.gui.Style} style is the style to draw it with.
-     * @param {fish.gui.Knob} child is the child to put inside the button.
+     * @param {string|fish.gui.Knob} child is the child to put inside the
+     *        button. If you passed text it is assumed you want it to be made
+     *        into a text knob.
+     * @param {?mixed} result is the thing to return from update if the button
+     *        is pressed. Be warned, though, if this is a function it will be
+     *        executed and then it's return value will be returned instead.
      */
-    constructor(style, child) {
+    constructor(style, child, result=null) {
         super(style);
-        this.child = child;
+        this.down = false;
+        this.result = result;
+        if (typeof child == 'string') {
+            this.child = new fish.gui.TextKnob(style, child);
+        } else {
+            this.child = child;
+        }
     }
 
-    /**
-     * @inheritDoc
-     */
-    fit(bounds) {
+    /** @inheritDoc */
+    selectable() {
+        return true;
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        interior.shrink(this.style.button.BORDER);
+        this.child.fit(interior);
+        if (!greedy) {
+            bounds.size.y = this.child.bounds.size.y +
+                this.style.button.BORDER * 2;
+            bounds.pos.y = this.child.bounds.pos.y - this.style.button.BORDER;
+        }
         super.fit(bounds);
+    }
+
+    /** @inheritDoc */
+    update(input, audio) {
+        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) &amp;&amp; !this.down) {
+            audio.playSample(this.style.click);
+            this.down = true;
+            if (typeof this.result == 'function') {
+                return this.result();
+            }
+            return this.result;
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        patchRenderer.renderPatch(
+            selected ? this.style.buttonSelected : this.style.button,
+            this.bounds
+        );
+        this.child.render(patchRenderer, selected);
     }
 };
 
-/*
- * Ok so how the hell am I gonna do this? The gui system needs to be set up so
- * that it can work with any renderer. Well, actually so it doesn't need to
- * work with the overall renderer in the case of the sprite renderer, it needs
- * to work with the sprite batch, and it also needs to know which sprites are
- * used for what parts of itself.
- * For sound it just needs to have a sound and be able to play it on the sound
- * player.
- * For input it needs to query a couple of things which I have already set up.
- * So yeah, main thing is graphics. Basically, I think I should make it that
- * you can only have one sprite atlas per sprite renderer because it's gonna be
- * a massive pain otherwise. eh but you need the renderer object to load
- * textures rn so that would suck.
- * So no, you can have as many as you want, but when you create guis you need
- * to pass them some kind of theme object which defines the sounds to play and
- * the sprites to draw with etc, and these sprites are obviously going to
- * presume that you are using some certain texture so if you ain't it's gonna
- * look pretty fucked up.
- * Yeah so then each frame you have to call update on your gui like you
- * generally would and in the render function you will call render on it while
- * passing it the batch that it will draw with.
- *
- * There are some other questions like what widgets there will be and how it
- * will be arranged etc etc but that is for antoher time.
- *
- *
- * Ok so how are we going to do the other part? First lets think about what the
- * use cases are so we can think of an idea that fits all of them.
- *
- * We need to be able to make passive windows that show the value of some
- * variable in like a bar graph or a number or something.
- * We need to be able to make text boxes and dialogs in games.
- * We need to be able to create menus where the user can change settings and
- * whatever the fuck else.
- * We need to be able to create level editors and tools like that.
- *
- * Uhhhhh yeah basically I think the usual shit will be fine. We need to make
- * it that there are buttons that can actually end the gui thing and evaluate
- * to something and there are some that just modify some variable without
- * changing anything. We also need some ones that can do some arbitrary shit or
- * render some arbitrary shit.
+/**
+ * Displays a picture nestled within the gui system.
  */
-</code></pre>
-        </article>
-    </section>
+fish.gui.PicKnob = class extends fish.gui.Knob {
+    /**
+     * @param {fish.gui.Style} style the style.
+     * @param {mixed} sprite the pic to draw.
+     * @param {number} [scale=1] is the scale to draw it at. If the knob ends
+     *        up being fitted greedily this will be ignored.
+     * @param {boolean} [stretch=false] is whether the image should eschew it's
+     *        aspect ratio to fill all the space it is given.
+     */
+    constructor(style, sprite, scale=1, stretch=false) {
+        super(style);
+        this.sprite = sprite;
+        this.scale = scale;
+        this.stretch = stretch;
+    }
+};
+
+/**
+ * Like a panel but it stores it's contents in equally sized areas separated
+ * by vertical lines.
+ */
+fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
+    /**
+     * @param {fish.gui.Style} style decides how stuff is displayed.
+     * @param {Array.&lt;fish.gui.Knob>} [children=[]] is a list of children to
+     *        add to the hbox right away.
+     */
+    constructor(style, children=[]) {
+        super(style, children);
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        let maxHeight = 0;
+        interior.size.x /= this.children.length;
+        for (let child of this.children) {
+            child.fit(interior.copy(), greedy);
+            interior.pos.x += interior.size.x;
+            maxHeight = Math.max(maxHeight, child.bounds.size.y);
+        }
+        if (!greedy) bounds.size.y = maxHeight;
+        super.fit(bounds, greedy);
+    }
+
+    /** @inheritDoc */
+    update(input, audio) {
+        if (this.children.length == 0) return null;
+        if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
+            this.incrementSelection(-1);
+        } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
+            this.incrementSelection(1);
+        }
+        return this.children[this.selection].update(input, audio);
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        for (let i in this.children) {
+            this.children[i].render(
+                patchRenderer,
+                selected &amp;&amp; i == this.selection
+            );
+        }
+    }
+};
+</pre>
+    </article>
+</section>
 
 
 
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
 
 </div>
+</div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.graphics.html">graphics</a></li><li><a href="fish.gui.html">gui</a></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="fish.audio.BasicAudio.html">BasicAudio</a></li><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.graphics.Atlas.html">Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">BitmapFont</a></li><li><a href="fish.graphics.Colour.html">Colour</a></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></li><li><a href="fish.graphics.Texture.html">Texture</a></li><li><a href="fish.gui.Knob.html">Knob</a></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a></li><li><a href="fish.gui.Style.html">Style</a></li><li><a href="fish.gui-fish.gui.ButtonKnob.html">ButtonKnob</a></li><li><a href="fish.input.BasicInput.html">BasicInput</a></li><li><a href="fish.screen.Screen.html">Screen</a></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a></li><li><a href="fish.util.Rect.html">Rect</a></li><li><a href="fish.util.Vector.html">Vector</a></li></ul><h3>Interfaces</h3><ul><li><a href="fish.audio.SamplePlayer.html">SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">BaseRenderer</a></li><li><a href="fish.graphics.Font.html">Font</a></li><li><a href="fish.graphics.PatchRenderer.html">PatchRenderer</a></li><li><a href="fish.input.UiInput.html">UiInput</a></li><li><a href="fish.screen.Context.html">Context</a></li></ul>
-</nav>
 
-<br class="clear">
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 23:45:09 GMT+0100 (British Summer Time)
+
+
+	<span class="copyright">
+	By Dany Burton 2021
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
+	
+		on Wed May 12th 2021
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
 </body>
 </html>

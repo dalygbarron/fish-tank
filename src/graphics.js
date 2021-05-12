@@ -209,30 +209,22 @@ fish.graphics.BitmapFont = class {
         this.sprite = sprite;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getHorizontalPadding() {
         return 0;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getVerticalPadding() {
         return 0;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getWidth(c) {
         return this.sprite.w / 16;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     getLineHeight() {
         return this.sprite.h / 16;
     }
@@ -456,6 +448,20 @@ fish.graphics.PatchRenderer = class {
             'fish.graphics.PatchRenderer.renderPatch must be implemented'
         );
     }
+
+    /**
+     * Renders a piece of text onto the screen using a font.
+     * @param {fish.graphics.Font} font is the font to use to draw the text.
+     * @param {string} text is the text to draw. All it's newlines and stuff
+     *        are taken as written.
+     * @param {fish.util.Vector} dst is the top left corner of where the text
+     *        will appear on the screen.
+     */
+    renderText(font, text, dst) {
+        throw new Error(
+            'fish.graphics.PatchRenderer.renderText must be implemented'
+        );
+    }
 };
 
 /**
@@ -554,8 +560,8 @@ fish.graphics.SpriteRenderer = function (gl) {
                 let halfScale = scale * 0.5;
                 l = dst.x - src.w * halfScale;
                 r = dst.x + src.w * halfScale;
-                b = dst.y - src.h * halfScale;
-                t = dst.y + src.h * halfScale;
+                b = dst.y + src.h * halfScale;
+                t = dst.y - src.h * halfScale;
             } else {
                 throw new TypeError(
                     'SpriteRenderer.Batch.add requres a Vector or a Rect'
@@ -658,8 +664,8 @@ fish.graphics.SpriteRenderer = function (gl) {
                     xOffset = 0;
                 } else {
                     fish.util.aRect.pos.set(
-                        Math.floor(c % 16) * width,
-                        Math.floor(c / 16) * height
+                        font.sprite.x + Math.floor(c % 16) * width,
+                        font.sprite.y + Math.floor(c / 16) * height
                     );
                     this.addComp(
                         fish.util.aRect,
@@ -673,11 +679,14 @@ fish.graphics.SpriteRenderer = function (gl) {
             }
         };
 
-        /**
-         * @inheritDoc
-         */
+        /** @inheritDoc */
         this.renderPatch = (patch, dst) => {
             this.addPatch(patch, dst);
+        };
+
+        /** @inheritDoc */
+        this.renderText = (font, text, dst) => {
+            this.addText(font, text, dst);
         };
 
         /**

@@ -43,6 +43,15 @@ fish.input.UiInput = class {
     uiDown(button) {
         throw new Error('fish.input.UiInput.uiDown must be implemented');
     }
+
+    /**
+     * Tells you if the given ui button just went down.
+     * @param {fish.input.UI_BUTTON} button is the button to check on.
+     * @return {boolean} true iff it is down.
+     */
+    uiJustDown(button) {
+        throw new Error('fish.input.UiInput.uiJustDown must be implemented');
+    }
 };
 
 /**
@@ -51,18 +60,18 @@ fish.input.UiInput = class {
  * It only works with 1 player games for that reason.
  * @constructor
  * @implements {fish.input.UiInput}
- * @param {Object.<string, string>} keymap a mapping from html key names to
- *        button on the virtual controller.
- * @param {number} threshold the threshold beyond which a gamepad axis is
+ * @param {Object.<string, string>} [keymap={}] a mapping from html key names
+ *        to button on the virtual controller.
+ * @param {number} [threshold=0.9] the threshold beyond which a gamepad axis is
  *        considered pressed.
  */
-fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
+fish.input.BasicInput = function (keymap={}, threshole=0.9) {
     /**
      * The buttons that this imaginary controller provides.
      * @readonly
      * @enum {string}
      */
-    this.BUTTONS = {
+    this.BUTTON = {
         /** Left axis on controller pointed up. */
         UP: 'UP',
         /** Left axis on controller pointed down. */
@@ -104,7 +113,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
     let frame = 0;
     let keys = {};
     let buttonStates = {};
-    for (let button in this.BUTTONS) {
+    for (let button in this.BUTTON) {
         buttonStates[button] = 0;
     }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
@@ -144,50 +153,52 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      */
     let uiToButton = uiCode => {
         switch (uiCode) {
-            case fish.input.UI_UP: return this.UP;
-            case fish.input.UI_DOWN: return this.DOWN;
-            case fish.input.UI_LEFT: return this.LEFT;
-            case fish.input.UI_RIGHT: return this.RIGHT;
-            case fish.input.UI_ACCEPT: return this.A;
-            case fish.input.UI_CANCEL: return this.B;
+            case fish.input.UI_BUTTON.UP: return this.BUTTON.UP;
+            case fish.input.UI_BUTTON.DOWN: return this.BUTTON.DOWN;
+            case fish.input.UI_BUTTON.LEFT: return this.BUTTON.LEFT;
+            case fish.input.UI_BUTTON.RIGHT: return this.BUTTON.RIGHT;
+            case fish.input.UI_BUTTON.ACCEPT: return this.BUTTON.A;
+            case fish.input.UI_BUTTON.CANCEL: return this.BUTTON.B;
         }
-        return null;
+        throw uiCode;
     };
 
     /**
      * Just iterates the frame number.
      */
-    this.update = function () {
+    this.update = () => {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        for (let button in this.BUTTONS) updateButton(button, keys[keymap[button]]);
+        for (let button in this.BUTTON) {
+            updateButton(button, keys[keymap[button]]);
+        }
         for (let pad of gamepads) {
-            updateButton(this.BUTTONS.A, pressed(pad.buttons[0]), true);
-            updateButton(this.BUTTONS.B, pressed(pad.buttons[1]), true);
-            updateButton(this.BUTTONS.X, pressed(pad.buttons[2]), true);
-            updateButton(this.BUTTONS.Y, pressed(pad.buttons[3]), true);
-            updateButton(this.BUTTONS.L, pressed(pad.buttons[4]), true);
-            updateButton(this.BUTTONS.R, pressed(pad.buttons[5]), true);
-            updateButton(this.BUTTONS.SELECT, pressed(pad.buttons[8]), true);
-            updateButton(this.BUTTONS.START, pressed(pad.buttons[9]), true);
+            updateButton(this.BUTTON.A, pressed(pad.buttons[0]), true);
+            updateButton(this.BUTTON.B, pressed(pad.buttons[1]), true);
+            updateButton(this.BUTTON.X, pressed(pad.buttons[2]), true);
+            updateButton(this.BUTTON.Y, pressed(pad.buttons[3]), true);
+            updateButton(this.BUTTON.L, pressed(pad.buttons[4]), true);
+            updateButton(this.BUTTON.R, pressed(pad.buttons[5]), true);
+            updateButton(this.BUTTON.SELECT, pressed(pad.buttons[8]), true);
+            updateButton(this.BUTTON.START, pressed(pad.buttons[9]), true);
             updateButton(
-                this.BUTTONS.UP,
+                this.BUTTON.UP,
                 pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
                 true
             );
             updateButton(
-                this.BUTTONS.DOWN,
+                this.BUTTON.DOWN,
                 pressed(pad.buttons[13]) || pad.axes[1] > threshold,
                 true
             );
             updateButton(
-                this.BUTTONS.LEFT,
+                this.BUTTON.LEFT,
                 pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
                 true
             );
             updateButton(
-                this.BUTTONS.RIGHT,
+                this.BUTTON.RIGHT,
                 pressed(pad.buttons[15]) || pad.axes[0] > threshold,
                 true
             );
@@ -199,7 +210,7 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string} code represents the iinput button thing.
      * @return {boolean} true if it is pressed.
      */
-    this.down = function (code) {
+    this.down = code => {
         if (!(code in buttonStates)) throw code;
         return buttonStates[code] > 0;
     };
@@ -209,15 +220,18 @@ fish.input.BasicInput = function (keymap={}, threshold = 0.9) {
      * @param {string} code is the code to represent or whatever.
      * @return {boolean} true if it was pressed this frame.
      */
-    this.justDown = function (code) {
+    this.justDown = code => {
         if (!(code in buttonStates)) throw code;
         return buttonStates[code] == frame;
     };
 
-    /**
-     * @inheritDoc
-     */
-    this.uiDown = (uiCode) => {
+    /** @inheritDoc */
+    this.uiDown = uiCode => {
         return this.down(uiToButton(uiCode));
+    };
+
+    /** @inheritDoc */
+    this.uiJustDown = uiCode => {
+        return this.justDown(uiToButton(uiCode));
     };
 };
