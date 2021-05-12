@@ -1119,10 +1119,7 @@ fish.audio.BasicAudio = function (context, players=3) {
             priority = priority;
             source.buffer = sample.buffer;
             source.start(0);
-            source.onended = () => {
-                console.log('erg');
-                playing = false;
-            };
+            source.onended = () => {playing = false;};
         };
 
         /**
