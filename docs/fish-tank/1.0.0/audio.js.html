@@ -41,7 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
+					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -133,11 +133,9 @@ fish.audio.Sample = function (name, buffer) {
  * @param {AudioContext} context is the audio context.
  * @param {number} players is the number of samples that can play at once.
  */
-fish.audio.BasicAudio = function (context, players=3) {
-    let songPlayer = context.createBufferSource();
-    let noisePlayer = context.createBufferSource();
-    songPlayer.connect(context.destination);
-    noisePlayer.connect(context.destination);
+fish.audio.BasicAudio = function (context, copies=2) {
+    let songPlayer = null;
+    let noisePlayer = null;
     let playingSong = '';
     let playingNoise = '';
     let soundPlayers = [];
@@ -156,6 +154,7 @@ fish.audio.BasicAudio = function (context, players=3) {
         let start = 0;
         let sample = null;
         let priority = 0;
+        source.onended = () => {playing = false;};
 
         /**
          * Tells you if this sample player is currently playing.
@@ -185,17 +184,17 @@ fish.audio.BasicAudio = function (context, players=3) {
 
         /**
          * Play a given sample.
-         * @param sample   is the sample to play.
-         * @param priority is the priority to say this had.
+         * @param {fish.audio.Sample} newSample is the sample to play.
+         * @param {number} newPriority is the priority to say this had.
          */
-        this.play = (sample, priority) => {
+        this.play = (newSample, newPriority) => {
             playing = true;
             start = frame;
-            sample = sample;
-            priority = priority;
-            source.buffer = sample.buffer;
+            sample = newSample;
+            priority = newPriority;
+            source.buffer = null;
+            source.buffer = newSample.buffer;
             source.start(0);
-            source.onended = () => {playing = false;};
         };
 
         /**
@@ -222,7 +221,7 @@ fish.audio.BasicAudio = function (context, players=3) {
         };
     };
 
-    for (let i = 0; i &lt; players; i++) soundPlayers.push(new SamplePlayer());
+    for (let i = 0; i &lt; copies; i++) soundPlayers.push(new SamplePlayer());
 
     /**
      * Updates the audio player. Needs to be done once per frame.
@@ -263,8 +262,20 @@ fish.audio.BasicAudio = function (context, players=3) {
             return;
         }
         playingSong = sample.name;
+        if (songPlayer) songPlayer.stop();
+        songPlayer = context.createBufferSource();
+        songPlayer.connect(context.destination);
         songPlayer.buffer = sample.buffer;
+        songPlayer.loop = true;
         songPlayer.start(0);
+    };
+
+    /**
+     * Stop the playing song.
+     */
+    this.stopSong = () => {
+        playingSong = '';
+        if (songPlayer) songPlayer.stop();
     };
 
     /**
@@ -287,8 +298,20 @@ fish.audio.BasicAudio = function (context, players=3) {
             return;
         }
         playingNoise = sample.name;
+        if (noisePlayer) noisePlayer.stop();
+        noisePlayer = context.createBufferSource();
+        noisePlayer.connect(context.destination);
         noisePlayer.buffer = sample.buffer;
+        noisePlayer.loop = true;
         noisePlayer.start(0);
+    };
+
+    /**
+     * Stop the playing song.
+     */
+    this.stopNoise = () => {
+        playingNoise = '';
+        if (noisePlayer) noisePlayer.stop();
     };
 
     /**
@@ -373,7 +396,7 @@ fish.audio.BasicAudio = function (context, players=3) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Wed May 12th 2021
+		on Tue May 18th 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

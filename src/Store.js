@@ -3,17 +3,12 @@ var fish = fish || {};
 /**
  * Class that stores assets.
  * @constructor
- * @param graphics is the graphics system which loads textures.
- * @param audio    is the audio system which loads samples.
+ * @param {Map.<string, function>} loaders map from asset type names to loaders
+ *        for them.
  * @param {string} prefix   is a prefix appended to urls.
  */
-fish.Store = function (graphics, audio, prefix) {
+fish.Store = function (loaders, prefix) {
     let assets = {};
-    let loaders = {
-        texture: graphics.loadTexture,
-        atlas: fish.graphics.loadAtlas,
-        sample: audio.loadSample
-    };
 
     /**
      * Gets a thing of arbitrary type from the asset store, or creates and adds
@@ -37,6 +32,8 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Gets a texture.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
      * @async
      * @param {string} name is the name of the texture to get.
      * @return {fish.graphics.Texture} the texture it got.
@@ -47,6 +44,8 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Gets a texture atlas thingy.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
      * @async
      * @param {string} name is the name of the atlas to get.
      * @return {fish.graphics.Atlas} the thingy.
@@ -57,6 +56,8 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Loads a sound sample.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
      * @async
      * @param {string} name is the name of the sample to g4et.
      * @return {fish.audio.Sample} the sample or null if it screwed up.

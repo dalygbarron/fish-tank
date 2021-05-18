@@ -10,88 +10,140 @@ var fish = fish || {};
  */
 
 /**
+ * The format of the argument object to fish.start. For most of the subsystems
+ * you have the choice of either passing an options object or an instance,
+ * basically if you are using the default subsystem you pass options or
+ * nothing, and if you want to use a custom subsystem you pass the instance of
+ * it which you have already set up.
  * @typedef {Object} fish.start~Args
+ * @param {number} rate is the frame rate to give the game. If you pass
+ *        something less than or equal to zero then it makes it variable.
  * @param {Object} usr copied to game context usr object.
- * @param {Object} gfx graphics
- * @param {Object} snd sound
- * @param {Object} in input
- * @param {Object} str store
+ * @param {?fish.graphics.PatchRenderer} gfx graphics system to use if given.
+ * @param {?fish.audio.SamplePlayer} snd sound system to use if given.
+ * @param {?fish.input.UiInput} in input system to use if given
+ * @param {?Object} str store the asset store object or nothing for default.
+ * @param {?WebGLRenderingContext} gl the webgl rendering context for the
+ *        default renderer. It is not needed if you passed a renderer.
+ * @param {?AudioContext} ac the audio context needed to create the default
+ *        sound player. If you have passed a sound player it is not needed or
+ *        used.
+ * @param {?number} nSamples the number of times the same sample can be playing
+ *        at once in the default sound player.
+ * @param {?Object} keymap is the mapping of keys to the default input's input.
+ * @param {?number} axisThreshold is the threshold for the default input to
+ *        detect axes being depressed.
+ * @param {?string} assetPrefix is the prefix to prepend to the names of all
+ *        things you try to load through the default store.
  */
 
-/**
- * Real function that starts the application running. Just takes all of the
- * subsystems like graphics and audio rather than building them, so that you
- * can create different ones to your heart's content.
- * @param rate     is the number of logic frames per second to aim for. If you
- *                 give a number less than 1 you are asking for variable frame
- *                 rate.
- * @param graphics    is the graphics system.
- * @param audio       is the audio system.
- * @param input       is the input system.
- * @param store       is the asset store system.
- * @param {fish~init} init is the initialisation function that generates the
- *                    starting screen.
- */
-fish.start = async function (rate, graphics, audio, input, store, init) {
-    const FRAME_LENGTH = 1 / rate;
-    let ctx = {
-        gfx: graphics,
-        snd: audio,
-        in: input,
-        str: store
-    };
-    let screen = await init(ctx);
-    if (screen == null) {
-        console.err("No Starting Screen. Game Cannot Start.");
-        return;
-    }
-    let screens = [screen];
-    screen.refresh();
-    const updateScreens = () => {
-        const response = screens[screens.length - 1].update(FRAME_LENGTH);
-        if (response) {
-            if (response.pop) screens.pop();
-            if (response.screen) screens.push(response.screen);
-            screens[screens.length - 1].refresh(response.message);
-        }
-    };
-    setInterval(() => {
-        if (screens.length > 0) {
-            // TODO: calculate the passage of time better and desync rendering
-            // with updating.
-            ctx.snd.update();
-            ctx.in.update();
-            updateScreens();
-            ctx.gfx.clear(0, 0, 0, 1);
-            for (screen of screens) {
-                screen.render();
+(() => {
+    /**
+     * Creates the game engine context which contains all the subsystems and is
+     * given to all the screens.
+     * @param {fish.start~Args} args contains all the details of how to
+     *        set up the engine. If there are invalidities with the settings in
+     *        this object an exception will be thrown containing a readable
+     *        error message.
+     * @return {fish.screen.Context} created according to the args.
+     */
+    let createContext = args => {
+        let gfx = args.gfx;
+        let snd = args.snd;
+        let input = args.in;
+        let loaders = args.loaders ? args.loaders : {};
+        if (!gfx) {
+            let gl = args.gl;
+            if (!gl) {
+                throw new RuntimeError(
+                    'In order to use the default renderer, gl argument ' +
+                    'must be provided'
+                );
+            }
+            gfx = new fish.graphics.SpriteRenderer(gl);
+            if (!loaders.texture) {
+                loaders.texture = gfx.loadTexture;
+            }
+            if (!loaders.atlas) {
+                loaders.atlas = fish.graphics.loadAtlas;
             }
         }
-    }, FRAME_LENGTH);
-};
+        if (!snd) {
+            let ac = args.ac;
+            if (!ac) {
+                throw new RuntimeError(
+                    'In order to use the default sound player, ac ' +
+                    'argument must be provided'
+                );
+            }
+            snd = new fish.audio.BasicAudio(
+                ac,
+                args.nSamples ? args.nSamples : 2
+            );
+            if (!loaders.sample) {
+                loaders.sprite = snd.loadSample;
+            }
+        }
+        if (!input) {
+            let keymap = args.keymap ? args.keymap : {};
+            let threshold = args.axisThreshold ? args.axisThreshold : 0.9;
+            input = new fish.input.BasicInput(keymap, threshold);
+        }
+        return {
+            gfx: gfx,
+            snd: snd,
+            in: input,
+            str: new fish.Store(
+                loaders,
+                args.storePrefix ? args.storePrefix : '/'
+            ),
+            usr: args.usr ? args.usr : {}
+        };
+    };
 
 
-/**
- * Starts the thing's main loop ticking along by passing to it the rendering
- * canvas, and the starting screen.
- * @param rate         is the number of logic frames per second to aim for. If
- *                     you give a number less than 1 you are asking for
- *                     variable frame rate.
- * @param gl           is a html canvas.
- * @param audio        is the audio context.
- * @param assetsPrefix is the prefix under which assets are found by the assets
- *                     store.
- * @param {fish~init} init         is a function to generate the starting screen.
- */
-fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
-    let graphics = new fish.graphics.SpriteRenderer(gl);
-    let fishAudio = new fish.audio.BasicAudio(audio);
-    await fish.start(
-        rate,
-        graphics,
-        fishAudio,
-        new fish.input.BasicInput(),
-        new fish.Store(graphics, fishAudio, assetsPrefix),
-        init
-    );
-};
+    /**
+     * Real function that starts the application running.
+     * @param {fish.start~Args} args 
+     * @param {fish~init} init initialisation function that generates the first
+     *        screen of the game.
+     */
+    fish.start = async function (args, init) {
+        const FRAME_LENGTH = 1 / (args.rate ? args.rate : 1);
+        let ctx = null;
+        try {
+            ctx = createContext(args);
+        } catch (err) {
+            alert(err + err.stack ? err.stack : '');
+            throw err;
+        }
+        let screen = await init(ctx);
+        if (screen == null) {
+            alert('No Starting Screen. Game Cannot Start.');
+            return;
+        }
+        let screens = [screen];
+        screen.refresh();
+        const updateScreens = () => {
+            const response = screens[screens.length - 1].update(FRAME_LENGTH);
+            if (response) {
+                if (response.pop) screens.pop();
+                if (response.screen) screens.push(response.screen);
+                screens[screens.length - 1].refresh(response.message);
+            }
+        };
+        setInterval(() => {
+            if (screens.length > 0) {
+                // TODO: calculate the passage of time better and desync rendering
+                // with updating.
+                ctx.snd.update();
+                ctx.in.update();
+                updateScreens();
+                ctx.gfx.clear(0, 0, 0, 1);
+                for (let i in screens) {
+                    screens[i].render(i == screens.length - 1);
+                }
+            }
+        }, FRAME_LENGTH);
+    };
+})();

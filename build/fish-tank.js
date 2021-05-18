@@ -8,6 +8,17 @@ var fish = fish || {};
 fish.util = {};
 
 /**
+ * Wraps a number between another number and zero. Like modulus but it actually
+ * does what you want it to.
+ * @param {number} x is the number to wrap.
+ * @param {number} max is the point at which it wraps.
+ * @return {number} the result.
+ */
+fish.util.wrap = (x, max) => {
+    return (x < 0) ? max - Math.abs(x % max) : x % max;
+};
+
+/**
  * Represents a two dimensional point / direction via cartesian coordinates.
  * You will notice there is no functional style stuff and that is because it
  * requires instantiating objects and in the kinds of contexts where a vector
@@ -48,11 +59,9 @@ fish.util.Vector = function (x=0, y=0) {
      * @param {fish.util.Vector} bounds is a vector representing the far
      *                           corner.
      */
-    this.wrap = (bounds) => {
-        this.x = (this.x < 0) ? (bounds.x - Math.abs(this.x % bounds.x)) :
-            (this.x % bounds.x);
-        this.y = (this.y < 0) ? (bounds.y - Math.abs(this.y % bounds.y)) :
-            (this.y % bounds.y);
+    this.wrap = bounds => {
+        this.x = fish.util.wrap(this.x, bounds.x);
+        this.y = fish.util.wrap(this.y, bounds.y);
     };
 };
 
@@ -209,12 +218,6 @@ fish.util.textHeight = (text, font) => {
     return lines * font.getLineHeight() +
         (lines - 1) * font.getVerticalPadding();
 };
-
-/**
- * This is a rect that you can use for stuff when you don't want to instantiate
- * one. Just know that in between uses it's value could be arbitrary.
- */
-fish.util.aRect = new fish.util.Rect();
 
 var fish = fish || {};
 
@@ -668,6 +671,20 @@ fish.graphics.PatchRenderer = class {
     }
 
     /**
+     * Renders a given character onto the screen, fitting it into the given
+     * rectangle as best the renderer can.
+     * @param {fish.graphics.Font} font is the font info for drawing.
+     * @param {number} c the character code of the character to draw.
+     * @param {fish.util.Rect} dst where to fit the character into. It ought to
+     *        stretch if possible.
+     */
+    renderCharacter(font, c, dst) {
+        throw new Error(
+            'fish.graphics.PatchRenderer.renderCharacter must be implemented'
+        );
+    }
+
+    /**
      * Renders a piece of text onto the screen using a font.
      * @param {fish.graphics.Font} font is the font to use to draw the text.
      * @param {string} text is the text to draw. All it's newlines and stuff
@@ -687,17 +704,16 @@ fish.graphics.PatchRenderer = class {
  * pictures.
  * @implements fish.graphics.BaseRenderer
  * @constructor
- * @param gl is the opengl context.
+ * @param {WebGLRenderingContext} gl is the opengl context.
  */
 fish.graphics.SpriteRenderer = function (gl) {
-    let usefulRect = new fish.util.Rect();
+    let spareRect = new fish.util.Rect();
     let usedTextures = [];
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.width = gl.drawingBufferWidth;
     this.height = gl.drawingBufferHeight;
-    console.log(this.width, this.height);
 
     /**
      * A thing that batches draw calls.
@@ -874,19 +890,19 @@ fish.graphics.SpriteRenderer = function (gl) {
             let height = font.getLineHeight();
             let xOffset = 0;
             let yOffset = 0;
-            fish.util.aRect.size.set(width, height);
+            spareRect.size.set(width, height);
             for (let i = 0; i < text.length; i++) {
                 let c = text.charCodeAt(i);
                 if (c == 10) {
                     yOffset += height + font.getVerticalPadding();
                     xOffset = 0;
                 } else {
-                    fish.util.aRect.pos.set(
+                    spareRect.pos.set(
                         font.sprite.x + Math.floor(c % 16) * width,
                         font.sprite.y + Math.floor(c / 16) * height
                     );
                     this.addComp(
-                        fish.util.aRect,
+                        spareRect,
                         dst.x + xOffset,
                         dst.y - yOffset - height,
                         dst.x + xOffset + width,
@@ -905,6 +921,16 @@ fish.graphics.SpriteRenderer = function (gl) {
         /** @inheritDoc */
         this.renderText = (font, text, dst) => {
             this.addText(font, text, dst);
+        };
+
+        /** @inheritDoc */
+        this.renderCharacter = (font, c, dst) => {
+            spareRect.size.set(font.getWidth(c), font.getLineHeight());
+            spareRect.pos.set(
+                font.sprite.x + Math.floor(c % 16) * spareRect.w,
+                font.sprite.y + Math.floor(c / 16) * spareRect.h
+            );
+            this.add(spareRect, dst);
         };
 
         /**
@@ -1057,11 +1083,9 @@ fish.audio.Sample = function (name, buffer) {
  * @param {AudioContext} context is the audio context.
  * @param {number} players is the number of samples that can play at once.
  */
-fish.audio.BasicAudio = function (context, players=3) {
-    let songPlayer = context.createBufferSource();
-    let noisePlayer = context.createBufferSource();
-    songPlayer.connect(context.destination);
-    noisePlayer.connect(context.destination);
+fish.audio.BasicAudio = function (context, copies=2) {
+    let songPlayer = null;
+    let noisePlayer = null;
     let playingSong = '';
     let playingNoise = '';
     let soundPlayers = [];
@@ -1080,6 +1104,7 @@ fish.audio.BasicAudio = function (context, players=3) {
         let start = 0;
         let sample = null;
         let priority = 0;
+        source.onended = () => {playing = false;};
 
         /**
          * Tells you if this sample player is currently playing.
@@ -1109,17 +1134,17 @@ fish.audio.BasicAudio = function (context, players=3) {
 
         /**
          * Play a given sample.
-         * @param sample   is the sample to play.
-         * @param priority is the priority to say this had.
+         * @param {fish.audio.Sample} newSample is the sample to play.
+         * @param {number} newPriority is the priority to say this had.
          */
-        this.play = (sample, priority) => {
+        this.play = (newSample, newPriority) => {
             playing = true;
             start = frame;
-            sample = sample;
-            priority = priority;
-            source.buffer = sample.buffer;
+            sample = newSample;
+            priority = newPriority;
+            source.buffer = null;
+            source.buffer = newSample.buffer;
             source.start(0);
-            source.onended = () => {playing = false;};
         };
 
         /**
@@ -1146,7 +1171,7 @@ fish.audio.BasicAudio = function (context, players=3) {
         };
     };
 
-    for (let i = 0; i < players; i++) soundPlayers.push(new SamplePlayer());
+    for (let i = 0; i < copies; i++) soundPlayers.push(new SamplePlayer());
 
     /**
      * Updates the audio player. Needs to be done once per frame.
@@ -1187,8 +1212,20 @@ fish.audio.BasicAudio = function (context, players=3) {
             return;
         }
         playingSong = sample.name;
+        if (songPlayer) songPlayer.stop();
+        songPlayer = context.createBufferSource();
+        songPlayer.connect(context.destination);
         songPlayer.buffer = sample.buffer;
+        songPlayer.loop = true;
         songPlayer.start(0);
+    };
+
+    /**
+     * Stop the playing song.
+     */
+    this.stopSong = () => {
+        playingSong = '';
+        if (songPlayer) songPlayer.stop();
     };
 
     /**
@@ -1211,8 +1248,20 @@ fish.audio.BasicAudio = function (context, players=3) {
             return;
         }
         playingNoise = sample.name;
+        if (noisePlayer) noisePlayer.stop();
+        noisePlayer = context.createBufferSource();
+        noisePlayer.connect(context.destination);
         noisePlayer.buffer = sample.buffer;
+        noisePlayer.loop = true;
         noisePlayer.start(0);
+    };
+
+    /**
+     * Stop the playing song.
+     */
+    this.stopNoise = () => {
+        playingNoise = '';
+        if (noisePlayer) noisePlayer.stop();
     };
 
     /**
@@ -1320,7 +1369,7 @@ fish.input.UiInput = class {
  * @param {number} [threshold=0.9] the threshold beyond which a gamepad axis is
  *        considered pressed.
  */
-fish.input.BasicInput = function (keymap={}, threshole=0.9) {
+fish.input.BasicInput = function (keymap={}, threshold=0.9) {
     /**
      * The buttons that this imaginary controller provides.
      * @readonly
@@ -1588,12 +1637,14 @@ fish.gui.Knob = class {
      *        or whatever.
      * @param {fish.audio.SamplePlayer} audio is used to play sound effects 
      *        like buttons clicking and shit.
+     * @param {boolean} selected is whether this thing is actually selected. It
+     *        can still do stuff without being selected though don't worry.
      * @return {?Object} whatever you want to return, this is handled by user
      *         code. If you return from a nested gui element the outer ones
      *         should just return it recursively. If you return null that is
      *         considered to mean nothing happened.
      */
-    update(input, audio) {
+    update(input, audio, selected) {
         return null;
     }
 
@@ -1633,11 +1684,13 @@ fish.gui.ContainerKnob = class extends fish.gui.Knob {
 
     /**
      * Increases or decreases the currently selected child.
+     * @param {fish.audio.SamplePlayer} audio is to make a nice sound.
      * @param {number} direction is whether to go forward (> 0) or back (< 0).
      *        If you pass 0 nothing will happen.
      */
-    incrementSelection(direction) {
+    incrementSelection(audio, direction) {
         if (direction == 0 || !this.hasSelectable) return;
+        audio.playSample(this.style.tap);
         let change = Math.sign(direction);
         for (let i = 0; i < this.children.length && change != 0; i++) {
             this.selection += change;
@@ -1702,17 +1755,25 @@ fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (this.cancellable && input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
+    update(input, audio, selected) {
+        if (selected && this.cancellable && input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
             return null;
         }
-        if (this.children.length == 0) return null;
-        if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
-            this.incrementSelection(-1);
-        } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
-            this.incrementSelection(1);
+        if (selected && this.children.length > 0) {
+            if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
+                this.incrementSelection(audio, 1);
+            }
         }
-        return this.children[this.selection].update(input, audio);
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection && selected
+            );
+            if (result) return result;
+        }
     }
 
     /** @inheritDoc */
@@ -1740,9 +1801,18 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
      */
     constructor(style, text) {
         super(style);
-        this.text = text;
+        this._text = text;
         this.fittedText = '';
         this.origin = new fish.util.Vector();
+    }
+
+    get content() {
+        return this._text;
+    }
+
+    set content(value) {
+        this._text = value;
+        if (this.fitted) this.fit(this.bounds, false);
     }
 
     /** @inheritDoc */
@@ -1750,7 +1820,7 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
         this.origin.x = bounds.x + 1;
         this.origin.y = bounds.t - 1;
         this.fittedText = fish.util.fitText(
-            this.text,
+            this._text,
             this.style.font,
             bounds.w - 2
         );
@@ -1814,24 +1884,30 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) && !this.down) {
-            audio.playSample(this.style.click);
-            this.down = true;
-            if (typeof this.result == 'function') {
-                return this.result();
+    update(input, audio, selected) {
+        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) && selected) {
+            if (!this.down) {
+                this.down = true;
+                audio.playSample(this.style.click);
             }
-            return this.result;
+        } else if (this.down) {
+            this.down = false;
+            if (selected) {
+                if (typeof this.result == 'function') {
+                    return this.result.call(this);
+                }
+                return this.result;
+            }
         }
         return null;
     }
 
     /** @inheritDoc */
     render(patchRenderer, selected) {
-        patchRenderer.renderPatch(
-            selected ? this.style.buttonSelected : this.style.button,
-            this.bounds
-        );
+        let patch = selected ?
+            (this.down ? this.style.buttonDepressed : this.style.buttonSelected) :
+            this.style.button;
+        patchRenderer.renderPatch(patch, this.bounds);
         this.child.render(patchRenderer, selected);
     }
 };
@@ -1885,14 +1961,22 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (this.children.length == 0) return null;
-        if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
-            this.incrementSelection(-1);
-        } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
-            this.incrementSelection(1);
+    update(input, audio, selected) {
+        if (selected && this.children.length > 0) {
+            if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
+                this.incrementSelection(audio, 1);
+            }
         }
-        return this.children[this.selection].update(input, audio);
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection && selected
+            );
+            if (result) return result;
+        }
     }
 
     /** @inheritDoc */
@@ -1906,22 +1990,86 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     }
 };
 
+/**
+ * A knob that shows an array of text characters that you can edit whenever.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextArrayKnob = class extends fish.gui.Knob {
+    constructor(style, width, height=1) {
+        super(style);
+        this.spareRect = new fish.util.Rect();
+        this.width = width;
+        this.height = height;
+        this.scale = new fish.util.Vector(1, 1);
+        this.array = [];
+        for (let y = 0; y < height; y++) {
+            let line = [];
+            for (let x = 0; x < width; x++) {
+                line.push(Math.floor(Math.random() * 200));
+            }
+            this.array.push(line);
+        }
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        if (greedy) {
+            super.fit(bounds, greedy);
+            this.scale.x = bounds.size.x /
+                (this.width * this.style.font.getWidth('n'));
+            this.scale.y = bounds.size.y /
+                (this.height * this.style.font.getLineHeight());
+        } else {
+            let newHeight = this.height * this.style.font.getLineHeight();
+            bounds.pos.y += bounds.size.y - newHeight;
+            bounds.size.y = newHeight;
+            bounds.size.x = this.width * this.style.font.getWidth('n');
+            super.fit(bounds, greedy);
+        }
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        let cWidth = this.style.font.getWidth('n') * this.scale.x;
+        let cHeight = this.style.font.getLineHeight() * this.scale.y;
+        this.spareRect.size.x = cWidth;
+        this.spareRect.size.y = cHeight;
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                this.spareRect.pos.x = this.bounds.x + x * cWidth;
+                this.spareRect.pos.y = this.bounds.y + y * cHeight;
+                patchRenderer.renderCharacter(
+                    this.style.font,
+                    this.array[y][x],
+                    this.spareRect
+                );
+            }
+        }
+    }
+
+    /**
+     * Sets the point in the array given to the given character code.
+     * @param {number} x is the column of the character to move.
+     * @param {number} y is the row of the character to move.
+     * @param {number} c is the character code to set it to.
+     */
+    setCharacter(x, y, c) {
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
+        this.array[y][x] = c;
+    }
+};
+
 var fish = fish || {};
 
 /**
  * Class that stores assets.
  * @constructor
- * @param graphics is the graphics system which loads textures.
- * @param audio    is the audio system which loads samples.
+ * @param {Map.<string, function>} loaders map from asset type names to loaders
+ *        for them.
  * @param {string} prefix   is a prefix appended to urls.
  */
-fish.Store = function (graphics, audio, prefix) {
+fish.Store = function (loaders, prefix) {
     let assets = {};
-    let loaders = {
-        texture: graphics.loadTexture,
-        atlas: fish.graphics.loadAtlas,
-        sample: audio.loadSample
-    };
 
     /**
      * Gets a thing of arbitrary type from the asset store, or creates and adds
@@ -1945,6 +2093,8 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Gets a texture.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
      * @async
      * @param {string} name is the name of the texture to get.
      * @return {fish.graphics.Texture} the texture it got.
@@ -1955,6 +2105,8 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Gets a texture atlas thingy.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
      * @async
      * @param {string} name is the name of the atlas to get.
      * @return {fish.graphics.Atlas} the thingy.
@@ -1965,6 +2117,8 @@ fish.Store = function (graphics, audio, prefix) {
 
     /**
      * Loads a sound sample.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
      * @async
      * @param {string} name is the name of the sample to g4et.
      * @return {fish.audio.Sample} the sample or null if it screwed up.
@@ -2190,88 +2344,140 @@ var fish = fish || {};
  */
 
 /**
+ * The format of the argument object to fish.start. For most of the subsystems
+ * you have the choice of either passing an options object or an instance,
+ * basically if you are using the default subsystem you pass options or
+ * nothing, and if you want to use a custom subsystem you pass the instance of
+ * it which you have already set up.
  * @typedef {Object} fish.start~Args
+ * @param {number} rate is the frame rate to give the game. If you pass
+ *        something less than or equal to zero then it makes it variable.
  * @param {Object} usr copied to game context usr object.
- * @param {Object} gfx graphics
- * @param {Object} snd sound
- * @param {Object} in input
- * @param {Object} str store
+ * @param {?fish.graphics.PatchRenderer} gfx graphics system to use if given.
+ * @param {?fish.audio.SamplePlayer} snd sound system to use if given.
+ * @param {?fish.input.UiInput} in input system to use if given
+ * @param {?Object} str store the asset store object or nothing for default.
+ * @param {?WebGLRenderingContext} gl the webgl rendering context for the
+ *        default renderer. It is not needed if you passed a renderer.
+ * @param {?AudioContext} ac the audio context needed to create the default
+ *        sound player. If you have passed a sound player it is not needed or
+ *        used.
+ * @param {?number} nSamples the number of times the same sample can be playing
+ *        at once in the default sound player.
+ * @param {?Object} keymap is the mapping of keys to the default input's input.
+ * @param {?number} axisThreshold is the threshold for the default input to
+ *        detect axes being depressed.
+ * @param {?string} assetPrefix is the prefix to prepend to the names of all
+ *        things you try to load through the default store.
  */
 
-/**
- * Real function that starts the application running. Just takes all of the
- * subsystems like graphics and audio rather than building them, so that you
- * can create different ones to your heart's content.
- * @param rate     is the number of logic frames per second to aim for. If you
- *                 give a number less than 1 you are asking for variable frame
- *                 rate.
- * @param graphics    is the graphics system.
- * @param audio       is the audio system.
- * @param input       is the input system.
- * @param store       is the asset store system.
- * @param {fish~init} init is the initialisation function that generates the
- *                    starting screen.
- */
-fish.start = async function (rate, graphics, audio, input, store, init) {
-    const FRAME_LENGTH = 1 / rate;
-    let ctx = {
-        gfx: graphics,
-        snd: audio,
-        in: input,
-        str: store
-    };
-    let screen = await init(ctx);
-    if (screen == null) {
-        console.err("No Starting Screen. Game Cannot Start.");
-        return;
-    }
-    let screens = [screen];
-    screen.refresh();
-    const updateScreens = () => {
-        const response = screens[screens.length - 1].update(FRAME_LENGTH);
-        if (response) {
-            if (response.pop) screens.pop();
-            if (response.screen) screens.push(response.screen);
-            screens[screens.length - 1].refresh(response.message);
-        }
-    };
-    setInterval(() => {
-        if (screens.length > 0) {
-            // TODO: calculate the passage of time better and desync rendering
-            // with updating.
-            ctx.snd.update();
-            ctx.in.update();
-            updateScreens();
-            ctx.gfx.clear(0, 0, 0, 1);
-            for (screen of screens) {
-                screen.render();
+(() => {
+    /**
+     * Creates the game engine context which contains all the subsystems and is
+     * given to all the screens.
+     * @param {fish.start~Args} args contains all the details of how to
+     *        set up the engine. If there are invalidities with the settings in
+     *        this object an exception will be thrown containing a readable
+     *        error message.
+     * @return {fish.screen.Context} created according to the args.
+     */
+    let createContext = args => {
+        let gfx = args.gfx;
+        let snd = args.snd;
+        let input = args.in;
+        let loaders = args.loaders ? args.loaders : {};
+        if (!gfx) {
+            let gl = args.gl;
+            if (!gl) {
+                throw new RuntimeError(
+                    'In order to use the default renderer, gl argument ' +
+                    'must be provided'
+                );
+            }
+            gfx = new fish.graphics.SpriteRenderer(gl);
+            if (!loaders.texture) {
+                loaders.texture = gfx.loadTexture;
+            }
+            if (!loaders.atlas) {
+                loaders.atlas = fish.graphics.loadAtlas;
             }
         }
-    }, FRAME_LENGTH);
-};
+        if (!snd) {
+            let ac = args.ac;
+            if (!ac) {
+                throw new RuntimeError(
+                    'In order to use the default sound player, ac ' +
+                    'argument must be provided'
+                );
+            }
+            snd = new fish.audio.BasicAudio(
+                ac,
+                args.nSamples ? args.nSamples : 2
+            );
+            if (!loaders.sample) {
+                loaders.sprite = snd.loadSample;
+            }
+        }
+        if (!input) {
+            let keymap = args.keymap ? args.keymap : {};
+            let threshold = args.axisThreshold ? args.axisThreshold : 0.9;
+            input = new fish.input.BasicInput(keymap, threshold);
+        }
+        return {
+            gfx: gfx,
+            snd: snd,
+            in: input,
+            str: new fish.Store(
+                loaders,
+                args.storePrefix ? args.storePrefix : '/'
+            ),
+            usr: args.usr ? args.usr : {}
+        };
+    };
 
 
-/**
- * Starts the thing's main loop ticking along by passing to it the rendering
- * canvas, and the starting screen.
- * @param rate         is the number of logic frames per second to aim for. If
- *                     you give a number less than 1 you are asking for
- *                     variable frame rate.
- * @param gl           is a html canvas.
- * @param audio        is the audio context.
- * @param assetsPrefix is the prefix under which assets are found by the assets
- *                     store.
- * @param {fish~init} init         is a function to generate the starting screen.
- */
-fish.normalStart = async function (rate, gl, audio, assetsPrefix, init) {
-    let graphics = new fish.graphics.SpriteRenderer(gl);
-    let fishAudio = new fish.audio.BasicAudio(audio);
-    await fish.start(
-        rate,
-        graphics,
-        fishAudio,
-        new fish.input.BasicInput(),
-        new fish.Store(graphics, fishAudio, assetsPrefix),
-        init
-    );
-};
+    /**
+     * Real function that starts the application running.
+     * @param {fish.start~Args} args 
+     * @param {fish~init} init initialisation function that generates the first
+     *        screen of the game.
+     */
+    fish.start = async function (args, init) {
+        const FRAME_LENGTH = 1 / (args.rate ? args.rate : 1);
+        let ctx = null;
+        try {
+            ctx = createContext(args);
+        } catch (err) {
+            alert(err + err.stack ? err.stack : '');
+            throw err;
+        }
+        let screen = await init(ctx);
+        if (screen == null) {
+            alert('No Starting Screen. Game Cannot Start.');
+            return;
+        }
+        let screens = [screen];
+        screen.refresh();
+        const updateScreens = () => {
+            const response = screens[screens.length - 1].update(FRAME_LENGTH);
+            if (response) {
+                if (response.pop) screens.pop();
+                if (response.screen) screens.push(response.screen);
+                screens[screens.length - 1].refresh(response.message);
+            }
+        };
+        setInterval(() => {
+            if (screens.length > 0) {
+                // TODO: calculate the passage of time better and desync rendering
+                // with updating.
+                ctx.snd.update();
+                ctx.in.update();
+                updateScreens();
+                ctx.gfx.clear(0, 0, 0, 1);
+                for (let i in screens) {
+                    screens[i].render(i == screens.length - 1);
+                }
+            }
+        }, FRAME_LENGTH);
+    };
+})();

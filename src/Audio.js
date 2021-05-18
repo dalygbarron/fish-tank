@@ -46,11 +46,9 @@ fish.audio.Sample = function (name, buffer) {
  * @param {AudioContext} context is the audio context.
  * @param {number} players is the number of samples that can play at once.
  */
-fish.audio.BasicAudio = function (context, players=3) {
-    let songPlayer = context.createBufferSource();
-    let noisePlayer = context.createBufferSource();
-    songPlayer.connect(context.destination);
-    noisePlayer.connect(context.destination);
+fish.audio.BasicAudio = function (context, copies=2) {
+    let songPlayer = null;
+    let noisePlayer = null;
     let playingSong = '';
     let playingNoise = '';
     let soundPlayers = [];
@@ -69,6 +67,7 @@ fish.audio.BasicAudio = function (context, players=3) {
         let start = 0;
         let sample = null;
         let priority = 0;
+        source.onended = () => {playing = false;};
 
         /**
          * Tells you if this sample player is currently playing.
@@ -98,17 +97,17 @@ fish.audio.BasicAudio = function (context, players=3) {
 
         /**
          * Play a given sample.
-         * @param sample   is the sample to play.
-         * @param priority is the priority to say this had.
+         * @param {fish.audio.Sample} newSample is the sample to play.
+         * @param {number} newPriority is the priority to say this had.
          */
-        this.play = (sample, priority) => {
+        this.play = (newSample, newPriority) => {
             playing = true;
             start = frame;
-            sample = sample;
-            priority = priority;
-            source.buffer = sample.buffer;
+            sample = newSample;
+            priority = newPriority;
+            source.buffer = null;
+            source.buffer = newSample.buffer;
             source.start(0);
-            source.onended = () => {playing = false;};
         };
 
         /**
@@ -135,7 +134,7 @@ fish.audio.BasicAudio = function (context, players=3) {
         };
     };
 
-    for (let i = 0; i < players; i++) soundPlayers.push(new SamplePlayer());
+    for (let i = 0; i < copies; i++) soundPlayers.push(new SamplePlayer());
 
     /**
      * Updates the audio player. Needs to be done once per frame.
@@ -176,8 +175,20 @@ fish.audio.BasicAudio = function (context, players=3) {
             return;
         }
         playingSong = sample.name;
+        if (songPlayer) songPlayer.stop();
+        songPlayer = context.createBufferSource();
+        songPlayer.connect(context.destination);
         songPlayer.buffer = sample.buffer;
+        songPlayer.loop = true;
         songPlayer.start(0);
+    };
+
+    /**
+     * Stop the playing song.
+     */
+    this.stopSong = () => {
+        playingSong = '';
+        if (songPlayer) songPlayer.stop();
     };
 
     /**
@@ -200,8 +211,20 @@ fish.audio.BasicAudio = function (context, players=3) {
             return;
         }
         playingNoise = sample.name;
+        if (noisePlayer) noisePlayer.stop();
+        noisePlayer = context.createBufferSource();
+        noisePlayer.connect(context.destination);
         noisePlayer.buffer = sample.buffer;
+        noisePlayer.loop = true;
         noisePlayer.start(0);
+    };
+
+    /**
+     * Stop the playing song.
+     */
+    this.stopNoise = () => {
+        playingNoise = '';
+        if (noisePlayer) noisePlayer.stop();
     };
 
     /**

@@ -41,7 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
+					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -182,12 +182,14 @@ fish.gui.Knob = class {
      *        or whatever.
      * @param {fish.audio.SamplePlayer} audio is used to play sound effects 
      *        like buttons clicking and shit.
+     * @param {boolean} selected is whether this thing is actually selected. It
+     *        can still do stuff without being selected though don't worry.
      * @return {?Object} whatever you want to return, this is handled by user
      *         code. If you return from a nested gui element the outer ones
      *         should just return it recursively. If you return null that is
      *         considered to mean nothing happened.
      */
-    update(input, audio) {
+    update(input, audio, selected) {
         return null;
     }
 
@@ -227,11 +229,13 @@ fish.gui.ContainerKnob = class extends fish.gui.Knob {
 
     /**
      * Increases or decreases the currently selected child.
+     * @param {fish.audio.SamplePlayer} audio is to make a nice sound.
      * @param {number} direction is whether to go forward (> 0) or back (&lt; 0).
      *        If you pass 0 nothing will happen.
      */
-    incrementSelection(direction) {
+    incrementSelection(audio, direction) {
         if (direction == 0 || !this.hasSelectable) return;
+        audio.playSample(this.style.tap);
         let change = Math.sign(direction);
         for (let i = 0; i &lt; this.children.length &amp;&amp; change != 0; i++) {
             this.selection += change;
@@ -296,17 +300,25 @@ fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (this.cancellable &amp;&amp; input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
+    update(input, audio, selected) {
+        if (selected &amp;&amp; this.cancellable &amp;&amp; input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
             return null;
         }
-        if (this.children.length == 0) return null;
-        if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
-            this.incrementSelection(-1);
-        } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
-            this.incrementSelection(1);
+        if (selected &amp;&amp; this.children.length > 0) {
+            if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
+                this.incrementSelection(audio, 1);
+            }
         }
-        return this.children[this.selection].update(input, audio);
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection &amp;&amp; selected
+            );
+            if (result) return result;
+        }
     }
 
     /** @inheritDoc */
@@ -334,9 +346,18 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
      */
     constructor(style, text) {
         super(style);
-        this.text = text;
+        this._text = text;
         this.fittedText = '';
         this.origin = new fish.util.Vector();
+    }
+
+    get content() {
+        return this._text;
+    }
+
+    set content(value) {
+        this._text = value;
+        if (this.fitted) this.fit(this.bounds, false);
     }
 
     /** @inheritDoc */
@@ -344,7 +365,7 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
         this.origin.x = bounds.x + 1;
         this.origin.y = bounds.t - 1;
         this.fittedText = fish.util.fitText(
-            this.text,
+            this._text,
             this.style.font,
             bounds.w - 2
         );
@@ -408,24 +429,30 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) &amp;&amp; !this.down) {
-            audio.playSample(this.style.click);
-            this.down = true;
-            if (typeof this.result == 'function') {
-                return this.result();
+    update(input, audio, selected) {
+        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) &amp;&amp; selected) {
+            if (!this.down) {
+                this.down = true;
+                audio.playSample(this.style.click);
             }
-            return this.result;
+        } else if (this.down) {
+            this.down = false;
+            if (selected) {
+                if (typeof this.result == 'function') {
+                    return this.result.call(this);
+                }
+                return this.result;
+            }
         }
         return null;
     }
 
     /** @inheritDoc */
     render(patchRenderer, selected) {
-        patchRenderer.renderPatch(
-            selected ? this.style.buttonSelected : this.style.button,
-            this.bounds
-        );
+        let patch = selected ?
+            (this.down ? this.style.buttonDepressed : this.style.buttonSelected) :
+            this.style.button;
+        patchRenderer.renderPatch(patch, this.bounds);
         this.child.render(patchRenderer, selected);
     }
 };
@@ -479,14 +506,22 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (this.children.length == 0) return null;
-        if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
-            this.incrementSelection(-1);
-        } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
-            this.incrementSelection(1);
+    update(input, audio, selected) {
+        if (selected &amp;&amp; this.children.length > 0) {
+            if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
+                this.incrementSelection(audio, 1);
+            }
         }
-        return this.children[this.selection].update(input, audio);
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection &amp;&amp; selected
+            );
+            if (result) return result;
+        }
     }
 
     /** @inheritDoc */
@@ -497,6 +532,75 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
                 selected &amp;&amp; i == this.selection
             );
         }
+    }
+};
+
+/**
+ * A knob that shows an array of text characters that you can edit whenever.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextArrayKnob = class extends fish.gui.Knob {
+    constructor(style, width, height=1) {
+        super(style);
+        this.spareRect = new fish.util.Rect();
+        this.width = width;
+        this.height = height;
+        this.scale = new fish.util.Vector(1, 1);
+        this.array = [];
+        for (let y = 0; y &lt; height; y++) {
+            let line = [];
+            for (let x = 0; x &lt; width; x++) {
+                line.push(Math.floor(Math.random() * 200));
+            }
+            this.array.push(line);
+        }
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        if (greedy) {
+            super.fit(bounds, greedy);
+            this.scale.x = bounds.size.x /
+                (this.width * this.style.font.getWidth('n'));
+            this.scale.y = bounds.size.y /
+                (this.height * this.style.font.getLineHeight());
+        } else {
+            let newHeight = this.height * this.style.font.getLineHeight();
+            bounds.pos.y += bounds.size.y - newHeight;
+            bounds.size.y = newHeight;
+            bounds.size.x = this.width * this.style.font.getWidth('n');
+            super.fit(bounds, greedy);
+        }
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        let cWidth = this.style.font.getWidth('n') * this.scale.x;
+        let cHeight = this.style.font.getLineHeight() * this.scale.y;
+        this.spareRect.size.x = cWidth;
+        this.spareRect.size.y = cHeight;
+        for (let y = 0; y &lt; this.height; y++) {
+            for (let x = 0; x &lt; this.width; x++) {
+                this.spareRect.pos.x = this.bounds.x + x * cWidth;
+                this.spareRect.pos.y = this.bounds.y + y * cHeight;
+                patchRenderer.renderCharacter(
+                    this.style.font,
+                    this.array[y][x],
+                    this.spareRect
+                );
+            }
+        }
+    }
+
+    /**
+     * Sets the point in the array given to the given character code.
+     * @param {number} x is the column of the character to move.
+     * @param {number} y is the row of the character to move.
+     * @param {number} c is the character code to set it to.
+     */
+    setCharacter(x, y, c) {
+        if (x &lt; 0 || x >= this.width || y &lt; 0 || y >= this.height) return;
+        this.array[y][x] = c;
     }
 };
 </pre>
@@ -544,7 +648,7 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Wed May 12th 2021
+		on Tue May 18th 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

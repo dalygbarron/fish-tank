@@ -65,7 +65,7 @@ fish.input.UiInput = class {
  * @param {number} [threshold=0.9] the threshold beyond which a gamepad axis is
  *        considered pressed.
  */
-fish.input.BasicInput = function (keymap={}, threshole=0.9) {
+fish.input.BasicInput = function (keymap={}, threshold=0.9) {
     /**
      * The buttons that this imaginary controller provides.
      * @readonly

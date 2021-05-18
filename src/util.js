@@ -8,6 +8,17 @@ var fish = fish || {};
 fish.util = {};
 
 /**
+ * Wraps a number between another number and zero. Like modulus but it actually
+ * does what you want it to.
+ * @param {number} x is the number to wrap.
+ * @param {number} max is the point at which it wraps.
+ * @return {number} the result.
+ */
+fish.util.wrap = (x, max) => {
+    return (x < 0) ? max - Math.abs(x % max) : x % max;
+};
+
+/**
  * Represents a two dimensional point / direction via cartesian coordinates.
  * You will notice there is no functional style stuff and that is because it
  * requires instantiating objects and in the kinds of contexts where a vector
@@ -48,11 +59,9 @@ fish.util.Vector = function (x=0, y=0) {
      * @param {fish.util.Vector} bounds is a vector representing the far
      *                           corner.
      */
-    this.wrap = (bounds) => {
-        this.x = (this.x < 0) ? (bounds.x - Math.abs(this.x % bounds.x)) :
-            (this.x % bounds.x);
-        this.y = (this.y < 0) ? (bounds.y - Math.abs(this.y % bounds.y)) :
-            (this.y % bounds.y);
+    this.wrap = bounds => {
+        this.x = fish.util.wrap(this.x, bounds.x);
+        this.y = fish.util.wrap(this.y, bounds.y);
     };
 };
 
@@ -209,9 +218,3 @@ fish.util.textHeight = (text, font) => {
     return lines * font.getLineHeight() +
         (lines - 1) * font.getVerticalPadding();
 };
-
-/**
- * This is a rect that you can use for stuff when you don't want to instantiate
- * one. Just know that in between uses it's value could be arbitrary.
- */
-fish.util.aRect = new fish.util.Rect();

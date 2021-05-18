@@ -41,7 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
+					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -200,7 +200,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".normalStart"><span class="type-signature">&lt;static> </span>normalStart(rate, gl, audio, assetsPrefix, init)</h4>
+    <h4 class="name" id=".start"><span class="type-signature">&lt;static> </span>start(args, init)</h4>
     
     
 </dt>
@@ -208,8 +208,7 @@
 
     
     <div class="description">
-        <p>Starts the thing's main loop ticking along by passing to it the rendering<br>
-canvas, and the starting screen.</p>
+        <p>Real function that starts the application running.</p>
     </div>
     
 
@@ -244,10 +243,16 @@ canvas, and the starting screen.</p>
 
         <tr>
             
-                <td class="name"><code>rate</code></td>
+                <td class="name"><code>args</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type"><a href="fish.html#.start#~Args">fish.start~Args</a></span>
+
+
+
             
             </td>
 
@@ -255,64 +260,7 @@ canvas, and the starting screen.</p>
 
             
 
-            <td class="description last"><p>is the number of logic frames per second to aim for. If<br>
-you give a number less than 1 you are asking for<br>
-variable frame rate.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>gl</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is a html canvas.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>audio</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the audio context.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>assetsPrefix</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the prefix under which assets are found by the assets<br>
-store.</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -336,7 +284,8 @@ store.</p></td>
 
             
 
-            <td class="description last"><p>is a function to generate the starting screen.</p></td>
+            <td class="description last"><p>initialisation function that generates the first<br>
+screen of the game.</p></td>
         </tr>
 
     
@@ -381,240 +330,7 @@ store.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="fish.js.html">fish.js</a>,
-				 <a href="fish.js.html#sunlight-1-line-86">line 86</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".start"><span class="type-signature">&lt;static> </span>start(rate, graphics, audio, input, store, init)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Real function that starts the application running. Just takes all of the<br>
-subsystems like graphics and audio rather than building them, so that you<br>
-can create different ones to your heart's content.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>rate</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the number of logic frames per second to aim for. If you<br>
-give a number less than 1 you are asking for variable frame<br>
-rate.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>graphics</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the graphics system.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>audio</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the audio system.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>input</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the input system.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>store</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the asset store system.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>init</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="fish.html#~init">fish~init</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the initialisation function that generates the<br>
-starting screen.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="fish.js.html">fish.js</a>,
-				 <a href="fish.js.html#sunlight-1-line-35">line 35</a>
+				 <a href="fish.js.html#sunlight-1-line-111">line 111</a>
 			</li>
 		</ul>
 	</dd>
@@ -864,7 +580,7 @@ and stuff.</p></td>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Wed May 12th 2021
+		on Tue May 18th 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

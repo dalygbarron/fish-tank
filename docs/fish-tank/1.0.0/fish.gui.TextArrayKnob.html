@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>fish-tank Class: Vector</title>
+	<title>fish-tank Class: TextArrayKnob</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -80,16 +80,18 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Vector</h1>
+	<h1 class="page-title">Class: TextArrayKnob</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.util.html">.util</a>.</span>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.gui.html">.gui</a>.</span>
         
-        Vector
+        TextArrayKnob
         </h2>
+        
+            <div class="class-description"><p>A knob that shows an array of text characters that you can edit whenever.</p></div>
         
     
 </header>
@@ -101,136 +103,19 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Vector"><span class="type-signature"></span>new Vector( [x] [, y])</h4>
+    <h4 class="name" id="TextArrayKnob"><span class="type-signature"></span>new TextArrayKnob()</h4>
     
     
 </dt>
 <dd>
 
     
-    <div class="description">
-        <p>Represents a two dimensional point / direction via cartesian coordinates.<br>
-You will notice there is no functional style stuff and that is because it<br>
-requires instantiating objects and in the kinds of contexts where a vector<br>
-class is most used, that is not really acceptable so yeah.</p>
-    </div>
-    
 
     
 
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-        <th>Default</th>
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>is the horizontal part.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>y</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
-
-            <td class="description last"><p>is the vector part.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -247,6 +132,13 @@ class is most used, that is not really acceptable so yeah.</p>
 
     
 
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li>
+        
+    </ul></dd>
     
 
     
@@ -268,8 +160,8 @@ class is most used, that is not really acceptable so yeah.</p>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-30">line 30</a>
+				<a href="gui.js.html">gui.js</a>,
+				 <a href="gui.js.html#sunlight-1-line-455">line 455</a>
 			</li>
 		</ul>
 	</dd>
@@ -320,7 +212,7 @@ class is most used, that is not really acceptable so yeah.</p>
             
 <hr>
 <dt>
-    <h4 class="name" id="add"><span class="type-signature"></span>add(other [, mag])</h4>
+    <h4 class="name" id="fit"><span class="type-signature"></span>fit(bounds, greedy)</h4>
     
     
 </dt>
@@ -328,7 +220,8 @@ class is most used, that is not really acceptable so yeah.</p>
 
     
     <div class="description">
-        <p>Adds another vector onto this one component wise.</p>
+        <p>Fits the gui knob to the given area. Probably needs to be extended to be<br>
+useful a lot of the time.</p>
     </div>
     
 
@@ -351,8 +244,6 @@ class is most used, that is not really acceptable so yeah.</p>
         <th>Type</th>
 
         
-        <th>Argument</th>
-        
 
         
         <th>Default</th>
@@ -367,27 +258,19 @@ class is most used, that is not really acceptable so yeah.</p>
 
         <tr>
             
-                <td class="name"><code>other</code></td>
+                <td class="name"><code>bounds</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="fish.util.Vector.html">fish.util.Vector</a></span>
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
 
 
 
             
             </td>
 
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -396,20 +279,20 @@ class is most used, that is not really acceptable so yeah.</p>
                 </td>
             
 
-            <td class="description last"><p>is the other vector.</p></td>
+            <td class="description last"><p>is the area to fit the element into.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>mag</code></td>
+                <td class="name"><code>greedy</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">boolean</span>
 
 
 
@@ -417,28 +300,21 @@ class is most used, that is not really acceptable so yeah.</p>
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
                 <td class="default">
                 
-                    1
+                    true
                 
                 </td>
             
 
-            <td class="description last"><p>is the amount to multiply the other one by<br>
-first. I know it's not really that relevant to adding but it is<br>
-the main use case so I might as well make it efficient and easy.</p></td>
+            <td class="description last"><p>whether to fill all available space even if not<br>
+needed. This is what is wanted generally if user code calls fit,<br>
+and sometimes it's needed for inner gui bits, but you obviously<br>
+can't use it for every situation. Also, keep in mind it's more<br>
+like a guideline than a rule, some things really can't be<br>
+greedy, and some have no choice but to be greedy.</p></td>
         </tr>
 
     
@@ -462,6 +338,13 @@ the main use case so I might as well make it efficient and easy.</p></td>
     
 
     
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.gui.Knob.html#fit">fish.gui.Knob#fit</a></li>
+        
+    </ul></dd>
+    
 
     
 
@@ -482,8 +365,8 @@ the main use case so I might as well make it efficient and easy.</p></td>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-51">line 51</a>
+				<a href="gui.js.html">gui.js</a>,
+				 <a href="gui.js.html#sunlight-1-line-86">line 86</a>
 			</li>
 		</ul>
 	</dd>
@@ -516,7 +399,7 @@ the main use case so I might as well make it efficient and easy.</p></td>
             
 <hr>
 <dt>
-    <h4 class="name" id="set"><span class="type-signature"></span>set( [x] [, y])</h4>
+    <h4 class="name" id="render"><span class="type-signature"></span>render(patchRenderer, selected)</h4>
     
     
 </dt>
@@ -524,7 +407,7 @@ the main use case so I might as well make it efficient and easy.</p></td>
 
     
     <div class="description">
-        <p>Sets both parts of the vector to new values.</p>
+        <p>Renders the gui element using the given patch renderer.</p>
     </div>
     
 
@@ -547,11 +430,176 @@ the main use case so I might as well make it efficient and easy.</p></td>
         <th>Type</th>
 
         
-        <th>Argument</th>
-        
 
         
-        <th>Default</th>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>patchRenderer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>does the rendering.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>selected</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is whether the knob is currently selected.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="fish.gui.Knob.html#render">fish.gui.Knob#render</a></li>
+        
+    </ul></dd>
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="gui.js.html">gui.js</a>,
+				 <a href="gui.js.html#sunlight-1-line-115">line 115</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setCharacter"><span class="type-signature"></span>setCharacter(x, y, c)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Sets the point in the array given to the given character code.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
         
 
         <th class="last">Description</th>
@@ -577,26 +625,10 @@ the main use case so I might as well make it efficient and easy.</p></td>
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
 
-            <td class="description last"><p>is the new x part.</p></td>
+            <td class="description last"><p>is the column of the character to move.</p></td>
         </tr>
 
     
@@ -617,154 +649,23 @@ the main use case so I might as well make it efficient and easy.</p></td>
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
-                <td class="default">
-                
-                    0
-                
-                </td>
-            
 
-            <td class="description last"><p>is the new y part.</p></td>
+            <td class="description last"><p>is the row of the character to move.</p></td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-39">line 39</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="wrap"><span class="type-signature"></span>wrap(bounds)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Wraps this vector in a rectangle that starts at (0, 0) then goes to<br>
-bounds.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>bounds</code></td>
+                <td class="name"><code>c</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="fish.util.Vector.html">fish.util.Vector</a></span>
+<span class="param-type">number</span>
 
 
 
@@ -775,8 +676,7 @@ bounds.</p>
 
             
 
-            <td class="description last"><p>is a vector representing the far<br>
-corner.</p></td>
+            <td class="description last"><p>is the character code to set it to.</p></td>
         </tr>
 
     
@@ -820,8 +720,8 @@ corner.</p></td>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-62">line 62</a>
+				<a href="gui.js.html">gui.js</a>,
+				 <a href="gui.js.html#sunlight-1-line-514">line 514</a>
 			</li>
 		</ul>
 	</dd>

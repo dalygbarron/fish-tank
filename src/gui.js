@@ -95,12 +95,14 @@ fish.gui.Knob = class {
      *        or whatever.
      * @param {fish.audio.SamplePlayer} audio is used to play sound effects 
      *        like buttons clicking and shit.
+     * @param {boolean} selected is whether this thing is actually selected. It
+     *        can still do stuff without being selected though don't worry.
      * @return {?Object} whatever you want to return, this is handled by user
      *         code. If you return from a nested gui element the outer ones
      *         should just return it recursively. If you return null that is
      *         considered to mean nothing happened.
      */
-    update(input, audio) {
+    update(input, audio, selected) {
         return null;
     }
 
@@ -140,11 +142,13 @@ fish.gui.ContainerKnob = class extends fish.gui.Knob {
 
     /**
      * Increases or decreases the currently selected child.
+     * @param {fish.audio.SamplePlayer} audio is to make a nice sound.
      * @param {number} direction is whether to go forward (> 0) or back (< 0).
      *        If you pass 0 nothing will happen.
      */
-    incrementSelection(direction) {
+    incrementSelection(audio, direction) {
         if (direction == 0 || !this.hasSelectable) return;
+        audio.playSample(this.style.tap);
         let change = Math.sign(direction);
         for (let i = 0; i < this.children.length && change != 0; i++) {
             this.selection += change;
@@ -209,17 +213,25 @@ fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (this.cancellable && input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
+    update(input, audio, selected) {
+        if (selected && this.cancellable && input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
             return null;
         }
-        if (this.children.length == 0) return null;
-        if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
-            this.incrementSelection(-1);
-        } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
-            this.incrementSelection(1);
+        if (selected && this.children.length > 0) {
+            if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
+                this.incrementSelection(audio, 1);
+            }
         }
-        return this.children[this.selection].update(input, audio);
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection && selected
+            );
+            if (result) return result;
+        }
     }
 
     /** @inheritDoc */
@@ -247,9 +259,18 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
      */
     constructor(style, text) {
         super(style);
-        this.text = text;
+        this._text = text;
         this.fittedText = '';
         this.origin = new fish.util.Vector();
+    }
+
+    get content() {
+        return this._text;
+    }
+
+    set content(value) {
+        this._text = value;
+        if (this.fitted) this.fit(this.bounds, false);
     }
 
     /** @inheritDoc */
@@ -257,7 +278,7 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
         this.origin.x = bounds.x + 1;
         this.origin.y = bounds.t - 1;
         this.fittedText = fish.util.fitText(
-            this.text,
+            this._text,
             this.style.font,
             bounds.w - 2
         );
@@ -321,24 +342,30 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) && !this.down) {
-            audio.playSample(this.style.click);
-            this.down = true;
-            if (typeof this.result == 'function') {
-                return this.result();
+    update(input, audio, selected) {
+        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) && selected) {
+            if (!this.down) {
+                this.down = true;
+                audio.playSample(this.style.click);
             }
-            return this.result;
+        } else if (this.down) {
+            this.down = false;
+            if (selected) {
+                if (typeof this.result == 'function') {
+                    return this.result.call(this);
+                }
+                return this.result;
+            }
         }
         return null;
     }
 
     /** @inheritDoc */
     render(patchRenderer, selected) {
-        patchRenderer.renderPatch(
-            selected ? this.style.buttonSelected : this.style.button,
-            this.bounds
-        );
+        let patch = selected ?
+            (this.down ? this.style.buttonDepressed : this.style.buttonSelected) :
+            this.style.button;
+        patchRenderer.renderPatch(patch, this.bounds);
         this.child.render(patchRenderer, selected);
     }
 };
@@ -392,14 +419,22 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    update(input, audio) {
-        if (this.children.length == 0) return null;
-        if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
-            this.incrementSelection(-1);
-        } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
-            this.incrementSelection(1);
+    update(input, audio, selected) {
+        if (selected && this.children.length > 0) {
+            if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
+                this.incrementSelection(audio, 1);
+            }
         }
-        return this.children[this.selection].update(input, audio);
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection && selected
+            );
+            if (result) return result;
+        }
     }
 
     /** @inheritDoc */
@@ -410,5 +445,74 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
                 selected && i == this.selection
             );
         }
+    }
+};
+
+/**
+ * A knob that shows an array of text characters that you can edit whenever.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextArrayKnob = class extends fish.gui.Knob {
+    constructor(style, width, height=1) {
+        super(style);
+        this.spareRect = new fish.util.Rect();
+        this.width = width;
+        this.height = height;
+        this.scale = new fish.util.Vector(1, 1);
+        this.array = [];
+        for (let y = 0; y < height; y++) {
+            let line = [];
+            for (let x = 0; x < width; x++) {
+                line.push(Math.floor(Math.random() * 200));
+            }
+            this.array.push(line);
+        }
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        if (greedy) {
+            super.fit(bounds, greedy);
+            this.scale.x = bounds.size.x /
+                (this.width * this.style.font.getWidth('n'));
+            this.scale.y = bounds.size.y /
+                (this.height * this.style.font.getLineHeight());
+        } else {
+            let newHeight = this.height * this.style.font.getLineHeight();
+            bounds.pos.y += bounds.size.y - newHeight;
+            bounds.size.y = newHeight;
+            bounds.size.x = this.width * this.style.font.getWidth('n');
+            super.fit(bounds, greedy);
+        }
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        let cWidth = this.style.font.getWidth('n') * this.scale.x;
+        let cHeight = this.style.font.getLineHeight() * this.scale.y;
+        this.spareRect.size.x = cWidth;
+        this.spareRect.size.y = cHeight;
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                this.spareRect.pos.x = this.bounds.x + x * cWidth;
+                this.spareRect.pos.y = this.bounds.y + y * cHeight;
+                patchRenderer.renderCharacter(
+                    this.style.font,
+                    this.array[y][x],
+                    this.spareRect
+                );
+            }
+        }
+    }
+
+    /**
+     * Sets the point in the array given to the given character code.
+     * @param {number} x is the column of the character to move.
+     * @param {number} y is the row of the character to move.
+     * @param {number} c is the character code to set it to.
+     */
+    setCharacter(x, y, c) {
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
+        this.array[y][x] = c;
     }
 };

@@ -450,6 +450,20 @@ fish.graphics.PatchRenderer = class {
     }
 
     /**
+     * Renders a given character onto the screen, fitting it into the given
+     * rectangle as best the renderer can.
+     * @param {fish.graphics.Font} font is the font info for drawing.
+     * @param {number} c the character code of the character to draw.
+     * @param {fish.util.Rect} dst where to fit the character into. It ought to
+     *        stretch if possible.
+     */
+    renderCharacter(font, c, dst) {
+        throw new Error(
+            'fish.graphics.PatchRenderer.renderCharacter must be implemented'
+        );
+    }
+
+    /**
      * Renders a piece of text onto the screen using a font.
      * @param {fish.graphics.Font} font is the font to use to draw the text.
      * @param {string} text is the text to draw. All it's newlines and stuff
@@ -469,17 +483,16 @@ fish.graphics.PatchRenderer = class {
  * pictures.
  * @implements fish.graphics.BaseRenderer
  * @constructor
- * @param gl is the opengl context.
+ * @param {WebGLRenderingContext} gl is the opengl context.
  */
 fish.graphics.SpriteRenderer = function (gl) {
-    let usefulRect = new fish.util.Rect();
+    let spareRect = new fish.util.Rect();
     let usedTextures = [];
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.width = gl.drawingBufferWidth;
     this.height = gl.drawingBufferHeight;
-    console.log(this.width, this.height);
 
     /**
      * A thing that batches draw calls.
@@ -656,19 +669,19 @@ fish.graphics.SpriteRenderer = function (gl) {
             let height = font.getLineHeight();
             let xOffset = 0;
             let yOffset = 0;
-            fish.util.aRect.size.set(width, height);
+            spareRect.size.set(width, height);
             for (let i = 0; i < text.length; i++) {
                 let c = text.charCodeAt(i);
                 if (c == 10) {
                     yOffset += height + font.getVerticalPadding();
                     xOffset = 0;
                 } else {
-                    fish.util.aRect.pos.set(
+                    spareRect.pos.set(
                         font.sprite.x + Math.floor(c % 16) * width,
                         font.sprite.y + Math.floor(c / 16) * height
                     );
                     this.addComp(
-                        fish.util.aRect,
+                        spareRect,
                         dst.x + xOffset,
                         dst.y - yOffset - height,
                         dst.x + xOffset + width,
@@ -687,6 +700,16 @@ fish.graphics.SpriteRenderer = function (gl) {
         /** @inheritDoc */
         this.renderText = (font, text, dst) => {
             this.addText(font, text, dst);
+        };
+
+        /** @inheritDoc */
+        this.renderCharacter = (font, c, dst) => {
+            spareRect.size.set(font.getWidth(c), font.getLineHeight());
+            spareRect.pos.set(
+                font.sprite.x + Math.floor(c % 16) * spareRect.w,
+                font.sprite.y + Math.floor(c / 16) * spareRect.h
+            );
+            this.add(spareRect, dst);
         };
 
         /**
