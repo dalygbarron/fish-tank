@@ -244,7 +244,7 @@ fish.audio.BasicAudio = function (context, copies=2) {
      * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
      *                                      didn't fuck up.
      */
-    this.loadSample = async function (url) {
+    this.loadSample = function (url) {
         let request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.responseType = 'arraybuffer';
@@ -261,6 +261,26 @@ fish.audio.BasicAudio = function (context, copies=2) {
                 );
             };
             request.send();
+        });
+    };
+
+    /**
+     * Makes a sample out of a base64 encoded string.
+     * @param {string} data is the data to make into a sample.
+     * @return Promise<fish.audio.Sample>} the created sample.
+     */
+    this.makeSample = function (data) {
+        return new Promise((resolve, reject) => {
+            context.decodeAudioData(
+                data,
+                buffer => {
+                    // TODO: can't just call it anon, will clash.
+                    resolve(new fish.audio.Sample('anon', buffer));
+                },
+                () => {
+                    reject('Could not make sampke from data');
+                }
+            );
         });
     };
 };

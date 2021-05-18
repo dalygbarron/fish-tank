@@ -11,6 +11,7 @@ module.exports = function(grunt) {
             dist: {
                 src: [
                     'src/util.js',
+                    'src/constants.js',
                     'src/graphics.js',
                     'src/audio.js',
                     'src/input.js',
@@ -33,9 +34,9 @@ module.exports = function(grunt) {
         },
         sprite: {
             all: {
-                src: 'testSprites/*.png',
-                dest: 'test/sprites.png',
-                destCss: 'test/sprites.json',
+                src: 'splashSprites/*.png',
+                dest: 'splash.png',
+                destCss: 'splash.json',
                 padding: 1
             }
         },

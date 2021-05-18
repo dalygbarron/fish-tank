@@ -1,0 +1,48 @@
+{
+    "font": {
+        "x": 357,
+        "y": 0,
+        "width": 128,
+        "height": 256,
+        "source_image": "splashSprites/font.png",
+        "image": "splash.png",
+        "total_width": 485,
+        "total_height": 356,
+        "escaped_image": "splash.png",
+        "offset_x": -357,
+        "offset_y": 0,
+        "px": {
+            "x": "357px",
+            "y": "0px",
+            "offset_x": "-357px",
+            "offset_y": "0px",
+            "height": "256px",
+            "width": "128px",
+            "total_height": "356px",
+            "total_width": "485px"
+        }
+    },
+    "logo": {
+        "x": 0,
+        "y": 0,
+        "width": 356,
+        "height": 356,
+        "source_image": "splashSprites/logo.png",
+        "image": "splash.png",
+        "total_width": 485,
+        "total_height": 356,
+        "escaped_image": "splash.png",
+        "offset_x": 0,
+        "offset_y": 0,
+        "px": {
+            "x": "0px",
+            "y": "0px",
+            "offset_x": "0px",
+            "offset_y": "0px",
+            "height": "356px",
+            "width": "356px",
+            "total_height": "356px",
+            "total_width": "485px"
+        }
+    }
+}

@@ -218,3 +218,16 @@ fish.util.textHeight = (text, font) => {
     return lines * font.getLineHeight() +
         (lines - 1) * font.getVerticalPadding();
 };
+
+/**
+ * Converts a base64 string to an arraybuffer which is useful for converting
+ * into data stuff with browser apis.
+ * @param {string} base64 is the base64 string to convert.
+ * @return {Uint8Array} created arraybuffer.
+ */
+fish.util.base64ToArrayBuffer = base64 => {
+    let binary = atob(base64);
+    let bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes.buffer;
+};
