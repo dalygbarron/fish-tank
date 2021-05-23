@@ -230,8 +230,8 @@ fish.audio.BasicAudio = function (context, copies=2) {
     /**
      * Load a noise from the store and then play it right away.
      * @param {fish.Store} store is the store to load from.
-     * @param {string}     name  is the key to the noise as you would normally
-     *                           use to load it from the store.
+     * @param {string} name is the key to the noise as you would normally
+     *        use to load it from the store.
      */
     this.loadNoise = async function (store, name) {
         let sample = await store.getSample(name);
@@ -240,9 +240,9 @@ fish.audio.BasicAudio = function (context, copies=2) {
 
     /**
      * Loads a piece of audio into memory from soem url.
-     * @param {strimg} url is the joint to load from.
+     * @param {string} url is the joint to load from.
      * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
-     *                                      didn't fuck up.
+     *         didn't fuck up.
      */
     this.loadSample = function (url) {
         let request = new XMLHttpRequest();
@@ -266,13 +266,13 @@ fish.audio.BasicAudio = function (context, copies=2) {
 
     /**
      * Makes a sample out of a base64 encoded string.
-     * @param {string} data is the data to make into a sample.
+     * @param {Uint8Array} data is the data to make into a sample.
      * @return Promise<fish.audio.Sample>} the created sample.
      */
     this.makeSample = function (data) {
         return new Promise((resolve, reject) => {
             context.decodeAudioData(
-                data,
+                data.buffer,
                 buffer => {
                     // TODO: can't just call it anon, will clash.
                     resolve(new fish.audio.Sample('anon', buffer));

@@ -38,75 +38,6 @@ var fish = fish || {};
  */
 
 (() => {
-    /**
-     * Screen that waits asynchronously for a new screen to be created and then
-     * switches to it. You can also do whatever you want during that time
-     * including loading whatever stuff you want asynchronously.
-     */
-    class InitScreen extends fish.screen.Screen {
-        /**
-         * @param {fish.screen.Context} ctx engine context.
-         * @param {fish~init} init function producing the screen that appears
-         *        after this one.
-         */
-        constructor(ctx, init) {
-            super(ctx);
-            this.next = null;
-            Promise.resolve(init(ctx)).then(value => {
-                this.next = value;
-            });
-        }
-
-        /** @inheritDoc */
-        update(delta) {
-            if (this.next) {
-                return new fish.screen.Transition(true, this.next);
-            }
-            return null;
-        }
-
-        /** @inheritDoc */
-        render(front) {
-            this.ctx.gfx.clear(0, 0, 0, 1);
-        }
-    }
-
-    /**
-     * Like the init screen but displays some cool stuff and does not return to
-     * the new screen until it has run for 7 seconds or so no matter what.
-     */
-    class FancyInitScreen extends InitScreen {
-        /**
-         * @param {fish.screen.Context} ctx engine context.
-         * @param {fish~init} init creates the start of the game proper.
-         */
-        constructor(ctx, init, texture, atlas, sound) {
-            super(ctx, init);
-            this.texture = texture;
-            this.atlas = atlas;
-            this.sound = sound;
-            this.timer = 7;
-            this.batch = new ctx.gfx.Batch(texture, 256);
-            console.log(this.sound);
-        }
-
-        /** @inheritDoc */
-        refresh() {
-            this.ctx.snd.playSample(this.sound[0]);
-        }
-
-        /** @inheritDoc */
-        update(delta) {
-            this.timer -= delta;
-            if (this.timer <= 0) return super.update(delta);
-            return null;
-        }
-
-        /** @inheritDoc */
-        render(front) {
-            this.ctx.gfx.clear(1, 0, 0, 1);
-        }
-    }
 
     /**
      * Creates the game engine context which contains all the subsystems and is
@@ -187,14 +118,7 @@ var fish = fish || {};
             alert(err + err.stack ? err.stack : '');
             throw err;
         }
-        let screen = new InitScreen(ctx, async function (ctx) {
-            let sample = await Promise.all([
-                //ctx.gfx.loadTexture('https://github.com/dalygbarron/fish-tank/raw/master/test/sprites.png'),
-                //fish.graphics.loadAtlas('https://raw.githubusercontent.com/dalygbarron/fish-tank/master/test/sprites.json'),
-                ctx.snd.makeSample(fish.constants.JINGLE)
-            ]);
-            return new FancyInitScreen(ctx, init, null, null, sample);
-        });
+        let screen = ctx.gfx.createSplashScreen(ctx, init);
         let screens = [screen];
         screen.refresh();
         const updateScreens = () => {

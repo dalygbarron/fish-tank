@@ -89,8 +89,9 @@
         FancyInitScreen
         </h2>
         
-            <div class="class-description"><p>Like the init screen but displays some cool stuff and does not return to<br>
-the new screen until it has run for 7 seconds or so no matter what.</p></div>
+            <div class="class-description"><p>Like the init screen but displays some cool stuff in ascii and does not<br>
+return to the new screen until it has run for 7 seconds or so no matter<br>
+what.</p></div>
         
     
 </header>
@@ -102,7 +103,7 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
         
 <hr>
 <dt>
-    <h4 class="name" id="FancyInitScreen"><span class="type-signature"></span>new FancyInitScreen(ctx, init)</h4>
+    <h4 class="name" id="FancyInitScreen"><span class="type-signature"></span>new FancyInitScreen(ctx, init, patcher, font, sound)</h4>
     
     
 </dt>
@@ -129,7 +130,11 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -155,7 +160,19 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>engine context.</p></td>
@@ -179,10 +196,136 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>creates the start of the game proper.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>patcher</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>is the patch renderer<br>
+used to render text.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>font</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.graphics.Font.html">fish.graphics.Font</a></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>is the font to output info with.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sound</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.audio.Sample.html">fish.audio.Sample</a></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>is a sound to play at the same<br>
+time which the screen cannot finish before the end of.</p></td>
         </tr>
 
     
@@ -227,7 +370,7 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
 		<ul class="dummy">
 			<li>
 				<a href="fish.js.html">fish.js</a>,
-				 <a href="fish.js.html#sunlight-1-line-78">line 78</a>
+				 <a href="fish.js.html#sunlight-1-line-79">line 79</a>
 			</li>
 		</ul>
 	</dd>
@@ -329,7 +472,7 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
 		<ul class="dummy">
 			<li>
 				<a href="fish.js.html">fish.js</a>,
-				 <a href="fish.js.html#sunlight-1-line-94">line 94</a>
+				 <a href="fish.js.html#sunlight-1-line-97">line 97</a>
 			</li>
 		</ul>
 	</dd>
@@ -413,7 +556,7 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
 		<ul class="dummy">
 			<li>
 				<a href="fish.js.html">fish.js</a>,
-				 <a href="fish.js.html#sunlight-1-line-106">line 106</a>
+				 <a href="fish.js.html#sunlight-1-line-112">line 112</a>
 			</li>
 		</ul>
 	</dd>
@@ -497,7 +640,7 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
 		<ul class="dummy">
 			<li>
 				<a href="fish.js.html">fish.js</a>,
-				 <a href="fish.js.html#sunlight-1-line-99">line 99</a>
+				 <a href="fish.js.html#sunlight-1-line-102">line 102</a>
 			</li>
 		</ul>
 	</dd>
@@ -580,7 +723,7 @@ the new screen until it has run for 7 seconds or so no matter what.</p></div>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Tue May 18th 2021
+		on Sun May 23rd 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

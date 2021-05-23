@@ -235,6 +235,7 @@ fish.graphics.BitmapFont = class {
  * pass a gl context so you probably want to use the version built into the
  * renderer unless you are making your own graphics system.
  * @async
+ * @param {WebGLRenderingContext} gl the rendering context.
  * @param {string} url is the url to load the texture from.
  * @return {Promise<fish.graphics.Texture>} the loaded texture.
  */
@@ -243,7 +244,6 @@ fish.graphics.loadTexture = async function (gl, url) {
         const image = new Image();
         image.onload = () => {
             const texture = gl.createTexture();
-            gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(
                 gl.TEXTURE_2D,
@@ -286,7 +286,36 @@ fish.graphics.loadTexture = async function (gl, url) {
     });
 };
 
-
+/**
+ * Make a texture out of an arraybuffer.
+ * @param {WebGLRenderingContext} gl the rendering context.
+ * @param {Uint8Array} data is the data to convert.
+ * @param {number} width image width.
+ * @param {number} height image height.
+ * @param {GLenum} format is the pixel format of the data.
+ * @return {fish.graphics.Texture} the created texture.
+ */
+fish.graphics.makeTexture = (gl, data, width, height, format) => {
+    console.log(data);
+    const glTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, glTexture);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        format,
+        width,
+        height,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_SHORT_4_4_4_4,
+        data
+    );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    return new fish.graphics.Texture(glTexture, width, height);
+};
 
 /**
  * Loads in the data part of a texture atlas.
@@ -432,6 +461,16 @@ fish.graphics.Patch = class {
  */
 
 /**
+ * Creates a splash screen that works with this graphics subsystem.
+ * @method fish.graphics.BaseRenderer#createSplashScreen
+ * @param {fish.screen.Context} ctx given to the new screen so it can do it's
+ *        shiet.
+ * @param {fish~init} init is the function that the splash screen uses
+ *        to create what happens after the splash screen.
+ * @return {fish.screen.Screen} the created screen.
+ */
+
+/**
  * Base rendering interface required by the engine internally for gui stuff.
  * Must be implemented by something in order to use the gui but does not need
  * to be implemented by the graphics subsystem itself.
@@ -491,8 +530,67 @@ fish.graphics.SpriteRenderer = function (gl) {
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    this.gl = gl;
     this.width = gl.drawingBufferWidth;
     this.height = gl.drawingBufferHeight;
+
+    /**
+     * Like the init screen but displays some cool stuff in ascii and does not
+     * return to the new screen until it has run for 7 seconds or so no matter
+     * what.
+     */
+    let InitScreen = class extends fish.screen.InitScreen {
+        /**
+         * @param {fish.screen.Context} ctx engine context.
+         * @param {fish~init} init creates the start of the game proper.
+         * @param {fish.graphics.BitmapFont} font is the font to output info.
+         * @param {fish.audio.Sample} sound is a sound to play at the same
+         *        time which the screen cannot finish before the end of.
+         */
+        constructor(ctx, init, font, sound) {
+            super(ctx, init);
+            // TODO: the font is not actually a font right now but it must be
+            //       made to be one I think.
+            this.batch = new ctx.gfx.Batch(font, 513);
+            this.font = font;
+            this.sound = sound;
+            this.timer = 70;
+            this.zoom = 2;
+            this.sprite = new fish.util.Rect(
+                0,
+                0,
+                this.font.getWidth() / 16,
+                this.font.getHeight() / 16
+            );
+            this.lines = [
+                'I am wearing a hat',
+                'A big ass hat'
+            ];
+        }
+
+        /** @inheritDoc */
+        refresh() {
+            if (this.sound) this.ctx.snd.playSample(this.sound);
+        }
+
+        /** @inheritDoc */
+        update(delta) {
+            this.timer -= delta;
+            if (this.timer <= 0) {
+                return super.update(delta);
+            }
+            return null;
+        }
+
+        /** @inheritDoc */
+        render(front) {
+            this.batch.clear();
+            for (let i = 0; i < this.lines.length; i++) {
+
+            }
+            this.batch.render();
+        }
+    };
 
     /**
      * A thing that batches draw calls.
@@ -745,8 +843,6 @@ fish.graphics.SpriteRenderer = function (gl) {
                 0
             );
             gl.enableVertexAttribArray(shader.textureCoord);
-            // TODO: decide active texture better.
-            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, texture.getGlTexture());
             gl.uniform1i(shader.sampler, 0);
             gl.uniform2f(
@@ -768,11 +864,37 @@ fish.graphics.SpriteRenderer = function (gl) {
     };
 
     /**
-     * @inheritDoc
+     * Make a texture using this graphics thing's graphics context.
+     * @param {Uint8Array} data the data to make it from.
+     * @param {number} width image width.
+     * @param {number} height image height.
+     * @param {GLenum} format pixel format of the data.
+     * @return {fish.graphics.Texture} the created texture.
      */
+    this.makeTexture = (data, width, height, format) => {
+        return fish.graphics.makeTexture(gl, data, width, height, format);
+    };
+
+    /** @inheritDoc */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);
         gl.clear(gl.COLOR_BUFFER_BIT);
+    };
+
+    /** @inheritDoc */
+    this.createSplashScreen = (ctx, init) => {
+        return new fish.screen.InitScreen(ctx, async function (ctx) {
+            let results = await Promise.all([
+                ctx.gfx.makeTexture(
+                    fish.constants.SPLASH,
+                    fish.constants.SPLASH_WIDTH,
+                    fish.constants.SPLASH_HEIGHT,
+                    ctx.gfx.gl.RGBA4
+                ),
+                ctx.snd.makeSample(fish.constants.JINGLE)
+            ]);
+            return new InitScreen(ctx, init, results[0], results[1]);
+        });
     };
 
     /**

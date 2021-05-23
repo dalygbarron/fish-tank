@@ -229,5 +229,5 @@ fish.util.base64ToArrayBuffer = base64 => {
     let binary = atob(base64);
     let bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return bytes.buffer;
+    return bytes;
 };

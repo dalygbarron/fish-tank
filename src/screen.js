@@ -96,3 +96,36 @@ fish.screen.Screen = class {
         // does nothing by default.
     }
 };
+
+/**
+ * Screen that waits asynchronously for a new screen to be created and then
+ * switches to it. You can also do whatever you want during that time
+ * including loading whatever stuff you want asynchronously.
+ */
+fish.screen.InitScreen = class extends fish.screen.Screen {
+    /**
+     * @param {fish.screen.Context} ctx engine context.
+     * @param {fish~init} init function producing the screen that appears
+     *        after this one.
+     */
+    constructor(ctx, init) {
+        super(ctx);
+        this.next = null;
+        Promise.resolve(init(ctx)).then(value => {
+            this.next = value;
+        });
+    }
+
+    /** @inheritDoc */
+    update(delta) {
+        if (this.next) {
+            return new fish.screen.Transition(true, this.next);
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(front) {
+        this.ctx.gfx.clear(0, 0, 0, 1);
+    }
+};

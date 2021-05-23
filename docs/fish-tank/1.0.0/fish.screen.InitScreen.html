@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>fish-tank Classes</title>
+	<title>fish-tank Class: InitScreen</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -80,14 +80,20 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Classes</h1>
+	<h1 class="page-title">Class: InitScreen</h1>
 <section>
 
 <header>
     
         <h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.screen.html">.screen</a>.</span>
         
+        InitScreen
         </h2>
+        
+            <div class="class-description"><p>Screen that waits asynchronously for a new screen to be created and then<br>
+switches to it. You can also do whatever you want during that time<br>
+including loading whatever stuff you want asynchronously.</p></div>
         
     
 </header>
@@ -97,8 +103,99 @@
     <div class="container-overview">
     
         
+<hr>
+<dt>
+    <h4 class="name" id="InitScreen"><span class="type-signature"></span>new InitScreen(ctx, init)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ctx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">fish.screen.Context</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>engine context.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>init</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.html#~init">fish~init</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>function producing the screen that appears<br>
+after this one.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -129,6 +226,16 @@
 
 
 	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="screen.js.html">screen.js</a>,
+				 <a href="screen.js.html#sunlight-1-line-105">line 105</a>
+			</li>
+		</ul>
+	</dd>
+	
 
 	
 
@@ -138,7 +245,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -147,120 +268,185 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-            <dt><a href="fish.audio.BasicAudio.html">BasicAudio</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id="render"><span class="type-signature"></span>render()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="screen.js.html">screen.js</a>,
+				 <a href="screen.js.html#sunlight-1-line-128">line 128</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
         
-            <dt><a href="fish.audio.Sample.html">Sample</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Atlas.html">Atlas</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.BitmapFont.html">BitmapFont</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Colour.html">Colour</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Patch.html">Patch</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.SpriteRenderer-InitScreen.html">InitScreen</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Texture.html">Texture</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.ButtonKnob.html">ButtonKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.ContainerKnob.html">ContainerKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.HBoxKnob.html">HBoxKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.Knob.html">Knob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.PanelKnob.html">PanelKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.PicKnob.html">PicKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.TextArrayKnob.html">TextArrayKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.TextKnob.html">TextKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.input.BasicInput.html">BasicInput</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.screen.InitScreen.html">InitScreen</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.screen.Screen.html">Screen</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.screen.Transition.html">Transition</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.Store.html">Store</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.util.Rect.html">Rect</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.util.Vector.html">Vector</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="screen.js.html">screen.js</a>,
+				 <a href="screen.js.html#sunlight-1-line-120">line 120</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
         </dl>
-    
-
-    
-
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="namespaces.html#fish"><a href="fish.html">fish</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish"><a href="fish.html">fish</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.audio"><a href="fish.audio.html">audio</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.graphics"><a href="fish.graphics.html">graphics</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.gui"><a href="fish.gui.html">gui</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.input"><a href="fish.input.html">input</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.screen"><a href="fish.screen.html">screen</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.util"><a href="fish.util.html">util</a></a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
     
 
     
