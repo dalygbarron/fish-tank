@@ -34,14 +34,14 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">fish.audio</a></li><li><a href="fish.graphics.html">fish.graphics</a></li><li><a href="fish.gui.html">fish.gui</a></li><li><a href="fish.input.html">fish.input</a></li><li><a href="fish.screen.html">fish.screen</a></li><li><a href="fish.util.html">fish.util</a></li>
+					<li><a href="fish.html">fish</a></li><li><a href="fish.audio.html">fish.audio</a></li><li><a href="fish.constants.html">fish.constants</a></li><li><a href="fish.graphics.html">fish.graphics</a></li><li><a href="fish.gui.html">fish.gui</a></li><li><a href="fish.input.html">fish.input</a></li><li><a href="fish.screen.html">fish.screen</a></li><li><a href="fish.util.html">fish.util</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.SpriteRenderer-InitScreen.html">fish.graphics.SpriteRenderer~InitScreen</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.InitScreen.html">fish.screen.InitScreen</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
+					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.Compatability.html">fish.Compatability</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -160,6 +160,15 @@ fish.graphics.Texture = function (glTexture, width, height) {
      */
     this.getHeight = () => {
         return height;
+    };
+
+    /**
+     * Creates a rectangle object for the size of the texture with the corner
+     * at (0, 0).
+     * @return {fish.util.Rect} the rect.
+     */
+    this.getRect = () => {
+        return new fish.util.Rect(0, 0, width, height);
     };
 };
 
@@ -552,9 +561,17 @@ fish.graphics.Patch = class {
  * @method fish.graphics.BaseRenderer#createSplashScreen
  * @param {fish.screen.Context} ctx given to the new screen so it can do it's
  *        shiet.
- * @param {fish~init} init is the function that the splash screen uses
- *        to create what happens after the splash screen.
+ * @param {Promise&lt;fish.screen.Screen> init promise resolving to the first real
+ *        screen of the game. You shouldn't need the return value of this, but
+ *        you might want to know when it resolves for timing reasons.
  * @return {fish.screen.Screen} the created screen.
+ */
+
+/**
+ * Tells you how compatable the subsystem is with the current browser running
+ * it.
+ * @method fish.graphics.BaseRenderer#getCompatability
+ * @return {fish.Compatability} a report on the compatability. 
  */
 
 /**
@@ -621,63 +638,6 @@ fish.graphics.SpriteRenderer = function (gl) {
     this.width = gl.drawingBufferWidth;
     this.height = gl.drawingBufferHeight;
 
-    /**
-     * Like the init screen but displays some cool stuff in ascii and does not
-     * return to the new screen until it has run for 7 seconds or so no matter
-     * what.
-     */
-    let InitScreen = class extends fish.screen.InitScreen {
-        /**
-         * @param {fish.screen.Context} ctx engine context.
-         * @param {fish~init} init creates the start of the game proper.
-         * @param {fish.graphics.BitmapFont} font is the font to output info.
-         * @param {fish.audio.Sample} sound is a sound to play at the same
-         *        time which the screen cannot finish before the end of.
-         */
-        constructor(ctx, init, font, sound) {
-            super(ctx, init);
-            // TODO: the font is not actually a font right now but it must be
-            //       made to be one I think.
-            this.batch = new ctx.gfx.Batch(font, 513);
-            this.font = font;
-            this.sound = sound;
-            this.timer = 70;
-            this.zoom = 2;
-            this.sprite = new fish.util.Rect(
-                0,
-                0,
-                this.font.getWidth() / 16,
-                this.font.getHeight() / 16
-            );
-            this.lines = [
-                'I am wearing a hat',
-                'A big ass hat'
-            ];
-        }
-
-        /** @inheritDoc */
-        refresh() {
-            if (this.sound) this.ctx.snd.playSample(this.sound);
-        }
-
-        /** @inheritDoc */
-        update(delta) {
-            this.timer -= delta;
-            if (this.timer &lt;= 0) {
-                return super.update(delta);
-            }
-            return null;
-        }
-
-        /** @inheritDoc */
-        render(front) {
-            this.batch.clear();
-            for (let i = 0; i &lt; this.lines.length; i++) {
-
-            }
-            this.batch.render();
-        }
-    };
 
     /**
      * A thing that batches draw calls.
@@ -970,18 +930,108 @@ fish.graphics.SpriteRenderer = function (gl) {
 
     /** @inheritDoc */
     this.createSplashScreen = (ctx, init) => {
-        return new fish.screen.InitScreen(ctx, async function (ctx) {
-            let results = await Promise.all([
-                ctx.gfx.makeTexture(
-                    fish.constants.SPLASH,
-                    fish.constants.SPLASH_WIDTH,
-                    fish.constants.SPLASH_HEIGHT,
-                    ctx.gfx.gl.RGBA4
-                ),
-                ctx.snd.makeSample(fish.constants.JINGLE)
-            ]);
-            return new InitScreen(ctx, init, results[0], results[1]);
-        });
+        let InitScreen = class extends fish.screen.Screen {
+            constructor(ctx) {
+                super(ctx);
+                this.done = false;
+                this.next = null;
+                this.batch = null;
+                this.font = null;
+                this.sound = null;
+                this.logo = new fish.util.Rect();
+                this.spot = new fish.util.Vector();
+                this.lines = [
+                    'fish-tank game engine version 645438567347',
+                    'created by Dany Burton 2021'
+                ];
+                this.gfxComp = ctx.gfx.getCompatability();
+                this.sndComp = ctx.snd.getCompatability();
+                this.inComp = ctx.in.getCompatability();
+                this.timer = 0;
+                this.sprite = new fish.util.Rect(0, 0, 0, 0);
+                Promise.all([
+                    ctx.gfx.makeTexture(
+                        fish.constants.SPLASH,
+                        fish.constants.SPLASH_WIDTH,
+                        fish.constants.SPLASH_HEIGHT,
+                        ctx.gfx.gl.RGBA4
+                    ),
+                    ctx.snd.makeSample(fish.constants.JINGLE)
+                ]).then(values => {
+                    this.ctx.snd.playSample(values[1]);
+                    this.font = new fish.graphics.BitmapFont(
+                        values[0].getRect()
+                    );
+                    this.logo.pos.set(
+                        this.font.getWidth('q') * 3,
+                        this.font.getLineHeight() * 11
+                    );
+                    this.logo.size.set(
+                        this.font.getWidth('c') * 4,
+                        this.font.getLineHeight() * 4
+                    );
+                    this.batch = new ctx.gfx.Batch(values[0], 512);
+                    (async function () {
+                        await fish.util.wait(1);
+                        this.lines.push(`graphics compatability ${this.gfxComp.level}: ${this.gfxComp.message}`);
+                        await fish.util.wait(1);
+                        this.lines.push(`sound compatability ${this.sndComp.level}: ${this.sndComp.message}`);
+                        await fish.util.wait(1);
+                        this.lines.push(`input compatability ${this.inComp.level}: ${this.inComp.message}`);
+                        await fish.util.wait(1);
+                        this.lines.push('the game is loading...');
+                        await fish.util.wait(1);
+                        this.done = true;
+                    }).call(this);
+                });
+                init.then((v) => {this.next = v;});
+            }
+
+            /** @inheritDoc */
+            update(delta) {
+                this.timer += delta;
+                if (this.next &amp;&amp; this.done) {
+                    return new fish.screen.Transition(true, this.next);
+                }
+                return null;
+            }
+
+            /** @inheritDoc */
+            render(front) {
+                if (!this.batch) return;
+                this.batch.clear();
+                let portion = 600 / (this.font.getLineHeight() * 12);
+                let overhang = (this.timer * 32) % Math.abs(
+                    this.font.getLineHeight() * 12 - portion
+                ) - this.font.getLineHeight() * 12;
+                for (let i = 0; i &lt; portion; i++) {
+                    this.batch.addComp(
+                        this.logo,
+                        0,
+                        i * this.font.getLineHeight() * 12 + overhang,
+                        this.logo.w * 3,
+                        (i + 1) * this.font.getLineHeight() * 12 + overhang
+                    );
+                }
+                this.spot.x = (this.font.getWidth('c') +
+                    this.font.getHorizontalPadding()) * 12;
+                for (let i = 0; i &lt; this.lines.length; i++) {
+                    this.spot.y = 600 - (this.font.getLineHeight() +
+                        this.font.getVerticalPadding()) * i;
+                    this.batch.addText(this.font, this.lines[i], this.spot);
+                }
+                this.batch.render();
+            }
+        };
+        return new InitScreen(ctx);
+    };
+
+    /** @inheritDoc */
+    this.getCompatability = () => {
+        return new fish.Compatability(
+            fish.COMPATABILITY_LEVEL.FULL,
+            'all g'
+        );
     };
 
     /**
@@ -1067,7 +1117,7 @@ fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Sun May 23rd 2021
+		on Mon May 24th 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -37,8 +37,52 @@ var fish = fish || {};
  *        things you try to load through the default store.
  */
 
-(() => {
+/**
+ * The levels of compatability a subsystem can have with the browser the game
+ * is running in. Remember that subsystems should not crash the game even if
+ * they have no compatability.
+ * @readonly
+ * @enum {string}
+ */
+fish.COMPATABILITY_LEVEL = {
+    /** Full compatability. Everything is fine. */
+    FULL: 'FULL',
+    /**
+     * Partial compatability. All base interface responsibilities can be
+     * fulfilled, but some other features don't work properly. Usual functions
+     * should still exist and not throw exceptions though because otherwise the
+     * game is just gonna crash anyway.
+     */
+    PARTIAL: 'PARTIAL',
+    /**
+     * Compatability is not high enough for subsystem to fulfill the features
+     * of it's basic interface.
+     */
+    NONE: 'NONE'
+};
 
+/**
+ * Format of a compatibility indicator object that comes from the subsystems to
+ * tell you what level of compatibility they have to the current system.
+ * Subsystems should never crash the game even if they are completely
+ * incompatible.
+ */
+fish.Compatability = class {
+    /**
+     * @param {fish.COMPATABILITY_LEVEL} level the actual level of
+     *        compatibility. If this is no compatability then the game should
+     *        not start.
+     * @param {string} message message which tells you what is up with
+     *        compatibility. If the system is fully compatible this doesn't
+     *        matter that much but it's reasonably important when it's fucked.
+     */
+    constructor(level, message) {
+        this.level = level;
+        this.message = message;
+    }
+};
+
+(() => {
     /**
      * Creates the game engine context which contains all the subsystems and is
      * given to all the screens.
@@ -46,7 +90,7 @@ var fish = fish || {};
      *        set up the engine. If there are invalidities with the settings in
      *        this object an exception will be thrown containing a readable
      *        error message.
-     * @return {fish.screen.Context} created according to the args.
+     * @return {Promise<fish.screen.Context>} created according to the args.
      */
     let createContext = args => {
         let gfx = args.gfx;
@@ -90,6 +134,19 @@ var fish = fish || {};
             let threshold = args.axisThreshold ? args.axisThreshold : 0.9;
             input = new fish.input.BasicInput(keymap, threshold);
         }
+        let gfxComp = gfx.getCompatability();
+        let sndComp = snd.getCompatability();
+        let inComp = input.getCompatability();
+        if (fish.COMPATABILITY_LEVEL.LOW in
+            [gfxComp.level, sndComp.level, inComp.level]
+        ) {
+            throw new RuntimeError(
+                'Browser Compatability is too low to run the game:\n' +
+                'graphics: ' + gfxComp.message + '\n' +
+                'sound: ' + sndComp.message + '\n' +
+                'input: ' + inComp.message
+            );
+        }
         return {
             gfx: gfx,
             snd: snd,
@@ -101,7 +158,6 @@ var fish = fish || {};
             usr: args.usr ? args.usr : {}
         };
     };
-
 
     /**
      * Real function that starts the application running.
@@ -118,7 +174,8 @@ var fish = fish || {};
             alert(err + err.stack ? err.stack : '');
             throw err;
         }
-        let screen = ctx.gfx.createSplashScreen(ctx, init);
+        let initScreen = init(ctx);
+        let screen = ctx.gfx.createSplashScreen(ctx, initScreen);
         let screens = [screen];
         screen.refresh();
         const updateScreens = () => {

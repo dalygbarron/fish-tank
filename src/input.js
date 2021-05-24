@@ -52,6 +52,16 @@ fish.input.UiInput = class {
     uiJustDown(button) {
         throw new Error('fish.input.UiInput.uiJustDown must be implemented');
     }
+
+    /**
+     * Gives you the compatability level of the input system.
+     * @return {fish.Compatability} compatability report.
+     */
+    getCompatability() {
+        throw new Error(
+            'fish.input.UiInput.getCompatability must be implemented'
+        );
+    }
 };
 
 /**
@@ -233,5 +243,10 @@ fish.input.BasicInput = function (keymap={}, threshold=0.9) {
     /** @inheritDoc */
     this.uiJustDown = uiCode => {
         return this.justDown(uiToButton(uiCode));
+    };
+
+    /** @inheritDoc */
+    this.getCompatability = () => {
+        return new fish.Compatability(fish.COMPATABILITY_LEVEL.FULL, 'all g');
     };
 };

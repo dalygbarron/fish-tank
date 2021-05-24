@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>fish-tank Namespaces</title>
+	<title>fish-tank Class: Compatability</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -80,14 +80,21 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespaces</h1>
+	<h1 class="page-title">Class: Compatability</h1>
 <section>
 
 <header>
     
         <h2>
+            <span class="ancestors"><a href="fish.html">fish</a>.</span>
         
+        Compatability
         </h2>
+        
+            <div class="class-description"><p>Format of a compatibility indicator object that comes from the subsystems to<br>
+tell you what level of compatibility they have to the current system.<br>
+Subsystems should never crash the game even if they are completely<br>
+incompatible.</p></div>
         
     
 </header>
@@ -97,8 +104,102 @@
     <div class="container-overview">
     
         
+<hr>
+<dt>
+    <h4 class="name" id="Compatability"><span class="type-signature"></span>new Compatability(level, message)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>level</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.html#.COMPATABILITY_LEVEL">fish.COMPATABILITY_LEVEL</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the actual level of<br>
+compatibility. If this is no compatability then the game should<br>
+not start.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>message which tells you what is up with<br>
+compatibility. If the system is fully compatible this doesn't<br>
+matter that much but it's reasonably important when it's fucked.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -129,6 +230,16 @@
 
 
 	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="fish.js.html">fish.js</a>,
+				 <a href="fish.js.html#sunlight-1-line-70">line 70</a>
+			</li>
+		</ul>
+	</dd>
+	
 
 	
 
@@ -138,7 +249,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -147,113 +272,9 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="fish.audio.BasicAudio.html">BasicAudio</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.audio.Sample.html">Sample</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.Compatability.html">Compatability</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Atlas.html">Atlas</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.BitmapFont.html">BitmapFont</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Colour.html">Colour</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Patch.html">Patch</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.SpriteRenderer.html">SpriteRenderer</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.SpriteRenderer_Batch.html">Batch</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.graphics.Texture.html">Texture</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.ButtonKnob.html">ButtonKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.ContainerKnob.html">ContainerKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.HBoxKnob.html">HBoxKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.Knob.html">Knob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.PanelKnob.html">PanelKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.PicKnob.html">PicKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.TextArrayKnob.html">TextArrayKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.gui.TextKnob.html">TextKnob</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.input.BasicInput.html">BasicInput</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.screen.Screen.html">Screen</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.screen.Transition.html">Transition</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.Store.html">Store</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.util.Rect.html">Rect</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.util.Vector.html">Vector</a></dt>
-            <dd></dd>
-        </dl>
-    
 
     
 
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="namespaces.html#fish"><a href="fish.html">fish</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.audio"><a href="fish.audio.html">audio</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.constants"><a href="fish.constants.html">constants</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.graphics"><a href="fish.graphics.html">graphics</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.gui"><a href="fish.gui.html">gui</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.input"><a href="fish.input.html">input</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.screen"><a href="fish.screen.html">screen</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#fish.util"><a href="fish.util.html">util</a></a></dt>
-            <dd></dd>
-        </dl>
     
 
     

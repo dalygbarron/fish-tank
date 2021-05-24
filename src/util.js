@@ -154,8 +154,8 @@ fish.util.Rect = class {
  * @param {string} url is the url to load the file from.
  * @return {Promise<string>} that resolves to the loaded file content.
  */
-fish.util.loadText = async function (url) {
-    return await new Promise((resolve, reject) => {
+fish.util.loadText = function (url) {
+    return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (this.readyState == 4) {
@@ -230,4 +230,13 @@ fish.util.base64ToArrayBuffer = base64 => {
     let bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return bytes;
+};
+
+/**
+ * Waits for the given amount of time asynchronously.
+ * @param {number} time time to wait in seconds.
+ * @return {Promise<mixed>} nothing in particular.
+ */
+fish.util.wait = function (time) {
+    return new Promise(resolve => setTimeout(resolve, time * 1000));
 };

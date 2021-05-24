@@ -31,11 +31,23 @@ fish.audio.Sample = function (name, buffer) {
  */
 
 /**
+ * Updates the player as should be called once per frame.
+ * @method fish.audio.SamplePlayer#update
+ */
+
+/**
  * Plays a sample.
  * @method fish.audio.SamplePlayer#playSample
  * @param {fish.audio.Sample} sample the sample to play.
  * @param {number} priority determines if this sample can override others if
  *        there are limited resources.
+ */
+
+/**
+ * Gives you the compatability of the sample player to the browser it is
+ * currently running in.
+ * @method.fish.audio.SamplePlayer#getCompatability
+ * @return {fish.Compatability} the compatability report.
  */
 
 /**
@@ -136,16 +148,12 @@ fish.audio.BasicAudio = function (context, copies=2) {
 
     for (let i = 0; i < copies; i++) soundPlayers.push(new SamplePlayer());
 
-    /**
-     * Updates the audio player. Needs to be done once per frame.
-     */
+    /** @inheritDoc */
     this.update = () => {
         frame++;
     };
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     this.playSample = (sample, priority=0) => {
         let chosen = -1;
         let chosenPriority = -99999;
@@ -166,6 +174,14 @@ fish.audio.BasicAudio = function (context, copies=2) {
         }
     };
 
+    /** @inheritDoc */
+    this.getCompatability = () => {
+        return new fish.Compatability(
+            fish.COMPATABILITY_LEVEL.FULL,
+            'lookin good fellas lets go wahooo'
+        );
+    };
+
     /**
      * Play the given song and if it is already playing then do nothing.
      * @param {fish.audio.Sample} sample is the audio to play.
@@ -183,9 +199,7 @@ fish.audio.BasicAudio = function (context, copies=2) {
         songPlayer.start(0);
     };
 
-    /**
-     * Stop the playing song.
-     */
+    /** Stop the playing song. */
     this.stopSong = () => {
         playingSong = '';
         if (songPlayer) songPlayer.stop();
@@ -219,9 +233,7 @@ fish.audio.BasicAudio = function (context, copies=2) {
         noisePlayer.start(0);
     };
 
-    /**
-     * Stop the playing song.
-     */
+    /** Stop the playing song. */
     this.stopNoise = () => {
         playingNoise = '';
         if (noisePlayer) noisePlayer.stop();
