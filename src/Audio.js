@@ -11,91 +11,39 @@ var fish = fish || {};
  */
 fish.audio = {};
 
-/**
- * Nice little sample object that stores it's name so we can use that for
- * stuff. You probably don't want to create one of these directly unless you
- * are creating your own audio system.
- * @constructor
- * @param name   is the name / url of the samepl.
- * @param buffer is the actual audio data.
- */
-fish.audio.Sample = function (name, buffer) {
-    this.name = name;
-    this.buffer = buffer;
-};
-
-/**
- * Audio player which can play samples, which is the minimum required by the
- * engine.
- * @interface fish.audio.SamplePlayer
- */
-
-/**
- * Updates the player as should be called once per frame.
- * @method fish.audio.SamplePlayer#update
- */
-
-/**
- * Plays a sample.
- * @method fish.audio.SamplePlayer#playSample
- * @param {fish.audio.Sample} sample the sample to play.
- * @param {number} priority determines if this sample can override others if
- *        there are limited resources.
- */
-
-/**
- * Gives you the compatability of the sample player to the browser it is
- * currently running in.
- * @method.fish.audio.SamplePlayer#getCompatability
- * @return {fish.Compatability} the compatability report.
- */
-
-/**
- * A basic audio handler that has a music channel, a looping background sound
- * channel, and a couple of channels for playing sound effects.
- * @implements fish.audio.SamplePlayer
- * @constructor
- * @param {AudioContext} context is the audio context.
- * @param {number} players is the number of samples that can play at once.
- */
-fish.audio.BasicAudio = function (context, copies=2) {
-    let songPlayer = null;
-    let noisePlayer = null;
-    let playingSong = '';
-    let playingNoise = '';
-    let soundPlayers = [];
-    let frame = 0;
-
+(() => {
     /**
      * Little thing that holds an audio buffer source and keeps track of what
      * it is being used for.
      * @private
      * @constructor
      */
-    let SamplePlayer = function () {
-        let source = context.createBufferSource();
-        source.connect(context.destination);
-        let playing = false;
-        let start = 0;
-        let sample = null;
-        let priority = 0;
-        source.onended = () => {playing = false;};
+    class SamplePlayer {
+        constructor(context) {
+            this.source = context.createBufferSource();
+            this.source.connext(context.destination);
+            this.playing = false;
+            this.start = 0;
+            this.sample = null;
+            this.priority = 0;
+            this.source.onended = () => {playing = false;};
+        }
 
         /**
          * Tells you if this sample player is currently playing.
          * @return true if it is playing.
          */
-        this.isPlaying = () => {
+        isPlaying() {
             return playing;
-        };
+        }
 
         /**
          * Tells you the tick that the current sample started on.
          * @return the tick as a number.
          */
-        this.getStart = () => {
+        getStart() {
             return start;
-        };
+        }
 
         /**
          * Tells you the priority of the currently playing sample on this
@@ -103,16 +51,16 @@ fish.audio.BasicAudio = function (context, copies=2) {
          * that high priority.
          * @return the priority of the last played sample.
          */
-        this.getPriority = () => {
+        getPriority() {
             return priority;
-        };
+        }
 
         /**
          * Play a given sample.
          * @param {fish.audio.Sample} newSample is the sample to play.
          * @param {number} newPriority is the priority to say this had.
          */
-        this.play = (newSample, newPriority) => {
+        play(newSample, newPriority) {
             playing = true;
             start = frame;
             sample = newSample;
@@ -120,7 +68,7 @@ fish.audio.BasicAudio = function (context, copies=2) {
             source.buffer = null;
             source.buffer = newSample.buffer;
             source.start(0);
-        };
+        }
 
         /**
          * Tells you if a given sample is the same as the one this one is
@@ -129,9 +77,9 @@ fish.audio.BasicAudio = function (context, copies=2) {
          * @return true if they are the same and this sample player is still
          *              playing.
          */
-        this.same = other => {
+        same(other) {
             return playing && sample && sample.name == other.name;
-        };
+        }
 
         /**
          * Tells you if this sample player is less important than another
@@ -140,159 +88,199 @@ fish.audio.BasicAudio = function (context, copies=2) {
          * @param otherStart    is the start of the other sample player.
          * @return true if this one is less important.
          */
-        this.lesser = (otherPriority, otherStart) => {
+        lesser(otherPriority, otherStart) {
             return !playing || priority < otherPriority ||
                 (priority == otherPriority && start < otherStart);
+        }
+    };
+
+    /**
+     * Represents a piece of fully loaded sampled audio.
+     */
+    fish.audio.Sample = class {
+        /**
+         * @param {string} name the name of the sample to keep track of it with.
+         * @param {AudioBuffer} buffer the audio data.
+         */
+        constructor(name, buffer) {
+            this.name = name;
+            this.buffer = buffer;
+        }
+    };
+
+    /**
+     * Controller of all things audio within the engine. Very based.
+     */
+    fish.audio.SoundPlayer = class {
+        /**
+         * @param {AudioContext} context the web audio context it requires to work.
+         * @param {number} [copies=2] the number of times the same sound can be
+         *        playing at once.
+         */
+        constructor(context, copies=2) {
+            this.songPlayer = null;
+            this.noisePlayer = null;
+            this.playingSong = '';
+            this.playingNoise = '';
+            this.soundPlayers = [];
+            this.frame = 0;
+            for (let i = 0; i < copies; i++) {
+                soundPlayers.push(new SamplePlayer());
+            }
+        }
+
+        /** Updates the sound player. */
+        update() {
+            frame++;
+        }
+
+        /**
+         * Play the given sample if possible with the given priority.
+         * @param {fish.audio.Sample} sample the sample to play.
+         * @param {number} [priority=0] a priority level for the playing where
+         *        higher numbers means more important.
+         */
+        playSample(sample, priority=0) {
+            let chosen = -1;
+            let chosenPriority = -99999;
+            let chosenStart = 0;
+            for (let i = 0; i < soundPlayers.length; i++) {
+                if (soundPlayers[i].same(sample) &&
+                    soundPlayers[i].getStart() == frame) {
+                    return;
+                }
+                if (soundPlayers[i].lesser(chosenPriority, chosenStart)) {
+                    chosen = i;
+                    chosenPriority = soundPlayers[i].getPriority();
+                    chosenStart = soundPlayers[i].getStart();
+                }
+            }
+            if (chosen >= 0) {
+                soundPlayers[chosen].play(sample, priority);
+            }
         };
-    };
 
-    for (let i = 0; i < copies; i++) soundPlayers.push(new SamplePlayer());
+        /** @inheritDoc */
+        this.getCompatability = () => {
+            return new fish.Compatability(
+                fish.COMPATABILITY_LEVEL.FULL,
+                'lookin good fellas lets go wahooo'
+            );
+        };
 
-    /** @inheritDoc */
-    this.update = () => {
-        frame++;
-    };
+        /**
+         * Play the given song and if it is already playing then do nothing.
+         * @param {fish.audio.Sample} sample is the audio to play.
+         */
+        playSong(sample) {
+            if (playingSong == sample.name) return;
+            playingSong = sample.name;
+            if (songPlayer) songPlayer.stop();
+            songPlayer = context.createBufferSource();
+            songPlayer.connect(context.destination);
+            songPlayer.buffer = sample.buffer;
+            songPlayer.loop = true;
+            songPlayer.start(0);
+        }
 
-    /** @inheritDoc */
-    this.playSample = (sample, priority=0) => {
-        let chosen = -1;
-        let chosenPriority = -99999;
-        let chosenStart = 0;
-        for (let i = 0; i < soundPlayers.length; i++) {
-            if (soundPlayers[i].same(sample) &&
-                soundPlayers[i].getStart() == frame) {
+        /** Stop the playing song. */
+        stopSong() {
+            playingSong = '';
+            if (songPlayer) songPlayer.stop();
+        }
+
+        /**
+         * Load a song from the store and then play it right away.
+         * @param {fish.Store} store is the store to load from.
+         * @param {string} name  is the key to the song as you would normally
+         *        use to load it from the store.
+         */
+        async loadSong(store, name) {
+            let sample = await store.getSample(name);
+            if (sample) this.playSong(sample);
+        }
+
+        /**
+         * Play the given noise and if it is already playing then do nothing.
+         * @param {fish.audio.Sample} sample is the audio to play.
+         */
+        playNoise(sample) {
+            if (playingNoise == sample.name) {
                 return;
             }
-            if (soundPlayers[i].lesser(chosenPriority, chosenStart)) {
-                chosen = i;
-                chosenPriority = soundPlayers[i].getPriority();
-                chosenStart = soundPlayers[i].getStart();
-            }
+            playingNoise = sample.name;
+            if (noisePlayer) noisePlayer.stop();
+            noisePlayer = context.createBufferSource();
+            noisePlayer.connect(context.destination);
+            noisePlayer.buffer = sample.buffer;
+            noisePlayer.loop = true;
+            noisePlayer.start(0);
         }
-        if (chosen >= 0) {
-            soundPlayers[chosen].play(sample, priority);
+
+        /** Stop the playing song. */
+        stopNoise() {
+            playingNoise = '';
+            if (noisePlayer) noisePlayer.stop();
         }
-    };
 
-    /** @inheritDoc */
-    this.getCompatability = () => {
-        return new fish.Compatability(
-            fish.COMPATABILITY_LEVEL.FULL,
-            'lookin good fellas lets go wahooo'
-        );
-    };
-
-    /**
-     * Play the given song and if it is already playing then do nothing.
-     * @param {fish.audio.Sample} sample is the audio to play.
-     */
-    this.playSong = sample => {
-        if (playingSong == sample.name) {
-            return;
+        /**
+         * Load a noise from the store and then play it right away.
+         * @param {fish.Store} store is the store to load from.
+         * @param {string} name is the key to the noise as you would normally
+         *        use to load it from the store.
+         */
+        async loadNoise(store, name) {
+            let sample = await store.getSample(name);
+            if (sample) this.playSong(sample);
         }
-        playingSong = sample.name;
-        if (songPlayer) songPlayer.stop();
-        songPlayer = context.createBufferSource();
-        songPlayer.connect(context.destination);
-        songPlayer.buffer = sample.buffer;
-        songPlayer.loop = true;
-        songPlayer.start(0);
-    };
 
-    /** Stop the playing song. */
-    this.stopSong = () => {
-        playingSong = '';
-        if (songPlayer) songPlayer.stop();
-    };
-
-    /**
-     * Load a song from the store and then play it right away.
-     * @param {fish.Store} store is the store to load from.
-     * @param {string}     name  is the key to the song as you would normally
-     *                           use to load it from the store.
-     */
-    this.loadSong = async function (store, name) {
-        let sample = await store.getSample(name);
-        if (sample) this.playSong(sample);
-    };
-
-    /**
-     * Play the given noise and if it is already playing then do nothing.
-     * @param {fish.audio.Sample} sample is the audio to play.
-     */
-    this.playNoise = sample => {
-        if (playingNoise == sample.name) {
-            return;
+        /**
+         * Loads a piece of audio into memory from soem url.
+         * @param {string} url is the joint to load from.
+         * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
+         *         didn't fuck up.
+         */
+        loadSample(url) {
+            let request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.responseType = 'arraybuffer';
+            return new Promise((resolve, reject) => {
+                request.onload = () => {
+                    context.decodeAudioData(
+                        request.response,
+                        buffer => {
+                            resolve(new fish.audio.Sample(url, buffer));
+                        },
+                        () => {
+                            reject(`Couldn't load sample ${url}`);
+                        }
+                    );
+                };
+                request.send();
+            });
         }
-        playingNoise = sample.name;
-        if (noisePlayer) noisePlayer.stop();
-        noisePlayer = context.createBufferSource();
-        noisePlayer.connect(context.destination);
-        noisePlayer.buffer = sample.buffer;
-        noisePlayer.loop = true;
-        noisePlayer.start(0);
-    };
 
-    /** Stop the playing song. */
-    this.stopNoise = () => {
-        playingNoise = '';
-        if (noisePlayer) noisePlayer.stop();
-    };
-
-    /**
-     * Load a noise from the store and then play it right away.
-     * @param {fish.Store} store is the store to load from.
-     * @param {string} name is the key to the noise as you would normally
-     *        use to load it from the store.
-     */
-    this.loadNoise = async function (store, name) {
-        let sample = await store.getSample(name);
-        if (sample) this.playSong(sample);
-    };
-
-    /**
-     * Loads a piece of audio into memory from soem url.
-     * @param {string} url is the joint to load from.
-     * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
-     *         didn't fuck up.
-     */
-    this.loadSample = function (url) {
-        let request = new XMLHttpRequest();
-        request.open('GET', url, true);
-        request.responseType = 'arraybuffer';
-        return new Promise((resolve, reject) => {
-            request.onload = () => {
+        /**
+         * Makes a sample out of a base64 encoded string.
+         * @param {Uint8Array} data is the data to make into a sample.
+         * @return Promise<fish.audio.Sample>} the created sample.
+         */
+        makeSample(data) {
+            return new Promise((resolve, reject) => {
                 context.decodeAudioData(
-                    request.response,
+                    data.buffer,
                     buffer => {
-                        resolve(new fish.audio.Sample(url, buffer));
+                        // TODO: can't just call it anon, will clash.
+                        resolve(new fish.audio.Sample('anon', buffer));
                     },
                     () => {
-                        reject(`Couldn't load sample ${url}`);
+                        reject('Could not make sampke from data');
                     }
                 );
-            };
-            request.send();
-        });
+            });
+        };
     };
+})();
 
-    /**
-     * Makes a sample out of a base64 encoded string.
-     * @param {Uint8Array} data is the data to make into a sample.
-     * @return Promise<fish.audio.Sample>} the created sample.
-     */
-    this.makeSample = function (data) {
-        return new Promise((resolve, reject) => {
-            context.decodeAudioData(
-                data.buffer,
-                buffer => {
-                    // TODO: can't just call it anon, will clash.
-                    resolve(new fish.audio.Sample('anon', buffer));
-                },
-                () => {
-                    reject('Could not make sampke from data');
-                }
-            );
-        });
-    };
-};
+
+

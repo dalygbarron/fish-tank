@@ -13,35 +13,6 @@ var fish = fish || {};
 fish.graphics = {};
 
 /**
- * Your graphics subsystem of choice can implement it's own font class which
- * can basically do whatever it needs to, but there are some things the engine
- * requires so that it can fit text.
- * @interface fish.graphics.Font
- */
-
-/**
- * @method fish.graphics.Font#getHorizontalPadding
- * @return {number} the number of pixels to put between characters
- *         horizontally.
- */
-
-/**
- * @method fish.graphics.Font#getVerticalPadding
- * @return {number} the number of pixels to put between lines of text.
- */
-
-/**
- * @method fish.graphics.Font#getWidth
- * @param {number} c is the character code to get the width of.
- * @return {number} the width of the given character in pixels.
- */
-
-/**
- * @method fish.graphics.Font#getLineHeight
- * @return {number} the height of lines drawn with this font.
- */
-
-/**
  * Creates a texture object out of a gl texture. You probably don't want to
  * instantiate one of these directly unless you are creating your own graphics
  * system.
@@ -200,7 +171,6 @@ fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
 /**
  * Font that is drawn using an 16x16 grid of characters all having the same
  * dimensions.
- * @implements fish.graphics.Font
  */
 fish.graphics.BitmapFont = class {
     /**
@@ -218,22 +188,19 @@ fish.graphics.BitmapFont = class {
         this.sprite = sprite;
     }
 
-    /** @inheritDoc */
-    getHorizontalPadding() {
-        return 0;
-    }
-
-    /** @inheritDoc */
-    getVerticalPadding() {
-        return 0;
-    }
-
-    /** @inheritDoc */
+    /**
+     * Gives you the width of the given character.
+     * @param {number} c character code of the character to measure.
+     * @return {number} the width of the character in pixels.
+     */
     getWidth(c) {
         return this.sprite.w / 16;
     }
 
-    /** @inheritDoc */
+    /**
+     * Gives you the height of lines in this font.
+     * @return {number} the height of the line in pixels.
+     */
     getLineHeight() {
         return this.sprite.h / 16;
     }
@@ -454,93 +421,11 @@ fish.graphics.Patch = class {
 };
 
 /**
- * Core functionality required by the engine for the graphics subsystem to
- * have.
- * @interface fish.graphics.BaseRenderer
- */
-
-/**
- * Fill the screen with a colour.
- * @method fish.graphics.BaseRenderer#clear
- * @param {number} r the red component from 0 to 1.
- * @param {number} g the green component from 0 to 1.
- * @param {number} b the blue component from 0 to 1.
- * @param {number} a the transparent component from 0 to 1.
- */
-
-/**
- * Creates a splash screen that works with this graphics subsystem.
- * @method fish.graphics.BaseRenderer#createSplashScreen
- * @param {fish.screen.Context} ctx given to the new screen so it can do it's
- *        shiet.
- * @param {Promise<fish.screen.Screen> init promise resolving to the first real
- *        screen of the game. You shouldn't need the return value of this, but
- *        you might want to know when it resolves for timing reasons.
- * @return {fish.screen.Screen} the created screen.
- */
-
-/**
- * Tells you how compatable the subsystem is with the current browser running
- * it.
- * @method fish.graphics.BaseRenderer#getCompatability
- * @return {fish.Compatability} a report on the compatability. 
- */
-
-/**
- * Base rendering interface required by the engine internally for gui stuff.
- * Must be implemented by something in order to use the gui but does not need
- * to be implemented by the graphics subsystem itself.
- * @interface
- */
-fish.graphics.PatchRenderer = class {
-    /**
-     * Renders a 9 patch to the given spot.
-     * @param {fish.graphics.Patch} patch is the 9patch to draw.
-     * @param {fish.util.Rect} dst is the place on the screen to draw it.
-     */
-    renderPatch(patch, dst) {
-        throw new Error(
-            'fish.graphics.PatchRenderer.renderPatch must be implemented'
-        );
-    }
-
-    /**
-     * Renders a given character onto the screen, fitting it into the given
-     * rectangle as best the renderer can.
-     * @param {fish.graphics.Font} font is the font info for drawing.
-     * @param {number} c the character code of the character to draw.
-     * @param {fish.util.Rect} dst where to fit the character into. It ought to
-     *        stretch if possible.
-     */
-    renderCharacter(font, c, dst) {
-        throw new Error(
-            'fish.graphics.PatchRenderer.renderCharacter must be implemented'
-        );
-    }
-
-    /**
-     * Renders a piece of text onto the screen using a font.
-     * @param {fish.graphics.Font} font is the font to use to draw the text.
-     * @param {string} text is the text to draw. All it's newlines and stuff
-     *        are taken as written.
-     * @param {fish.util.Vector} dst is the top left corner of where the text
-     *        will appear on the screen.
-     */
-    renderText(font, text, dst) {
-        throw new Error(
-            'fish.graphics.PatchRenderer.renderText must be implemented'
-        );
-    }
-};
-
-/**
- * The default graphics handler which uses a sprite batch to draw nice
- * pictures.
- * @implements fish.graphics.BaseRenderer
+ * The graphics handler which uses a sprite batch to draw nice pictures.
  * @constructor
  * @param {WebGLRenderingContext} gl is the opengl context.
  */
-fish.graphics.SpriteRenderer = function (gl) {
+fish.graphics.Renderer = function (gl) {
     let spareRect = new fish.util.Rect();
     let usedTextures = [];
     gl.disable(gl.DEPTH_TEST);
@@ -554,7 +439,6 @@ fish.graphics.SpriteRenderer = function (gl) {
     /**
      * A thing that batches draw calls.
      * @constructor
-     * @implements {fish.graphics.PatchRenderer}
      * @param {fish.graphics.Texture} texture is the texture all the draws must
      *        be from.
      * @param {number} max the max things to draw.
@@ -749,18 +633,15 @@ fish.graphics.SpriteRenderer = function (gl) {
             }
         };
 
-        /** @inheritDoc */
-        this.renderPatch = (patch, dst) => {
-            this.addPatch(patch, dst);
-        };
-
-        /** @inheritDoc */
-        this.renderText = (font, text, dst) => {
-            this.addText(font, text, dst);
-        };
-
-        /** @inheritDoc */
-        this.renderCharacter = (font, c, dst) => {
+        /**
+         * Batch to draw a single character from a bitmap font somewhere on the
+         * screen.
+         * @param {fish.graphics.BitmapFont} font is the font to draw from.
+         * @param {number} c character code of character to draw.
+         * @param {fish.util.Rect|fish.util.Vector} dst place to put the
+         *        character on the screen.
+         */
+        this.addCharacter = (font, c, dst) => {
             spareRect.size.set(font.getWidth(c), font.getLineHeight());
             spareRect.pos.set(
                 font.sprite.x + Math.floor(c % 16) * spareRect.w,
@@ -769,17 +650,13 @@ fish.graphics.SpriteRenderer = function (gl) {
             this.add(spareRect, dst);
         };
 
-        /**
-         * Blanks the contents of the batch to go again.
-         */
+        /** Blanks the contents of the batch to go again. */
         this.clear = () => {
             rendered = false;
             n = 0;
         };
 
-        /**
-         * Renders what the batch currently has to the screen.
-         */
+        /** Renders what the batch currently has to the screen. */
         this.render = () => {
             if (rendered) {
                 console.error('repeat batch rendering without clear');
@@ -834,116 +711,16 @@ fish.graphics.SpriteRenderer = function (gl) {
         return fish.graphics.makeTexture(gl, data, width, height, format);
     };
 
-    /** @inheritDoc */
+    /**
+     * Fill the screen with colour.
+     * @param {number} r is the red part from 0 to 1.
+     * @param {number} g is the green part from 0 to 1.
+     * @param {number} b is the blue part from 0 to 1.
+     * @param {number} a is the alpha part from 0 to 1.
+     */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);
         gl.clear(gl.COLOR_BUFFER_BIT);
-    };
-
-    /** @inheritDoc */
-    this.createSplashScreen = (ctx, init) => {
-        let InitScreen = class extends fish.screen.Screen {
-            constructor(ctx) {
-                super(ctx);
-                this.done = false;
-                this.next = null;
-                this.batch = null;
-                this.font = null;
-                this.sound = null;
-                this.logo = new fish.util.Rect();
-                this.spot = new fish.util.Vector();
-                this.lines = [
-                    'fish-tank game engine version 645438567347',
-                    'created by Dany Burton 2021'
-                ];
-                this.gfxComp = ctx.gfx.getCompatability();
-                this.sndComp = ctx.snd.getCompatability();
-                this.inComp = ctx.in.getCompatability();
-                this.timer = 0;
-                this.sprite = new fish.util.Rect(0, 0, 0, 0);
-                Promise.all([
-                    ctx.gfx.makeTexture(
-                        fish.constants.SPLASH,
-                        fish.constants.SPLASH_WIDTH,
-                        fish.constants.SPLASH_HEIGHT,
-                        ctx.gfx.gl.RGBA4
-                    ),
-                    ctx.snd.makeSample(fish.constants.JINGLE)
-                ]).then(values => {
-                    this.ctx.snd.playSample(values[1]);
-                    this.font = new fish.graphics.BitmapFont(
-                        values[0].getRect()
-                    );
-                    this.logo.pos.set(
-                        this.font.getWidth('q') * 3,
-                        this.font.getLineHeight() * 11
-                    );
-                    this.logo.size.set(
-                        this.font.getWidth('c') * 4,
-                        this.font.getLineHeight() * 4
-                    );
-                    this.batch = new ctx.gfx.Batch(values[0], 512);
-                    (async function () {
-                        await fish.util.wait(1);
-                        this.lines.push(`graphics compatability ${this.gfxComp.level}: ${this.gfxComp.message}`);
-                        await fish.util.wait(1);
-                        this.lines.push(`sound compatability ${this.sndComp.level}: ${this.sndComp.message}`);
-                        await fish.util.wait(1);
-                        this.lines.push(`input compatability ${this.inComp.level}: ${this.inComp.message}`);
-                        await fish.util.wait(1);
-                        this.lines.push('the game is loading...');
-                        await fish.util.wait(1);
-                        this.done = true;
-                    }).call(this);
-                });
-                init.then((v) => {this.next = v;});
-            }
-
-            /** @inheritDoc */
-            update(delta) {
-                this.timer += delta;
-                if (this.next && this.done) {
-                    return new fish.screen.Transition(true, this.next);
-                }
-                return null;
-            }
-
-            /** @inheritDoc */
-            render(front) {
-                if (!this.batch) return;
-                this.batch.clear();
-                let portion = 600 / (this.font.getLineHeight() * 12);
-                let overhang = (this.timer * 32) % Math.abs(
-                    this.font.getLineHeight() * 12 - portion
-                ) - this.font.getLineHeight() * 12;
-                for (let i = 0; i < portion; i++) {
-                    this.batch.addComp(
-                        this.logo,
-                        0,
-                        i * this.font.getLineHeight() * 12 + overhang,
-                        this.logo.w * 3,
-                        (i + 1) * this.font.getLineHeight() * 12 + overhang
-                    );
-                }
-                this.spot.x = (this.font.getWidth('c') +
-                    this.font.getHorizontalPadding()) * 12;
-                for (let i = 0; i < this.lines.length; i++) {
-                    this.spot.y = 600 - (this.font.getLineHeight() +
-                        this.font.getVerticalPadding()) * i;
-                    this.batch.addText(this.font, this.lines[i], this.spot);
-                }
-                this.batch.render();
-            }
-        };
-        return new InitScreen(ctx);
-    };
-
-    /** @inheritDoc */
-    this.getCompatability = () => {
-        return new fish.Compatability(
-            fish.COMPATABILITY_LEVEL.FULL,
-            'all g'
-        );
     };
 
     /**
@@ -952,6 +729,14 @@ fish.graphics.SpriteRenderer = function (gl) {
      */
     this.clearColour = colour => {
         this.clear(colour.r, colour.g, colour.b, colour.a);
+    };
+
+    /** @inheritDoc */
+    this.getCompatability = () => {
+        return new fish.Compatability(
+            fish.COMPATABILITY_LEVEL.FULL,
+            'all g'
+        );
     };
 };
 
