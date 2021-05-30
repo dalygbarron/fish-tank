@@ -184,6 +184,7 @@ fish.input.BasicInput = function (keymap={}, threshold=0.9) {
             updateButton(button, keys[keymap[button]]);
         }
         for (let pad of gamepads) {
+            if (!pad) continue;
             updateButton(this.BUTTON.A, pressed(pad.buttons[0]), true);
             updateButton(this.BUTTON.B, pressed(pad.buttons[1]), true);
             updateButton(this.BUTTON.X, pressed(pad.buttons[2]), true);

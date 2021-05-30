@@ -305,7 +305,6 @@ fish.graphics.loadTexture = async function (gl, url) {
  * @return {fish.graphics.Texture} the created texture.
  */
 fish.graphics.makeTexture = (gl, data, width, height, format) => {
-    console.log(data);
     const glTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, glTexture);
     gl.texImage2D(

@@ -6,15 +6,18 @@
         <script defer>
             window.onload = () => {
                 const canvas = document.querySelector('#canvas');
-                canvas.width = 1024;
-                canvas.height = 600;
                 const gl = canvas.getContext('webgl2');
                 const context = new AudioContext();
                 if (gl === null || context === null) {
                     alert('the police the FBI are coming in your window man');
                     return;
                 }
-                go(gl, context);
+                fish.start({
+                    rate: 30,
+                    gl: gl,
+                    ac: context,
+                    storePrefix: '/test/'
+                }, createBasedScreen);
             };
         </script>
         <style>

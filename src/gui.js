@@ -61,6 +61,7 @@ fish.gui.Knob = class {
         this.fitted = false;
         this.bounds = null;
         this.style = style;
+        this.usr = {};
     }
 
     /**
@@ -70,6 +71,14 @@ fish.gui.Knob = class {
      */
     selectable() {
         return false;
+    }
+
+    /**
+     * Call a callback on this gui element and all of it's children.
+     * @param {function} callback is the function to call on this.
+     */
+    propagate(callback) {
+        callback(this);
     }
     
     /**
@@ -138,6 +147,12 @@ fish.gui.ContainerKnob = class extends fish.gui.Knob {
     /** @inheritDoc */
     selectable() {
         return this.hasSelectable;
+    }
+
+    /** @inheritDoc */
+    propagate(callback) {
+        super.propagate(callback);
+        for (let child of this.children) child.propagate(callback);
     }
 
     /**
@@ -326,6 +341,14 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
     /** @inheritDoc */
     selectable() {
         return true;
+    }
+
+    /** @inheritDoc */
+    propagate(callback) {
+        super.propagate(callback);
+        if (this.child instanceof fish.gui.Knob) {
+            this.child.propagate(callback);
+        }
     }
 
     /** @inheritDoc */

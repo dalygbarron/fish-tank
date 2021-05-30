@@ -179,7 +179,6 @@ fish.util.loadText = function (url) {
  * @param {number} width the width to fit the text into.
  */
 fish.util.fitText = (text, font, width) => {
-    console.log(width);
     let fitted = '';
     let lines = text.split(/\n\n+/);
     for (let line of lines) {

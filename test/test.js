@@ -84,13 +84,13 @@ class Rodent {
     }
 }
 
-function makeMainMenu(style, ctx) {
-    let panel = new fish.gui.PanelKnob(style);
-    panel.addChild(new fish.gui.PanelKnob(style, false, [
-        new fish.gui.TextKnob(style, 'fish-tank-demo')
+function makeMainMenu(styleA, styleB, ctx) {
+    let panel = new fish.gui.PanelKnob(styleA);
+    panel.addChild(new fish.gui.PanelKnob(styleA, false, [
+        new fish.gui.TextKnob(styleA, 'fish-tank-demo')
     ]));
     panel.addChild(new fish.gui.TextKnob(
-        style,
+        styleA,
         `Welcome to the wonderful world of fish-tank.
 
         Each of the following sections is supposed to showcase some 
@@ -101,38 +101,47 @@ function makeMainMenu(style, ctx) {
         seal the deal.`
     ));
     panel.addChild(new fish.gui.HBoxKnob(
-        style,
+        styleA,
         [
-            new fish.gui.PanelKnob(style, false, [
-                new fish.gui.TextKnob(style, 'Gui'),
-                new fish.gui.ButtonKnob(style, 'Popup menu with some controls for the background'),
-                new fish.gui.ButtonKnob(style, 'Reskin', 'reskin'),
-                new fish.gui.ButtonKnob(style, 'ASCII screen inside gui window')
+            new fish.gui.PanelKnob(styleA, false, [
+                new fish.gui.TextKnob(styleA, 'Gui'),
+                new fish.gui.ButtonKnob(styleA, 'Popup menu with some controls for the background'),
+                new fish.gui.ButtonKnob(styleA, 'Reskin', async function () {
+                    let style = styleB;
+                    if (this.usr.flipped) {
+                        this.usr.flipped = false;
+                        style = styleA;
+                    } else {
+                        this.usr.flipped = true;
+                    }
+                    panel.propagate((knob) => {
+                        knob.style = style;
+                    });
+                })
             ]),
-            new fish.gui.PanelKnob(style, false, [
-                new fish.gui.TextKnob(style, 'Audio'),
-                new fish.gui.ButtonKnob(style, 'Go to a screen with some annoying noises'),
-                new fish.gui.ButtonKnob(style, 'Play some cool music', async function () {
-                    if (this.done) {
+            new fish.gui.PanelKnob(styleA, false, [
+                new fish.gui.TextKnob(styleA, 'Audio'),
+                new fish.gui.ButtonKnob(styleA, 'Play some cool music', async function () {
+                    if (this.usr.done) {
                         ctx.snd.stopSong();
-                        this.done = false;
+                        this.usr.done = false;
                         this.child.content = 'Play Some cool music';
                     } else {
-                        this.done = true;
+                        this.usr.done = true;
                         this.child.content = 'Loading...';
                         await ctx.snd.loadSong(ctx.str, 'ging.ogg');
                         this.child.content = 'Stop the Music';
                     }
                 })
             ]),
-            new fish.gui.PanelKnob(style, false, [
-                new fish.gui.TextKnob(style, 'Input'),
-                new fish.gui.ButtonKnob(style, 'a very boring game (but you can play it with a gamepad too hell yeah)')
+            new fish.gui.PanelKnob(styleA, false, [
+                new fish.gui.TextKnob(styleA, 'Input'),
+                new fish.gui.ButtonKnob(styleA, 'a very boring game (but you can play it with a gamepad too hell yeah)')
             ]),
-            new fish.gui.PanelKnob(style, false, [
-                new fish.gui.TextKnob(style, 'Graphics'),
-                new fish.gui.ButtonKnob(style, 'Seizure Screen', 'seizure'),
-                new fish.gui.ButtonKnob(style, 'Outer Space', 'space')
+            new fish.gui.PanelKnob(styleA, false, [
+                new fish.gui.TextKnob(styleA, 'Graphics'),
+                new fish.gui.ButtonKnob(styleA, 'Seizure Screen', 'seizure'),
+                new fish.gui.ButtonKnob(styleA, 'Outer Space', 'space')
             ])
         ]
     ));
@@ -148,7 +157,7 @@ class BasedScreen extends fish.screen.Screen {
         this.shift = new fish.util.Vector();
         this.batch = new this.ctx.gfx.Batch(this.ctx.usr.texture, 2000);
         this.boxes = [];
-        this.panel = makeMainMenu(this.ctx.usr.mainStyle, this.ctx);
+        this.panel = makeMainMenu(this.ctx.usr.mainStyle, this.ctx.usr.otherStyle, this.ctx);
         this.panel.fit(new fish.util.Rect(256, 50, 512, 400));
         for (let i = 0; i < Math.floor(500 / this.ctx.usr.atlas.n()); i++) {
             this.ctx.usr.atlas.forEach((name, sprite) => {
@@ -171,11 +180,6 @@ class BasedScreen extends fish.screen.Screen {
         }
         let result = this.panel.update(this.ctx.in, this.ctx.snd, true);
         switch (result) {
-            case 'reskin':
-                this.styleFlip = !this.styleFlip;
-                this.panel = makeMainMenu(this.styleFlip ? this.ctx.usr.otherStyle : this.ctx.usr.mainStyle, this.ctx);
-                this.panel.fit(new fish.util.Rect(256, 50, 512, 400));
-                break;
             case 'seizure':
                 return new fish.screen.Transition(false, new SeizureScreen(this.ctx));
             case 'space':
@@ -218,13 +222,3 @@ async function createBasedScreen(ctx) {
     };
     return new BasedScreen(ctx);
 }
-
-function go(gl, audio) {
-    fish.start({
-        rate: 30,
-        gl: gl,
-        ac: audio,
-        storePrefix: '/test/'
-    }, createBasedScreen);
-}
-

@@ -16,8 +16,8 @@ var fish = fish || {};
  * nothing, and if you want to use a custom subsystem you pass the instance of
  * it which you have already set up.
  * @typedef {Object} fish.start~Args
- * @param {number} rate is the frame rate to give the game. If you pass
- *        something less than or equal to zero then it makes it variable.
+ * @param {number} rate is the logical frame rate to give the game. If this is
+ *        not given it defaults to 30.
  * @param {Object} usr copied to game context usr object.
  * @param {?fish.graphics.PatchRenderer} gfx graphics system to use if given.
  * @param {?fish.audio.SamplePlayer} snd sound system to use if given.
@@ -166,7 +166,7 @@ fish.Compatability = class {
      *        screen of the game.
      */
     fish.start = async function (args, init) {
-        const FRAME_LENGTH = 1 / (args.rate ? args.rate : 1);
+        const FRAME_LENGTH = 1 / (args.rate ? args.rate : 30);
         let ctx = null;
         try {
             ctx = createContext(args);
@@ -177,27 +177,37 @@ fish.Compatability = class {
         let initScreen = init(ctx);
         let screen = ctx.gfx.createSplashScreen(ctx, initScreen);
         let screens = [screen];
+        let logicInterval;
+        let visualInterval;
         screen.refresh();
         const updateScreens = () => {
+            if (screens.length == 0) {
+                window.clearInterval(logicInterval);
+                return;
+            }
             const response = screens[screens.length - 1].update(FRAME_LENGTH);
             if (response) {
                 if (response.pop) screens.pop();
                 if (response.screen) screens.push(response.screen);
-                screens[screens.length - 1].refresh(response.message);
+                if (screens.length >= 1) {
+                    screens[screens.length - 1].refresh(response.message);
+                }
             }
         };
-        setInterval(() => {
+        const render = (timestamp) => {
+            ctx.gfx.clear(0, 0, 0, 1);
+            for (let i in screens) {
+                screens[i].render(i == screens.length - 1);
+            }
+            if (screens.length > 0) window.requestAnimationFrame(render);
+        };
+        logicInterval = window.setInterval(() => {
             if (screens.length > 0) {
-                // TODO: calculate the passage of time better and desync rendering
-                // with updating.
                 ctx.snd.update();
                 ctx.in.update();
                 updateScreens();
-                ctx.gfx.clear(0, 0, 0, 1);
-                for (let i in screens) {
-                    screens[i].render(i == screens.length - 1);
-                }
             }
         }, FRAME_LENGTH);
+        window.requestAnimationFrame(render);
     };
 })();
