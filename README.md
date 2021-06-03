@@ -14,7 +14,7 @@ Admittedly, if you want maximum control, you might find the way this engine's
 interfaces work a little bit too friendly for your liking. All I can say is
 enjoy writing your own engine because I don't care.
 
-[Check out the demo](/test).
+[Check out the demo](https://dalygbarron.github.io/fish-tank/test).
 
 # Making a game with fish-tank
 All the concepts talked about here can also be seen in the code of the demo
