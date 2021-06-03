@@ -1440,14 +1440,13 @@ fish.Store = function (loaders, prefix) {
     let get = async function (name, type) {
         if (!(name in assets)) {
             if (type in loaders) {
-                let item = await loaders[type](prefix + name);
-                assets[name] = item;
+                assets[name] = loaders[type](prefix + name);
             } else {
                 console.error(`${type} is a not a valid asset type`);
                 assets[name] = null;
             }
         }
-        return assets[name];
+        return await assets[name];
     };
 
     /**
