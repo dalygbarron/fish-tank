@@ -58,7 +58,7 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {src: ['logo.png'], dest: 'docs/'},
-                    {src: ['build/fish-tank.min.js'], dest: 'test/',
+                    {src: ['build/fish-tank.min.js'], dest: 'test/fish-tank.min.js'},
                     {expand: true, src: ['test/*'], dest: 'docs/'}
                 ]
             }

@@ -87,7 +87,7 @@ var fish = fish || {};
             in: input,
             str: new fish.Store(
                 loaders,
-                args.storePrefix ? args.storePrefix : '/'
+                ('storePrefix' in args) ? args.storePrefix : '/'
             ),
             usr: args.usr ? args.usr : {}
         };
