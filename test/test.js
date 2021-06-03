@@ -103,7 +103,7 @@ function makeMainMenu(styleA, styleB, ctx) {
     panel.addChild(new fish.gui.HBoxKnob([
         new fish.gui.PanelKnob(false, [
             new fish.gui.TextKnob('Gui'),
-            new fish.gui.ButtonKnob('Popup menu with some controls for the background'),
+            new fish.gui.ButtonKnob('Popup Message', 'popup'),
             new fish.gui.ButtonKnob('Reskin', async function () {
                 let style = styleB;
                 if (this.usr.flipped) {
@@ -129,10 +129,6 @@ function makeMainMenu(styleA, styleB, ctx) {
                     this.child.content = 'Stop the Music';
                 }
             })
-        ]),
-        new fish.gui.PanelKnob(false, [
-            new fish.gui.TextKnob('Input'),
-            new fish.gui.ButtonKnob('a very boring game (but you can play it with a gamepad too hell yeah)')
         ]),
         new fish.gui.PanelKnob(false, [
             new fish.gui.TextKnob('Graphics'),
@@ -161,10 +157,6 @@ class BasedScreen extends fish.screen.Screen {
         }
     }
 
-    refresh() {
-        //this.ctx.snd.loadNoise(this.ctx.str, 'wind.ogg');
-    }
-
     update(delta) {
         this.time += delta;
         this.shift.x = Math.sin(this.time * 0.5) * 16;
@@ -179,17 +171,19 @@ class BasedScreen extends fish.screen.Screen {
                 return new fish.screen.Transition(false, new SeizureScreen(this.ctx));
             case 'space':
                 return new fish.screen.Transition(false, new SpaceScreen(this.ctx));
+            case 'popup':
+                fish.gui.defaultStyle = this.ctx.usr.mainStyle;
+                return new fish.screen.Transition(false, fish.gui.messageScreen(this.ctx, this.batch, 'Popup', 'hi HOw are YOU?', 'Good :)', 'Kinda bad ngl'));
         }
         return null;
     }
 
     render(front) {
-        if (!front) return;
         this.batch.clear();
         for (let i in this.boxes) {
             this.batch.add(this.boxes[i].sprite, this.boxes[i].pos);
         }
-        this.panel.render(this.batch, true);
+        if (front) this.panel.render(this.batch, true);
         this.batch.render();
     }
 }

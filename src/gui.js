@@ -550,7 +550,7 @@ fish.screen.SplashScreen = class extends fish.screen.Screen {
         this.sound = null;
         this.loaded = false;
         this.spot = new fish.util.Vector();
-        this.timer = 90;
+        this.timer = 9;
         this.sprite = new fish.util.Rect(0, 0, 0, 0);
         this.lines = [
             `fish-tank engine version ${fish.constants.VERSION}`,
