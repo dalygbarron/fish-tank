@@ -1,8 +1,8 @@
 <html>
     <head>
         <title>fish-tank test</title>
-        <script src="/fish-tank.min.js" defer></script>
-        <script src="/test/test.js" defer></script>
+        <script src="fish-tank.min.js" defer></script>
+        <script src="test.js" defer></script>
         <script defer>
             window.onload = () => {
                 const canvas = document.querySelector('#canvas');
@@ -16,7 +16,7 @@
                     rate: 30,
                     gl: gl,
                     ac: context,
-                    storePrefix: '/test/'
+                    storePrefix: '/'
                 }, createBasedScreen);
             };
         </script>
