@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>fish-tank Interface: Style</title>
+	<title>fish-tank Class: GuiScreen</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -45,13 +45,6 @@
 				</ul>
 			</li>
 			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.gui.Style.html">fish.gui.Style</a></li>
-				</ul>
-			</li>
-			
 		</ul>
         
             <div class="col-sm-3 col-md-3">
@@ -80,7 +73,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Interface: Style</h1>
+	<h1 class="page-title">Class: GuiScreen</h1>
 <section>
 
 <header>
@@ -88,8 +81,10 @@
         <h2>
             <span class="ancestors"><a href="fish.html">fish</a><a href="fish.gui.html">.gui</a>.</span>
         
-        Style
+        GuiScreen
         </h2>
+        
+            <div class="class-description"><p>Screen that hosts some gui stuff and returns when it finishes.</p></div>
         
     
 </header>
@@ -99,13 +94,98 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Stores all the style information used to draw gui elements in one place.<br>
-It's just an object so that if I add more style stuff later it won't break<br>
-your code and you won't be using the new gui things that use the new stuff<br>
-anyway.</p></div>
+<hr>
+<dt>
+    <h4 class="name" id="GuiScreen"><span class="type-signature"></span>new GuiScreen(ctx, knob)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ctx</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">fish.Context</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>usual screen context.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>knob</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.gui.Knob.html">fish.gui.Knob</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>gui stuff to display in this screen.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -141,7 +221,7 @@ anyway.</p></div>
 		<ul class="dummy">
 			<li>
 				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-17">line 17</a>
+				 <a href="gui.js.html#sunlight-1-line-654">line 654</a>
 			</li>
 		</ul>
 	</dd>
@@ -155,11 +235,34 @@ anyway.</p></div>
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li>
+    </ul>
+
 
     
 
@@ -170,34 +273,98 @@ anyway.</p></div>
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
             
 <hr>
-<dt class="name" id="button">
-    <h4 id="button"><span class="type-signature"></span>button<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
-
+<dt>
+    <h4 class="name" id="refresh"><span class="type-signature"></span>refresh(message)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>The patch to draw buttons with.</p>
+        <p>Called by the engine whenever the screen gets onto the top of the screen<br>
+stack.</p>
     </div>
     
 
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
                 
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+<span class="param-type">Object</span>
 
 
 
-            </li>
-        </ul>
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>something sent from the screen that allowed<br>
+this screen to be revealed. Could be a return value from a screen<br>
+this one pushed on top of itself or whatever you want.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -209,7 +376,21 @@ anyway.</p></div>
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="fish.screen.Screen.html#refresh">fish.screen.Screen#refresh</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="fish.screen.Screen.html#refresh">fish.screen.Screen#refresh</a>
+    </li></ul></dd>
     
 
     
@@ -235,8 +416,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-37">line 37</a>
+				<a href="screen.js.html">screen.js</a>,
+				 <a href="screen.js.html#sunlight-1-line-73">line 73</a>
 			</li>
 		</ul>
 	</dd>
@@ -249,6 +430,18 @@ anyway.</p></div>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -256,29 +449,75 @@ anyway.</p></div>
         
             
 <hr>
-<dt class="name" id="buttonDown">
-    <h4 id="buttonDown"><span class="type-signature"></span>buttonDown<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
-
+<dt>
+    <h4 class="name" id="render"><span class="type-signature"></span>render(front)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>The patch to draw depressed buttons with.</p>
+        <p>Renders the screen.</p>
     </div>
     
 
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>front</code></td>
+            
+
+            <td class="type">
+            
                 
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+<span class="param-type">boolean</span>
 
 
 
-            </li>
-        </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is whether this screen is the top one being<br>
+rendered.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -290,7 +529,21 @@ anyway.</p></div>
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="fish.screen.Screen.html#render">fish.screen.Screen#render</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="fish.screen.Screen.html#render">fish.screen.Screen#render</a>
+    </li></ul></dd>
     
 
     
@@ -316,8 +569,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-43">line 43</a>
+				<a href="screen.js.html">screen.js</a>,
+				 <a href="screen.js.html#sunlight-1-line-95">line 95</a>
 			</li>
 		</ul>
 	</dd>
@@ -330,6 +583,18 @@ anyway.</p></div>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -337,191 +602,75 @@ anyway.</p></div>
         
             
 <hr>
-<dt class="name" id="font">
-    <h4 id="font"><span class="type-signature"></span>font<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
-
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update(delta)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>The font for writing text in the gui.</p>
+        <p>Updates the screen.</p>
     </div>
     
 
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
 
     
 
     
-
     
+        <h5>Parameters:</h5>
+        
 
-    
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-25">line 25</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
+        <th>Type</th>
 
         
-            
-<hr>
-<dt class="name" id="panel">
-    <h4 id="panel"><span class="type-signature"></span>panel<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The patch to draw panels with.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-31">line 31</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<hr>
-<dt class="name" id="select">
-    <h4 id="select"><span class="type-signature"></span>select<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
+                <td class="name"><code>delta</code></td>
+            
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The patch to draw over stuff that is selected.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
+            <td class="type">
+            
                 
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+<span class="param-type">number</span>
 
 
 
-            </li>
-        </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the amount of time passage to update for in<br>
+seconds.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -533,7 +682,21 @@ anyway.</p></div>
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="fish.screen.Screen.html#update">fish.screen.Screen#update</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="fish.screen.Screen.html#update">fish.screen.Screen#update</a>
+    </li></ul></dd>
     
 
     
@@ -559,8 +722,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-49">line 49</a>
+				<a href="screen.js.html">screen.js</a>,
+				 <a href="screen.js.html#sunlight-1-line-85">line 85</a>
 			</li>
 		</ul>
 	</dd>
@@ -573,13 +736,49 @@ anyway.</p></div>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>the update thing that tells the engine<br>
+what to do next with regards to the screen stack. If null is<br>
+returned then nothing is done.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="fish.screen.Transition.html">fish.screen.Transition</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
 
         </dl>
-    
-
     
 
     

@@ -41,14 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.Compatability.html">fish.Compatability</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li><li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li><li><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></li><li><a href="fish.gui.Style.html">fish.gui.Style</a></li><li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+					<li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.audio.SoundPlayer.html">fish.audio.SoundPlayer</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.Renderer.html">fish.graphics.Renderer</a></li><li><a href="fish.graphics.Renderer_Batch.html">fish.graphics.Renderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.GuiScreen.html">fish.gui.GuiScreen</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.input.CodeError.html">fish.input.CodeError</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.SplashScreen.html">fish.screen.SplashScreen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -94,6 +87,9 @@
  * In the future I might add mouse support to the default input system in which
  * case I will also make the gui be able to use mouse at least if you want it
  * to.
+ * Oh yeah, there is a field called default style. You need to set that field
+ * to something before using the gui system, or you must call set style on all
+ * gui nodes after or they will just crash.
  * @namespace
  */
 fish.gui = {};
@@ -102,52 +98,35 @@ fish.gui = {};
  * Stores all the style information used to draw gui elements in one place.
  * It's just an object so that if I add more style stuff later it won't break
  * your code and you won't be using the new gui things that use the new stuff
- * anyway.
- * @interface fish.gui.Style
+ * anyway. Obviously you need to use the correct texture/batch for the drawing.
+ * @typedef {Object} fish.gui~Style
+ * @property {fish.graphics.BitmapFont} font font for writing text.
+ * @property {fish.graphics.Patch} panel patch used for panel drawing.
+ * @property {fish.graphics.Patch} button patch for normal button.
+ * @property {fish.graphics.Patch} buttonSelected patch for selected button.
+ * @property {fish.graphics.Patch} buttonDepressed patch for down button.
+ * @property {fish.audio.Sample} tap sound for moving selection.
+ * @property {fish.audio.Sample} click sound for clicking a button.
  */
 
 /**
- * The font for writing text in the gui.
- * @member fish.gui.Style#font
- * @type fish.util.Rect
+ * The style that knobs are given when they are created. You can change the
+ * style afterwards. You can also change this value whenever you want, but if
+ * you change it often just be cautious about what it is going to be next time.
+ * @type fish.gui.Style
  */
-
-/**
- * The patch to draw panels with.
- * @member fish.gui.Style#panel
- * @type fish.graphics.Patch
- */
-
-/**
- * The patch to draw buttons with.
- * @member fish.gui.Style#button
- * @type fish.graphics.Patch
- */
-
-/**
- * The patch to draw depressed buttons with.
- * @member fish.gui.Style#buttonDown
- * @type fish.graphics.Patch
- */
-
-/**
- * The patch to draw over stuff that is selected.
- * @member fish.gui.Style#select
- * @type fish.graphics.Patch
- */
+fish.gui.defaultStyle = null;
 
 /**
  * Base gui knob class. Yeah I call it knob instead of element or something
  * because element is long as hell and gay.
  */
 fish.gui.Knob = class {
-    /**
-     * @param {fish.gui.Style} style is used to style it.
-     */
-    constructor(style) {
+    constructor() {
+        console.assert(fish.gui.defaultStyle);
+        this.style = fish.gui.defaultStyle;
         this.fitted = false;
         this.bounds = null;
-        this.style = style;
         this.usr = {};
     }
 
@@ -166,6 +145,14 @@ fish.gui.Knob = class {
      */
     propagate(callback) {
         callback(this);
+    }
+
+    /**
+     * Sets the style of this knob and all it's children.
+     * @param {fish.gui.Style} style is the style to set it to.
+     */
+    setStyle(style) {
+        this.propagate(knob => {knob.style = style;});
     }
     
     /**
@@ -189,7 +176,7 @@ fish.gui.Knob = class {
      * return some stuff. Should recurse for nested elements.
      * @param {fish.input.UiInput} input is used to check if keys are pressed
      *        or whatever.
-     * @param {fish.audio.SamplePlayer} audio is used to play sound effects 
+     * @param {fish.audio.SoundPlayer} audio is used to play sound effects 
      *        like buttons clicking and shit.
      * @param {boolean} selected is whether this thing is actually selected. It
      *        can still do stuff without being selected though don't worry.
@@ -205,10 +192,10 @@ fish.gui.Knob = class {
     /**
      * Renders the gui element using the given patch renderer.
      * @abstract
-     * @param {fish.graphics.PatchRenderer} patchRenderer does the rendering.
+     * @param {fish.graphics.Renderer.Batch} batch does the rendering.
      * @param {boolean} selected is whether the knob is currently selected.
      */
-    render(patchRenderer, selected) {
+    render(batch, selected) {
         throw new Error('fish.gui.knob.render must be implemented');
     }
 };
@@ -219,12 +206,11 @@ fish.gui.Knob = class {
  */
 fish.gui.ContainerKnob = class extends fish.gui.Knob {
     /**
-     * @param {fish.gui.Style} styles the container.
      * @param {Array.&lt;fish.gui.Knob>} children is a list of children to add
      *        stright away.
      */
-    constructor(style, children) {
-        super(style);
+    constructor(children) {
+        super();
         this.hasSelectable = false;
         this.selection = 0;
         this.children = [];
@@ -244,13 +230,13 @@ fish.gui.ContainerKnob = class extends fish.gui.Knob {
 
     /**
      * Increases or decreases the currently selected child.
-     * @param {fish.audio.SamplePlayer} audio is to make a nice sound.
+     * @param {fish.audio.SoundPlayer} audio is to make a nice sound.
      * @param {number} direction is whether to go forward (> 0) or back (&lt; 0).
      *        If you pass 0 nothing will happen.
      */
     incrementSelection(audio, direction) {
         if (direction == 0 || !this.hasSelectable) return;
-        audio.playSample(this.style.tap);
+        if (this.style.tap) audio.playSample(this.style.tap);
         let change = Math.sign(direction);
         for (let i = 0; i &lt; this.children.length &amp;&amp; change != 0; i++) {
             this.selection += change;
@@ -280,21 +266,23 @@ fish.gui.ContainerKnob = class extends fish.gui.Knob {
  */
 fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
     /**
-     * @param {fish.gui.Style} style used to style it.
-     * @param {boolean} [cancellable=false] is if pressing UI_BUTTON.CANCEL
+     * @param {boolean} [cancellable=false] is if pressing BUTTON.A
      *        will cause the panel to return null on the next update.
      * @param {Array.&lt;fish.gui.Knob>} [children=[]] is a list of knobs to add as
      *        children to this panel.
      */
-    constructor(style, cancellable=false, children=[]) {
-        super(style, children);
+    constructor(cancellable=false, children=[]) {
+        super(children);
         this.cancellable = cancellable;
     }
 
     /** @inheritDoc */
     fit(bounds, greedy=true) {
         let interior = bounds.copy();
-        interior.shrink(this.style.panel.BORDER);
+        interior.shrink(
+            this.style.panel.SIDE_BORDER,
+            this.style.panel.TOP_BORDER
+        );
         for (let i in this.children) {
             this.children[i].fit(
                 interior.copy(),
@@ -316,13 +304,13 @@ fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
 
     /** @inheritDoc */
     update(input, audio, selected) {
-        if (selected &amp;&amp; this.cancellable &amp;&amp; input.uiDown(fish.input.UI_BUTTON.CANCEL)) {
+        if (selected &amp;&amp; this.cancellable &amp;&amp; input.down(fish.input.BUTTON.A)) {
             return null;
         }
         if (selected &amp;&amp; this.children.length > 0) {
-            if (input.uiJustDown(fish.input.UI_BUTTON.UP)) {
+            if (input.justDown(fish.input.BUTTON.UP)) {
                 this.incrementSelection(audio, -1);
-            } else if (input.uiJustDown(fish.input.UI_BUTTON.DOWN)) {
+            } else if (input.justDown(fish.input.BUTTON.DOWN)) {
                 this.incrementSelection(audio, 1);
             }
         }
@@ -332,16 +320,17 @@ fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
                 audio,
                 i == this.selection &amp;&amp; selected
             );
-            if (result) return result;
+            if (result !== null) return result;
         }
+        return null;
     }
 
     /** @inheritDoc */
-    render(patchRenderer, selected) {
-        patchRenderer.renderPatch(this.style.panel, this.bounds);
+    render(batch, selected) {
+        batch.addPatch(this.style.panel, this.bounds);
         for (let i in this.children) {
             this.children[i].render(
-                patchRenderer,
+                batch,
                 selected &amp;&amp; i == this.selection
             );
         }
@@ -355,12 +344,11 @@ fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
  */
 fish.gui.TextKnob = class extends fish.gui.Knob {
     /**
-     * @param {fish.gui.Style} style the style used by the knob.
      * @param {string} text the unwrapped text in which only multiple newlines
      *        are counted as newlines.
      */
-    constructor(style, text) {
-        super(style);
+    constructor(text) {
+        super();
         this._text = text;
         this.fittedText = '';
         this.origin = new fish.util.Vector();
@@ -391,8 +379,8 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
     }
 
     /** @inheritDoc */
-    render(patchRenderer, selected) {
-        patchRenderer.renderText(
+    render(batch, selected) {
+        batch.addText(
             this.style.font,
             this.fittedText,
             this.origin
@@ -406,7 +394,6 @@ fish.gui.TextKnob = class extends fish.gui.Knob {
  */
 fish.gui.ButtonKnob = class extends fish.gui.Knob {
     /**
-     * @param {fish.gui.Style} style is the style to draw it with.
      * @param {string|fish.gui.Knob} child is the child to put inside the
      *        button. If you passed text it is assumed you want it to be made
      *        into a text knob.
@@ -414,12 +401,12 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
      *        is pressed. Be warned, though, if this is a function it will be
      *        executed and then it's return value will be returned instead.
      */
-    constructor(style, child, result=null) {
-        super(style);
+    constructor(child, result=null) {
+        super();
         this.down = false;
         this.result = result;
         if (typeof child == 'string') {
-            this.child = new fish.gui.TextKnob(style, child);
+            this.child = new fish.gui.TextKnob(child);
         } else {
             this.child = child;
         }
@@ -441,22 +428,26 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
     /** @inheritDoc */
     fit(bounds, greedy=true) {
         let interior = bounds.copy();
-        interior.shrink(this.style.button.BORDER);
+        interior.shrink(
+            this.style.button.SIDE_BORDER,
+            this.style.button.TOP_BORDER
+        );
         this.child.fit(interior);
         if (!greedy) {
             bounds.size.y = this.child.bounds.size.y +
-                this.style.button.BORDER * 2;
-            bounds.pos.y = this.child.bounds.pos.y - this.style.button.BORDER;
+                this.style.button.TOP_BORDER * 2;
+            bounds.pos.y = this.child.bounds.pos.y -
+                this.style.button.TOP_BORDER;
         }
         super.fit(bounds);
     }
 
     /** @inheritDoc */
     update(input, audio, selected) {
-        if (input.uiDown(fish.input.UI_BUTTON.ACCEPT) &amp;&amp; selected) {
+        if (input.down(fish.input.BUTTON.B) &amp;&amp; selected) {
             if (!this.down) {
                 this.down = true;
-                audio.playSample(this.style.click);
+                if (this.style.click) audio.playSample(this.style.click);
             }
         } else if (this.down) {
             this.down = false;
@@ -471,12 +462,12 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
     }
 
     /** @inheritDoc */
-    render(patchRenderer, selected) {
+    render(batch, selected) {
         let patch = selected ?
             (this.down ? this.style.buttonDepressed : this.style.buttonSelected) :
             this.style.button;
-        patchRenderer.renderPatch(patch, this.bounds);
-        this.child.render(patchRenderer, selected);
+        batch.addPatch(patch, this.bounds);
+        this.child.render(batch, selected);
     }
 };
 
@@ -485,15 +476,14 @@ fish.gui.ButtonKnob = class extends fish.gui.Knob {
  */
 fish.gui.PicKnob = class extends fish.gui.Knob {
     /**
-     * @param {fish.gui.Style} style the style.
      * @param {mixed} sprite the pic to draw.
      * @param {number} [scale=1] is the scale to draw it at. If the knob ends
      *        up being fitted greedily this will be ignored.
      * @param {boolean} [stretch=false] is whether the image should eschew it's
      *        aspect ratio to fill all the space it is given.
      */
-    constructor(style, sprite, scale=1, stretch=false) {
-        super(style);
+    constructor(sprite, scale=1, stretch=false) {
+        super();
         this.sprite = sprite;
         this.scale = scale;
         this.stretch = stretch;
@@ -506,12 +496,11 @@ fish.gui.PicKnob = class extends fish.gui.Knob {
  */
 fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     /**
-     * @param {fish.gui.Style} style decides how stuff is displayed.
      * @param {Array.&lt;fish.gui.Knob>} [children=[]] is a list of children to
      *        add to the hbox right away.
      */
-    constructor(style, children=[]) {
-        super(style, children);
+    constructor(children=[]) {
+        super(children);
     }
 
     /** @inheritDoc */
@@ -531,9 +520,9 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     /** @inheritDoc */
     update(input, audio, selected) {
         if (selected &amp;&amp; this.children.length > 0) {
-            if (input.uiJustDown(fish.input.UI_BUTTON.LEFT)) {
+            if (input.justDown(fish.input.BUTTON.LEFT)) {
                 this.incrementSelection(audio, -1);
-            } else if (input.uiJustDown(fish.input.UI_BUTTON.RIGHT)) {
+            } else if (input.justDown(fish.input.BUTTON.RIGHT)) {
                 this.incrementSelection(audio, 1);
             }
         }
@@ -548,12 +537,9 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
     }
 
     /** @inheritDoc */
-    render(patchRenderer, selected) {
+    render(batch, selected) {
         for (let i in this.children) {
-            this.children[i].render(
-                patchRenderer,
-                selected &amp;&amp; i == this.selection
-            );
+            this.children[i].render(batch, selected &amp;&amp; i == this.selection);
         }
     }
 };
@@ -563,8 +549,8 @@ fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
  * @implements fish.gui.Knob
  */
 fish.gui.TextArrayKnob = class extends fish.gui.Knob {
-    constructor(style, width, height=1) {
-        super(style);
+    constructor(width, height=1) {
+        super();
         this.spareRect = new fish.util.Rect();
         this.width = width;
         this.height = height;
@@ -626,6 +612,180 @@ fish.gui.TextArrayKnob = class extends fish.gui.Knob {
         this.array[y][x] = c;
     }
 };
+
+/**
+ * Starting screen of the game that shows some crap and makes you click or
+ * buttonise or whatever.
+ */
+fish.screen.SplashScreen = class extends fish.screen.Screen {
+    constructor(ctx, init) {
+        super(ctx);
+        this.messaged = false;
+        this.next = null;
+        this.batch = null;
+        this.font = null;
+        this.sound = null;
+        this.loaded = false;
+        this.spot = new fish.util.Vector();
+        this.timer = 90;
+        this.sprite = new fish.util.Rect(0, 0, 0, 0);
+        this.lines = [
+            'fish-tank engine version 0.1.0',
+            'Created by Dany Burton',
+            'Game is loading...'
+        ];
+        this.roaches = [];
+        for (let i = 0; i &lt; 100; i++) {
+            let size = i * 0.03;
+            this.roaches.push({
+                pos: new fish.util.Vector(
+                    i % 30 * 50,
+                    i / 30 * 100
+                ),
+                size: size,
+                velocity: new fish.util.Vector(
+                    (Math.random() - 0.5) * size * 24,
+                    (Math.random() - 0.5) * size * 24
+                )
+            });
+        }
+        Promise.all([
+            ctx.gfx.makeTexture(
+                fish.constants.SPLASH,
+                fish.constants.SPLASH_WIDTH,
+                fish.constants.SPLASH_HEIGHT,
+                ctx.gfx.gl.RGBA4
+            ),
+            ctx.snd.makeSample(fish.constants.JINGLE)
+        ]).then(values => {
+            this.font = new fish.graphics.BitmapFont(values[0].getRect());
+            this.batch = new ctx.gfx.Batch(values[0], 512);
+            this.logo = this.font.getRect(3, 11, 4, 4);
+            this.logo.shrink(0.5);
+            this.sound = values[1];
+            this.loaded = true;
+        });
+        init.then((v) => {this.next = v;});
+    }
+
+    /** @inheritDoc */
+    refresh(message) {
+        if (this.sound) this.ctx.snd.playSong(this.sound);
+    }
+
+    /** @inheritDoc */
+    update(delta) {
+        for (let roach of this.roaches) {
+            roach.pos.add(roach.velocity, delta);
+            roach.pos.y += delta * 20;
+            roach.pos.wrap(this.ctx.gfx.size);
+        }
+        if (this.loaded) {
+            if (!this.messaged) {
+                this.messaged = true;
+                fish.gui.defaultStyle = {
+                    font: this.font,
+                    panel: this.font.getPatch(0, 11, 3, 3, 1),
+                    button: this.font.getPatch(7, 11, 3, 3, 1),
+                    buttonSelected: this.font.getPatch(10, 11, 3, 3, 1),
+                    buttonDepressed: this.font.getPatch(13, 11, 3, 3, 1)
+                };
+                return new fish.screen.Transition(
+                    false,
+                    fish.gui.messageScreen(
+                        this.ctx,
+                        this.batch,
+                        `Press ${this.ctx.in.nameCode(fish.input.BUTTON.B)} to start the game`,
+                        '',
+                        'OK'
+
+                    )
+                );
+            }
+            this.timer -= delta;
+            if (this.timer &lt; 0) {
+                return new fish.screen.Transition(true, this.next);
+            }
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(front) {
+        if (!this.batch) return;
+        this.ctx.gfx.clear(0, 0, 0, 1);
+        this.batch.clear();
+        for (let roach of this.roaches) {
+            this.batch.add(this.logo, roach.pos, roach.size);
+        }
+        this.spot.x = 0;
+        for (let i = 0; i &lt; this.lines.length; i++) {
+            this.spot.y = 600 - this.font.getLineHeight() * i;
+            this.batch.addText(this.font, this.lines[i], this.spot);
+        }
+        this.batch.render();
+    }
+};
+
+/**
+ * Screen that hosts some gui stuff and returns when it finishes.
+ * @extends {fish.screen.Screen}
+ */
+fish.gui.GuiScreen = class extends fish.screen.Screen {
+    /**
+     * @param {fish.Context} ctx usual screen context.
+     * @param {fish.gui.Knob} knob gui stuff to display in this screen.
+     */
+    constructor(ctx, batch, knob) {
+        super(ctx);
+        this.knob = knob;
+        this.batch = batch;
+    }
+
+    /** @inheritDoc */
+    update(delta) {
+        let result = this.knob.update(this.ctx.in, this.ctx.snd, true);
+        if (result !== null) {
+            return new fish.screen.Transition(true, null, result);
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(front) {
+        this.batch.clear();
+        this.knob.render(this.batch, true);
+        this.batch.render();
+    }
+};
+
+/**
+ * Creates a screen which shows a message and one or more confirmation buttons.
+ * @param {fish.Context} ctx is the context which the screen needs.
+ * @param {fish.graphics.Renderer.Batch} batch does rendering.
+ * @param {string} heading is the heading of the message box.
+ * @param {...string} choices is all the choices you can choose, when the
+ *        screen pops off the screen stack the screen beneath will receive the
+ *        number of the choice chosen. If you provide no choices then it will
+ *        just add a generic one.
+ */
+fish.gui.messageScreen = (ctx, batch, heading, message, ...choices) => {
+    if (choices.length == 0) choices[0] = '...';
+    let panel = new fish.gui.PanelKnob(false, [
+        new fish.gui.PanelKnob(false, [new fish.gui.TextKnob(heading)]),
+        new fish.gui.TextKnob(message)
+    ]);
+    for (let i = 0; i &lt; choices.length; i++) {
+        panel.addChild(new fish.gui.ButtonKnob(choices[i], i));
+    }
+    let widthBit = ctx.gfx.size.x / 4;
+    let heightBit = ctx.gfx.size.y / 4;
+    panel.fit(
+        new fish.util.Rect(widthBit, heightBit, widthBit * 2, heightBit * 2),
+        true
+    );
+    return new fish.gui.GuiScreen(ctx, batch, panel);
+};
 </pre>
     </article>
 </section>
@@ -671,7 +831,7 @@ fish.gui.TextArrayKnob = class extends fish.gui.Knob {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Sun May 30th 2021
+		on Thu Jun 3rd 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

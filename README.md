@@ -1,78 +1,159 @@
 ![Logo](logo.png)
-*This is the fish-tank official mascot and he is named Vabongaringo. He is 600
-years old and has committed multiple war crimes for which he was never caught.*
 
 Every browser based game library sucks real bad real good UNTIL NOW... Wahooo,
 we now have fish-tank; a browser based game library that takes loose
 inspiration from lua love since it's real nice but not browser based obviously.
 
-We have:
- - Not much state.
- - Nice interfaces for default subsystems
- - you can rewrite any subsystem you want as long as you implement a small
-   interface.
- - cool looking gui system.
- - batched sprite rendering on gpu with great performance.
+I guess another way of describing this library is that it's everything I ended
+up implementing on top of other libraries implemented beforehand. The
+interfaces are designed to be easy to use and not require reams of code, so
+that you can make games quickly and with good code quality. For some reason or
+other the web seems to hate both of those things.
 
-## The Subsystems
-The core functionality of the engine is in it's subsystems.
- - ctx.gfx: the renderer `fish.graphics.SpriteRenderer` by default
- - ctx.in: the input handler `fish.input.BasicInput` by default
- - ctx.snd: the sound player `fish.audio.BasicAudio` by default
- - ctx.str: the asset store `fish.store.Store` by default
+Admittedly, if you want maximum control, you might find the way this engine's
+interfaces work a little bit too friendly for your liking. All I can say is
+enjoy writing your own engine because I don't care.
 
-Each of these has an intentionally quite specific but easy to use and nice
-interface which is real nice 99% of the time since the interfaces on these
-subsystems is basically the usable system that I end up building on top of
-other game engine's systems when their built in interface to these features is
-painful.
+[Check out the demo](/test).
 
-For example, the renderer uses gpu accelerated sprite batching which provides a
-really good tradeoff between speed and clean code and programmer ease. The
-input system maps all connected gamepads and the keyboard to a single imaginary
-game controller which you can then poll the buttons of in your game code.
+# Making a game with fish-tank
+All the concepts talked about here can also be seen in the code of the demo
+which can be found
+[here](https://github.com/dalygbarron/fish-tank/tree/master/test).
 
-Right now the systems are pretty minimal, I might also add some more features
-to them. Below is a section on adding new subsystems but there is no point
-forcing people to create new subsystems just because I was too lazy to add
-a few basic features, you know. If you wish they had a feature you could email
-me or make a github ticket or whatever and I will discuss whether it should be
-added to the built in subsystems or made into a custom subsystem. Pull Requests
-would be appreciated but it's probably better if you talk to me first because
-I'm not gonna merge things I don't want simply out of politeness.
+Also, this is more meant to give you an idea of how the engine works and get
+you off the ground. It's not 100% thorough because there is full up to date API
+documentation that you can use to get the finer points through your skull.
 
-Now, as I said, these easy to use systems are real nice 99% of the time, but
-sometimes you need a different way of doing things, which these rather imposing
-interfaces can only support to a point. This brings us to the next section.
+## The HTML Page
+I am going to make a yeoman generator for fish-tank projects, but until I do,
+basically you are going to want to create an index containing a canvas with
+a size fixed to whatever size you want. fish-tank does not handle resizing the
+screen and it doesn't have capabilities for handling different sizes of screen.
+Games must be built to have fixed dimensions. As you will see on the test
+project, this doesn't mean that the canvas cannot be scaled via css to fill the
+window, but the logical size from within the game engine should stay the same.
 
-## Implementing your own versions of the subsystems
-99% of the functionality of the subsystem is only used in your actual game code
-and so the engine doesn't care about it, there are just a couple of small
-interfaces you will need to implement so that your new subsystem can interact
-with the other ones.
+Yeah so once you have a page with a canvas, you need to include the code of
+fish-tank, and you need to include your own code. Your own code needs to find
+the canvas webgl context and the webaudio context and then pass them to the
+engine along with the setting up stuff like so:
 
-For graphics, there is the `fish.graphics.BaseRenderer` interface and the
-`fish.graphics.PatchRenderer` interface, I know it seems weird that there are
-two but you might not actually use the same object to perform both of those
-tasks and you don't have to. The base renderer interface is the for basic stuff
-like filling the screen with colour, and the patch renderer is for rendering
-styled rectangles and text. There is also the `fish.graphics.Font` interface
-which your renderer's font implementation that it uses to draw text must
-implement. This is just for getting the size of pieces of text and stuff like
-that, other than that your font and text rendering system can be whatever you
-want.
+```javascript
+window.onload = () => {
+    const canvas = document.querySelector('#canvas');
+    const gl = canvas.getContext('webgl2');
+    const context = new AudioContext();
+    if (gl === null || context === null) {
+        alert('not compatible');
+        return;
+    }
+    fish.start({
+        rate: 30,
+        gl: gl,
+        ac: context,
+        storePrefix: '/test/'
+    }, init);
+};
+```
 
-For audio, there is the `fish.audio.SamplePlayer` interface that requires your
-audio implementation to be able to play samples on command.
+So, you can see we have gotten the webgl context and webaudio context and
+passed them to fish.start which takes an object containing arguments, and
+a function.
 
-For input, there is the `fish.input.UiInput` interface which requires the input
-subsystem to be able to provide information about the user interacting with the
-ui. It is currently only based on button presses but you can map these to
-whatever buttons or inputs you want to in your implementation.
+The arguments are documented elsewhere and fairly obvious, and the function is
+one which returns a promise to create a {fish.screen.Screen}, the game's first
+screen after the init/loading screen ends. In this init function you can
+asynchronously load assets and whatever you want to do.
 
-The asset store has no interface because it is only used in user code, but you
-can replace it if you want to. I don't really know of a good reason to bother
-though tbh.
+## The Screen Stack
+Sections of games in fish-tank are divided into screens, you can transition
+from one screen to another, but as well as that, you can place one screen on
+top of another, meaning the top screen will run until it ends, then return
+control to the screen beneath at the same point it was at before it placed the
+other screen on top.
 
-## Starting the Game
-`fish.start` takes a fairly complicated set of arguments.
+A screen can also return values to the screen below, much like function calls,
+hence the term 'call stack'. For example, fish-tank has a built in
+{fish.gui.GuiScreen} which is a screen that just displays a tree of gui
+elements and when the gui elements generate a value, the screen pops itself
+from the stack and returns the generated value to the screen below. This can be
+used to pause the level while the user responds to dialogue, or whatever else
+you want.
+
+Screens transition by returning a {fish.screen.Transition} from their update
+function. If you do not want to transition then return null.
+
+## The GUI System aka Knobs
+Fish-tank has a built in gui system which the demo program uses heavily. Before
+you create any gui elements you need to set the global value
+{fish.gui.defaultStyle} or the style that your created gui elements will have
+will be undefined which ain't so good as it might crash the program or do
+something stupid.
+
+```javascript
+class ButtonScreen extends fish.screen.Screen {
+    constructor(ctx) {
+        super(ctx);
+        this.batch = new ctx.gfx.Batch(ctx.usr.texture, 512);
+        fish.gui.defaultStyle = ctx.usr.style;
+        this.button = new fish.gui.ButtonKnob('hello');
+        this.button.fit(new fish.util.Rect(
+            0,
+            0,
+            ctx.gfx.size.x,
+            ctx.gfx.size.y
+        );
+    }
+
+    update(delta) {
+        this.button.update(this.ctx.in, this.ctx.snd, true);
+    }
+
+    render() {
+        this.button.render(this.batch, true);
+    }
+}
+```
+
+Here is some code for a screen that fills the entire window with a big button
+that says hello on it. You will notice that we make use of a variable called
+ctx.usr.style, and one called ctx.usr.texture. ctx.usr is essentially a little
+object where you can place any data your game is going to need all over the
+place. Essentially this just means in a game engine this could would have
+already loaded some texture and created a style.
+
+First we set fish.gui.defaultStyle which is essential, then we create the
+button object, then we fit the button. Fitting must be called on any tree of
+gui knobs before they are updated or rendered. It is used to determine where
+they appear on the screen. You simply set the boundaries for the parent gui
+object and then rest are fitted in based on their size.
+
+## Sprite Batching
+Sprite Batching is a very genius technique for 2d rendering that allows you to
+take advantage of the speed of hardware accelerated rendering while drawing in
+roughly the same way you would with software rendering. This allows you to make
+the code way cleaner and have to babysit a lot less state and junk.
+
+```javascript
+render() {
+    batch.clear();
+    for (let thing of things) batch.add(thing.sprite, thing.pos);
+    batch.render();
+}
+```
+
+This is the basic process for rendering with a batch. First you clear it to
+remove any junk currently in it, then you add all of the things you want to
+render, then you call batch.render to render all of them in a single draw call.
+
+Now, of course there is a limitation which is that you need all of your images
+to be sub images inside one texture, but you can see how the demo project uses
+texture atlases to alleviate this. The first argument to batch.add is
+a rectangle defining the portion of the batch texture to use.
+
+It is worth pointing out if all your screens are using the same texture for
+sprites, they can all use the same batch object. The only thing is make sure
+you seperately call clear and render for each screen that uses it because
+otherwise you will run into weird issues with drawing order when using
+rendering techniques that do not use the batch (eg ctx.gfx.clear).

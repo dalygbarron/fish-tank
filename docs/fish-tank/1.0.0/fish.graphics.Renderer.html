@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>fish-tank Interface: Style</title>
+	<title>fish-tank Class: Renderer</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -45,13 +45,6 @@
 				</ul>
 			</li>
 			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.gui.Style.html">fish.gui.Style</a></li>
-				</ul>
-			</li>
-			
 		</ul>
         
             <div class="col-sm-3 col-md-3">
@@ -80,15 +73,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Interface: Style</h1>
+	<h1 class="page-title">Class: Renderer</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.gui.html">.gui</a>.</span>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>
         
-        Style
+        Renderer
         </h2>
         
     
@@ -99,13 +92,78 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Stores all the style information used to draw gui elements in one place.<br>
-It's just an object so that if I add more style stuff later it won't break<br>
-your code and you won't be using the new gui things that use the new stuff<br>
-anyway.</p></div>
+<hr>
+<dt>
+    <h4 class="name" id="Renderer"><span class="type-signature"></span>new Renderer(gl)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>The graphics handler which uses a sprite batch to draw nice pictures.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">WebGLRenderingContext</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the opengl context.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -140,8 +198,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-17">line 17</a>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-438">line 438</a>
 			</li>
 		</ul>
 	</dd>
@@ -155,7 +213,21 @@ anyway.</p></div>
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -164,40 +236,166 @@ anyway.</p></div>
     
 
     
+        <h3 class="subsection-title">Classes</h3>
 
+        <dl>
+            <dt><a href="fish.graphics.Renderer_Batch.html">Batch</a></dt>
+            <dd></dd>
+        </dl>
     
 
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
             
 <hr>
-<dt class="name" id="button">
-    <h4 id="button"><span class="type-signature"></span>button<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
-
+<dt>
+    <h4 class="name" id="clear"><span class="type-signature"></span>clear(r, g, b, a)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>The patch to draw buttons with.</p>
+        <p>Fill the screen with colour.</p>
     </div>
     
 
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
                 
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+<span class="param-type">number</span>
 
 
 
-            </li>
-        </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the red part from 0 to 1.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the green part from 0 to 1.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the blue part from 0 to 1.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the alpha part from 0 to 1.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -235,8 +433,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-37">line 37</a>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-733">line 733</a>
 			</li>
 		</ul>
 	</dd>
@@ -249,6 +447,18 @@ anyway.</p></div>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -256,29 +466,74 @@ anyway.</p></div>
         
             
 <hr>
-<dt class="name" id="buttonDown">
-    <h4 id="buttonDown"><span class="type-signature"></span>buttonDown<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
-
+<dt>
+    <h4 class="name" id="loadTexture"><span class="type-signature"></span>loadTexture(url)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>The patch to draw depressed buttons with.</p>
+        <p>Loads a texture using this graphics thing's gl context.</p>
     </div>
     
 
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
                 
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+<span class="param-type">string</span>
 
 
 
-            </li>
-        </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the url of the texture to load.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -316,8 +571,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-43">line 43</a>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-710">line 710</a>
 			</li>
 		</ul>
 	</dd>
@@ -330,6 +585,42 @@ anyway.</p></div>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>the texture if it worked.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="fish.graphics.Texture.html">fish.graphics.Texture</a>></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -337,191 +628,146 @@ anyway.</p></div>
         
             
 <hr>
-<dt class="name" id="font">
-    <h4 id="font"><span class="type-signature"></span>font<span class="type-signature"> :<a href="fish.util.Rect.html">fish.util.Rect</a></span></h4>
-
+<dt>
+    <h4 class="name" id="makeTexture"><span class="type-signature"></span>makeTexture(data, width, height, format)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
-        <p>The font for writing text in the gui.</p>
+        <p>Make a texture using this graphics thing's graphics context.</p>
     </div>
     
 
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
 
     
 
     
-
     
+        <h5>Parameters:</h5>
+        
 
-    
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-25">line 25</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
+        <th>Type</th>
 
         
-            
-<hr>
-<dt class="name" id="panel">
-    <h4 id="panel"><span class="type-signature"></span>panel<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The patch to draw panels with.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-31">line 31</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
             
-<hr>
-<dt class="name" id="select">
-    <h4 id="select"><span class="type-signature"></span>select<span class="type-signature"> :<a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span></h4>
+                <td class="name"><code>data</code></td>
+            
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The patch to draw over stuff that is selected.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
+            <td class="type">
+            
                 
-<span class="param-type"><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></span>
+<span class="param-type">Uint8Array</span>
 
 
 
-            </li>
-        </ul>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the data to make it from.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>image width.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>image height.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GLenum</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>pixel format of the data.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -559,8 +805,8 @@ anyway.</p></div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="gui.js.html">gui.js</a>,
-				 <a href="gui.js.html#sunlight-1-line-49">line 49</a>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-722">line 722</a>
 			</li>
 		</ul>
 	</dd>
@@ -573,13 +819,47 @@ anyway.</p></div>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>the created texture.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
 
         </dl>
-    
-
     
 
     

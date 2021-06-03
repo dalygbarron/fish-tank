@@ -41,14 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.Compatability.html">fish.Compatability</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li><li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li><li><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></li><li><a href="fish.gui.Style.html">fish.gui.Style</a></li><li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+					<li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.audio.SoundPlayer.html">fish.audio.SoundPlayer</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.Renderer.html">fish.graphics.Renderer</a></li><li><a href="fish.graphics.Renderer_Batch.html">fish.graphics.Renderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.GuiScreen.html">fish.gui.GuiScreen</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.input.CodeError.html">fish.input.CodeError</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.SplashScreen.html">fish.screen.SplashScreen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -98,35 +91,6 @@
  * @namespace
  */
 fish.graphics = {};
-
-/**
- * Your graphics subsystem of choice can implement it's own font class which
- * can basically do whatever it needs to, but there are some things the engine
- * requires so that it can fit text.
- * @interface fish.graphics.Font
- */
-
-/**
- * @method fish.graphics.Font#getHorizontalPadding
- * @return {number} the number of pixels to put between characters
- *         horizontally.
- */
-
-/**
- * @method fish.graphics.Font#getVerticalPadding
- * @return {number} the number of pixels to put between lines of text.
- */
-
-/**
- * @method fish.graphics.Font#getWidth
- * @param {number} c is the character code to get the width of.
- * @return {number} the width of the given character in pixels.
- */
-
-/**
- * @method fish.graphics.Font#getLineHeight
- * @return {number} the height of lines drawn with this font.
- */
 
 /**
  * Creates a texture object out of a gl texture. You probably don't want to
@@ -251,43 +215,8 @@ fish.graphics.Atlas = function () {
 };
 
 /**
- * Represents a colour with parts from 0 to 1.
- * @constructor
- * @param {number} r is the red part.
- * @param {number} g is the green part.
- * @param {number} b is the blue part.
- * @param {number} a is the transparancy part.
- */
-fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
-    /** 
-     * Red component of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.r = r;
-
-    /**
-     * Green component of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.g = g;
-
-    /**
-     * Blue component of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.b = b;
-
-    /**
-     * The transparancy part of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.a = a;
-};
-
-/**
  * Font that is drawn using an 16x16 grid of characters all having the same
  * dimensions.
- * @implements fish.graphics.Font
  */
 fish.graphics.BitmapFont = class {
     /**
@@ -305,24 +234,55 @@ fish.graphics.BitmapFont = class {
         this.sprite = sprite;
     }
 
-    /** @inheritDoc */
-    getHorizontalPadding() {
-        return 0;
-    }
-
-    /** @inheritDoc */
-    getVerticalPadding() {
-        return 0;
-    }
-
-    /** @inheritDoc */
+    /**
+     * Gives you the width of the given character.
+     * @param {number} c character code of the character to measure.
+     * @return {number} the width of the character in pixels.
+     */
     getWidth(c) {
         return this.sprite.w / 16;
     }
 
-    /** @inheritDoc */
+    /**
+     * Gives you the height of lines in this font.
+     * @return {number} the height of the line in pixels.
+     */
     getLineHeight() {
         return this.sprite.h / 16;
+    }
+
+    /**
+     * Gives you a rectangle made of characters from the font.
+     * @param {number} x is the left offset of the rectangle in characters.
+     * @param {number} y is the top offset of the rectangle in characters.
+     * @param {number} w is the width of the rectangle in characters.
+     * @param {number} h is the height of the rectangle in characters.
+     * @return {fish.util.Rect} such a rect as was requested.
+     */
+    getRect(x, y, w, h) {
+        return new fish.util.Rect(
+            this.sprite.x + x * this.sprite.w / 16,
+            this.sprite.y + y * this.sprite.h / 16,
+            this.sprite.w / 16 * w,
+            this.sprite.h / 16 * h
+        );
+    }
+
+    /**
+     * Creates a patch from a rectangle of characters in the font.
+     * @param {number} x is the left offset of the rectangle in characters.
+     * @param {number} y is the top offset of the rectangle in characters.
+     * @param {number} w is the width of the rectangle in characters.
+     * @param {number} h is the height of the rectangle in characters.
+     * @param {number} border is the border of the patch in characters.
+     * @return {fish.graphics.Patch} the relevant patch.
+     */
+    getPatch(x, y, w, h, border) {
+        return new fish.graphics.Patch(
+            this.getRect(x, y, w, h),
+            this.sprite.w / 16 * border,
+            this.sprite.h / 16 * border
+        );
     }
 };
 
@@ -443,12 +403,15 @@ fish.graphics.Patch = class {
      * becomes the non middle parts.
      * @param {fish.util.Rect} rect is the overall sprite to make the patch
      *        from.
-     * @param {number} bord is the number of pixels from the outer edge to the
-     *        interior.
+     * @param {number} sideBorder is the border size to use on the sides.
+     * @param {?number} [topBorder=null] is the border size to use on the top
+     *        and bottom of the patch. If you leave this to default as null
+     *        then it will just use sideBorder.
      */
-    constructor(rect, bord) {
-        let hMid = rect.w - bord * 2;
-        let vMid = rect.h - bord * 2;
+    constructor(rect, sideBorder, topBorder=null) {
+        if (topBorder === null) topBorder = sideBorder;
+        let hMid = rect.w - sideBorder * 2;
+        let vMid = rect.h - topBorder * 2;
         if (hMid &lt; 1 || vMid &lt; 1) {
             throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
         }
@@ -458,42 +421,49 @@ fish.graphics.Patch = class {
          * @readonly
          * @member {number}
          */
-        this.BORDER = bord;
+        this.SIDE_BORDER = sideBorder;
+
+        /**
+         * Border height of the patch.
+         * @readonly
+         * @member {number}
+         */
+        this.TOP_BORDER = topBorder;
 
         /**
          * Top left part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.TL = new fish.util.Rect(rect.x, rect.y, bord, bord);
+        this.TL = new fish.util.Rect(rect.x, rect.y, sideBorder, topBorder);
 
         /**
          * Top part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.T = new fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
+        this.T = new fish.util.Rect(rect.x + sideBorder, rect.y, hMid, topBorder);
 
         /**
          * Top right part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.TR = new fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
+        this.TR = new fish.util.Rect(rect.x + sideBorder + hMid, rect.y, sideBorder, topBorder);
 
         /**
          * mid left part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.ML = new fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
+        this.ML = new fish.util.Rect(rect.x, rect.y + topBorder, sideBorder, vMid);
 
         /**
          * middle part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.M = new fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
+        this.M = new fish.util.Rect(rect.x + sideBorder, rect.y + topBorder, hMid, vMid);
 
         /**
          * mid right part of the patch.
@@ -501,9 +471,9 @@ fish.graphics.Patch = class {
          * @member {fish.util.Rect}
          */
         this.MR = new fish.util.Rect(
-            rect.x + bord + hMid,
-            rect.y + bord,
-            bord,
+            rect.x + sideBorder + hMid,
+            rect.y + topBorder,
+            sideBorder,
             vMid
         );
 
@@ -512,7 +482,7 @@ fish.graphics.Patch = class {
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.BL = new fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
+        this.BL = new fish.util.Rect(rect.x, rect.y + topBorder + vMid, sideBorder, topBorder);
 
         /**
          * bottom part of the patch.
@@ -520,10 +490,10 @@ fish.graphics.Patch = class {
          * @member {fish.util.Rect}
          */
         this.B = new fish.util.Rect(
-            rect.x + bord,
-            rect.y + bord + vMid,
+            rect.x + sideBorder,
+            rect.y + topBorder + vMid,
             hMid,
-            bord
+            topBorder
         );
 
         /**
@@ -532,116 +502,35 @@ fish.graphics.Patch = class {
          * @member {fish.util.Rect}
          */
         this.BR = new fish.util.Rect(
-            rect.x + bord + hMid,
-            rect.y + bord + vMid,
-            bord,
-            bord
+            rect.x + sideBorder + hMid,
+            rect.y + topBorder + vMid,
+            sideBorder,
+            topBorder
         );
     }
 };
 
 /**
- * Core functionality required by the engine for the graphics subsystem to
- * have.
- * @interface fish.graphics.BaseRenderer
- */
-
-/**
- * Fill the screen with a colour.
- * @method fish.graphics.BaseRenderer#clear
- * @param {number} r the red component from 0 to 1.
- * @param {number} g the green component from 0 to 1.
- * @param {number} b the blue component from 0 to 1.
- * @param {number} a the transparent component from 0 to 1.
- */
-
-/**
- * Creates a splash screen that works with this graphics subsystem.
- * @method fish.graphics.BaseRenderer#createSplashScreen
- * @param {fish.screen.Context} ctx given to the new screen so it can do it's
- *        shiet.
- * @param {Promise&lt;fish.screen.Screen> init promise resolving to the first real
- *        screen of the game. You shouldn't need the return value of this, but
- *        you might want to know when it resolves for timing reasons.
- * @return {fish.screen.Screen} the created screen.
- */
-
-/**
- * Tells you how compatable the subsystem is with the current browser running
- * it.
- * @method fish.graphics.BaseRenderer#getCompatability
- * @return {fish.Compatability} a report on the compatability. 
- */
-
-/**
- * Base rendering interface required by the engine internally for gui stuff.
- * Must be implemented by something in order to use the gui but does not need
- * to be implemented by the graphics subsystem itself.
- * @interface
- */
-fish.graphics.PatchRenderer = class {
-    /**
-     * Renders a 9 patch to the given spot.
-     * @param {fish.graphics.Patch} patch is the 9patch to draw.
-     * @param {fish.util.Rect} dst is the place on the screen to draw it.
-     */
-    renderPatch(patch, dst) {
-        throw new Error(
-            'fish.graphics.PatchRenderer.renderPatch must be implemented'
-        );
-    }
-
-    /**
-     * Renders a given character onto the screen, fitting it into the given
-     * rectangle as best the renderer can.
-     * @param {fish.graphics.Font} font is the font info for drawing.
-     * @param {number} c the character code of the character to draw.
-     * @param {fish.util.Rect} dst where to fit the character into. It ought to
-     *        stretch if possible.
-     */
-    renderCharacter(font, c, dst) {
-        throw new Error(
-            'fish.graphics.PatchRenderer.renderCharacter must be implemented'
-        );
-    }
-
-    /**
-     * Renders a piece of text onto the screen using a font.
-     * @param {fish.graphics.Font} font is the font to use to draw the text.
-     * @param {string} text is the text to draw. All it's newlines and stuff
-     *        are taken as written.
-     * @param {fish.util.Vector} dst is the top left corner of where the text
-     *        will appear on the screen.
-     */
-    renderText(font, text, dst) {
-        throw new Error(
-            'fish.graphics.PatchRenderer.renderText must be implemented'
-        );
-    }
-};
-
-/**
- * The default graphics handler which uses a sprite batch to draw nice
- * pictures.
- * @implements fish.graphics.BaseRenderer
+ * The graphics handler which uses a sprite batch to draw nice pictures.
  * @constructor
  * @param {WebGLRenderingContext} gl is the opengl context.
  */
-fish.graphics.SpriteRenderer = function (gl) {
+fish.graphics.Renderer = function (gl) {
     let spareRect = new fish.util.Rect();
     let usedTextures = [];
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.gl = gl;
-    this.width = gl.drawingBufferWidth;
-    this.height = gl.drawingBufferHeight;
+    this.size = new fish.util.Vector(
+        gl.drawingBufferWidth,
+        gl.drawingBufferHeight
+    );
 
 
     /**
      * A thing that batches draw calls.
      * @constructor
-     * @implements {fish.graphics.PatchRenderer}
      * @param {fish.graphics.Texture} texture is the texture all the draws must
      *        be from.
      * @param {number} max the max things to draw.
@@ -739,62 +628,62 @@ fish.graphics.SpriteRenderer = function (gl) {
                 patch.BL,
                 dst.x,
                 dst.y,
-                dst.x + patch.BORDER,
-                dst.y + patch.BORDER
+                dst.x + patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER
             );
             this.addComp(
                 patch.B,
-                dst.x + patch.BORDER,
+                dst.x + patch.SIDE_BORDER,
                 dst.y,
-                dst.r - patch.BORDER,
-                dst.y + patch.BORDER
+                dst.r - patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER
             );
             this.addComp(
                 patch.BR,
-                dst.r - patch.BORDER,
+                dst.r - patch.SIDE_BORDER,
                 dst.y,
                 dst.r,
-                dst.y + patch.BORDER
+                dst.y + patch.TOP_BORDER
             );
             this.addComp(
                 patch.ML,
                 dst.x,
-                dst.y + patch.BORDER,
-                dst.x + patch.BORDER,
-                dst.t - patch.BORDER
+                dst.y + patch.TOP_BORDER,
+                dst.x + patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER
             );
             this.addComp(
                 patch.M,
-                dst.x + patch.BORDER,
-                dst.y + patch.BORDER,
-                dst.r - patch.BORDER,
-                dst.t - patch.BORDER
+                dst.x + patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER
             );
             this.addComp(
                 patch.MR,
-                dst.r - patch.BORDER,
-                dst.y + patch.BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER,
                 dst.r,
-                dst.t - patch.BORDER
+                dst.t - patch.TOP_BORDER
             );
             this.addComp(
                 patch.TL,
                 dst.x,
-                dst.t - patch.BORDER,
-                dst.x + patch.BORDER,
+                dst.t - patch.TOP_BORDER,
+                dst.x + patch.SIDE_BORDER,
                 dst.t
             );
             this.addComp(
                 patch.T,
-                dst.x + patch.BORDER,
-                dst.t - patch.BORDER,
-                dst.r - patch.BORDER,
+                dst.x + patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER,
+                dst.r - patch.SIDE_BORDER,
                 dst.t
             );
             this.addComp(
                 patch.TR,
-                dst.r - patch.BORDER,
-                dst.t - patch.BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER,
                 dst.r,
                 dst.t
             );
@@ -817,7 +706,7 @@ fish.graphics.SpriteRenderer = function (gl) {
             for (let i = 0; i &lt; text.length; i++) {
                 let c = text.charCodeAt(i);
                 if (c == 10) {
-                    yOffset += height + font.getVerticalPadding();
+                    yOffset += height;
                     xOffset = 0;
                 } else {
                     spareRect.pos.set(
@@ -831,23 +720,20 @@ fish.graphics.SpriteRenderer = function (gl) {
                         dst.x + xOffset + width,
                         dst.y - yOffset
                     );
-                    xOffset += width + font.getHorizontalPadding();
+                    xOffset += width;
                 }
             }
         };
 
-        /** @inheritDoc */
-        this.renderPatch = (patch, dst) => {
-            this.addPatch(patch, dst);
-        };
-
-        /** @inheritDoc */
-        this.renderText = (font, text, dst) => {
-            this.addText(font, text, dst);
-        };
-
-        /** @inheritDoc */
-        this.renderCharacter = (font, c, dst) => {
+        /**
+         * Batch to draw a single character from a bitmap font somewhere on the
+         * screen.
+         * @param {fish.graphics.BitmapFont} font is the font to draw from.
+         * @param {number} c character code of character to draw.
+         * @param {fish.util.Rect|fish.util.Vector} dst place to put the
+         *        character on the screen.
+         */
+        this.addCharacter = (font, c, dst) => {
             spareRect.size.set(font.getWidth(c), font.getLineHeight());
             spareRect.pos.set(
                 font.sprite.x + Math.floor(c % 16) * spareRect.w,
@@ -856,17 +742,13 @@ fish.graphics.SpriteRenderer = function (gl) {
             this.add(spareRect, dst);
         };
 
-        /**
-         * Blanks the contents of the batch to go again.
-         */
+        /** Blanks the contents of the batch to go again. */
         this.clear = () => {
             rendered = false;
             n = 0;
         };
 
-        /**
-         * Renders what the batch currently has to the screen.
-         */
+        /** Renders what the batch currently has to the screen. */
         this.render = () => {
             if (rendered) {
                 console.error('repeat batch rendering without clear');
@@ -921,156 +803,18 @@ fish.graphics.SpriteRenderer = function (gl) {
         return fish.graphics.makeTexture(gl, data, width, height, format);
     };
 
-    /** @inheritDoc */
+    /**
+     * Fill the screen with colour.
+     * @param {number} r is the red part from 0 to 1.
+     * @param {number} g is the green part from 0 to 1.
+     * @param {number} b is the blue part from 0 to 1.
+     * @param {number} a is the alpha part from 0 to 1.
+     */
     this.clear = (r=1, g=1, b=1, a=1) => {
         gl.clearColor(r, g, b, a);
         gl.clear(gl.COLOR_BUFFER_BIT);
     };
-
-    /** @inheritDoc */
-    this.createSplashScreen = (ctx, init) => {
-        let InitScreen = class extends fish.screen.Screen {
-            constructor(ctx) {
-                super(ctx);
-                this.done = false;
-                this.next = null;
-                this.batch = null;
-                this.font = null;
-                this.sound = null;
-                this.logo = new fish.util.Rect();
-                this.spot = new fish.util.Vector();
-                this.lines = [
-                    'fish-tank game engine version 645438567347',
-                    'created by Dany Burton 2021'
-                ];
-                this.gfxComp = ctx.gfx.getCompatability();
-                this.sndComp = ctx.snd.getCompatability();
-                this.inComp = ctx.in.getCompatability();
-                this.timer = 0;
-                this.sprite = new fish.util.Rect(0, 0, 0, 0);
-                Promise.all([
-                    ctx.gfx.makeTexture(
-                        fish.constants.SPLASH,
-                        fish.constants.SPLASH_WIDTH,
-                        fish.constants.SPLASH_HEIGHT,
-                        ctx.gfx.gl.RGBA4
-                    ),
-                    ctx.snd.makeSample(fish.constants.JINGLE)
-                ]).then(values => {
-                    this.ctx.snd.playSample(values[1]);
-                    this.font = new fish.graphics.BitmapFont(
-                        values[0].getRect()
-                    );
-                    this.logo.pos.set(
-                        this.font.getWidth('q') * 3,
-                        this.font.getLineHeight() * 11
-                    );
-                    this.logo.size.set(
-                        this.font.getWidth('c') * 4,
-                        this.font.getLineHeight() * 4
-                    );
-                    this.batch = new ctx.gfx.Batch(values[0], 512);
-                    (async function () {
-                        await fish.util.wait(1);
-                        this.lines.push(`graphics compatability ${this.gfxComp.level}: ${this.gfxComp.message}`);
-                        await fish.util.wait(1);
-                        this.lines.push(`sound compatability ${this.sndComp.level}: ${this.sndComp.message}`);
-                        await fish.util.wait(1);
-                        this.lines.push(`input compatability ${this.inComp.level}: ${this.inComp.message}`);
-                        await fish.util.wait(1);
-                        this.lines.push('the game is loading...');
-                        await fish.util.wait(1);
-                        this.done = true;
-                    }).call(this);
-                });
-                init.then((v) => {this.next = v;});
-            }
-
-            /** @inheritDoc */
-            update(delta) {
-                this.timer += delta;
-                if (this.next &amp;&amp; this.done) {
-                    return new fish.screen.Transition(true, this.next);
-                }
-                return null;
-            }
-
-            /** @inheritDoc */
-            render(front) {
-                if (!this.batch) return;
-                this.batch.clear();
-                let portion = 600 / (this.font.getLineHeight() * 12);
-                let overhang = (this.timer * 32) % Math.abs(
-                    this.font.getLineHeight() * 12 - portion
-                ) - this.font.getLineHeight() * 12;
-                for (let i = 0; i &lt; portion; i++) {
-                    this.batch.addComp(
-                        this.logo,
-                        0,
-                        i * this.font.getLineHeight() * 12 + overhang,
-                        this.logo.w * 3,
-                        (i + 1) * this.font.getLineHeight() * 12 + overhang
-                    );
-                }
-                this.spot.x = (this.font.getWidth('c') +
-                    this.font.getHorizontalPadding()) * 12;
-                for (let i = 0; i &lt; this.lines.length; i++) {
-                    this.spot.y = 600 - (this.font.getLineHeight() +
-                        this.font.getVerticalPadding()) * i;
-                    this.batch.addText(this.font, this.lines[i], this.spot);
-                }
-                this.batch.render();
-            }
-        };
-        return new InitScreen(ctx);
-    };
-
-    /** @inheritDoc */
-    this.getCompatability = () => {
-        return new fish.Compatability(
-            fish.COMPATABILITY_LEVEL.FULL,
-            'all g'
-        );
-    };
-
-    /**
-     * Clears the screen with a colour object.
-     * @param {fish.graphics.Colour} colour is the colour to clear with.
-     */
-    this.clearColour = colour => {
-        this.clear(colour.r, colour.g, colour.b, colour.a);
-    };
 };
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.BLACK = new fish.graphics.Colour(0, 0, 0, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.WHITE = new fish.graphics.Colour(1, 1, 1, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.RED = new fish.graphics.Colour(1, 0, 0, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.GREEN = new fish.graphics.Colour(0, 1, 0, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
 </pre>
     </article>
 </section>
@@ -1116,7 +860,7 @@ fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Sun May 30th 2021
+		on Thu Jun 3rd 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

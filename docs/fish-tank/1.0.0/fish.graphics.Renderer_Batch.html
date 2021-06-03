@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>fish-tank Namespace: util</title>
+	<title>fish-tank Class: Batch</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -73,15 +73,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: util</h1>
+	<h1 class="page-title">Class: Batch</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="fish.html">fish</a>.</span>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a><a href="fish.graphics.Renderer.html">.Renderer</a>#</span>
         
-        util
+        Batch
         </h2>
         
     
@@ -92,94 +92,9 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Provides some basic utility stuff. Maths classes and whatever the hell ya<br>
-know.</p></div>
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-8">line 8</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="fish.util.Rect.html">Rect</a></dt>
-            <dd></dd>
-        
-            <dt><a href="fish.util.Vector.html">Vector</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
 <hr>
 <dt>
-    <h4 class="name" id=".base64ToArrayBuffer"><span class="type-signature">&lt;static> </span>base64ToArrayBuffer(base64)</h4>
+    <h4 class="name" id="Batch"><span class="type-signature"></span>new Batch(texture, max)</h4>
     
     
 </dt>
@@ -187,8 +102,7 @@ know.</p></div>
 
     
     <div class="description">
-        <p>Converts a base64 string to an arraybuffer which is useful for converting<br>
-into data stuff with browser apis.</p>
+        <p>A thing that batches draw calls.</p>
     </div>
     
 
@@ -223,13 +137,13 @@ into data stuff with browser apis.</p>
 
         <tr>
             
-                <td class="name"><code>base64</code></td>
+                <td class="name"><code>texture</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></span>
 
 
 
@@ -240,869 +154,8 @@ into data stuff with browser apis.</p>
 
             
 
-            <td class="description last"><p>is the base64 string to convert.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-229">line 229</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>created arraybuffer.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Uint8Array</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".fitText"><span class="type-signature">&lt;static> </span>fitText(text, font, width)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Takes a piece of text and fits it so that when drawn with a given font it<br>
-will fit into a given width space. It ignores single newlines, and turns two<br>
-or more newlines in a row into a single newline.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the text to fit.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">fish.graphics.Font</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the font to give size to the text.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>width</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the width to fit the text into.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-184">line 184</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".loadText"><span class="type-signature">&lt;static> </span>loadText(url)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Asynchronously loads a text file in.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the url to load the file from.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-160">line 160</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>that resolves to the loaded file content.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;string></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".textHeight"><span class="type-signature">&lt;static> </span>textHeight(text, font)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Takes a fitted piece of text and tells you how high it is gonna be in the<br>
-given font.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is text where every newline is taken seriously.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>font</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">fish.graphics.Font</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the font used to measure it.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-218">line 218</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>the number of pixels high it will be.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".wait"><span class="type-signature">&lt;static> </span>wait(time)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Waits for the given amount of time asynchronously.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>time</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>time to wait in seconds.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-241">line 241</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>nothing in particular.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;mixed></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".wrap"><span class="type-signature">&lt;static> </span>wrap(x, max)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Wraps a number between another number and zero. Like modulus but it actually<br>
-does what you want it to.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>x</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>is the number to wrap.</p></td>
+            <td class="description last"><p>is the texture all the draws must<br>
+be from.</p></td>
         </tr>
 
     
@@ -1126,7 +179,7 @@ does what you want it to.</p>
 
             
 
-            <td class="description last"><p>is the point at which it wraps.</p></td>
+            <td class="description last"><p>the max things to draw.</p></td>
         </tr>
 
     
@@ -1170,8 +223,8 @@ does what you want it to.</p>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="util.js.html">util.js</a>,
-				 <a href="util.js.html#sunlight-1-line-17">line 17</a>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-458">line 458</a>
 			</li>
 		</ul>
 	</dd>
@@ -1196,30 +249,1157 @@ does what you want it to.</p>
     
 
     
-    <h5>Returns:</h5>
+
     
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
             
-<div class="param-desc">
-    <p>the result.</p>
-</div>
+<hr>
+<dt>
+    <h4 class="name" id="add"><span class="type-signature"></span>add(src, dst, scale)</h4>
+    
+    
+</dt>
+<dd>
 
+    
+    <div class="description">
+        <p>Adds a sprite to the list of those to draw. I guess rotating would<br>
+be good but I would have to do it in software and I dunno what the<br>
+performance would be like.</p>
+    </div>
+    
 
+    
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
+    
+
+    
+    
+        <h5>Parameters:</h5>
         
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>src</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the src rectangle from the texture.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dst</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+|
+
+<span class="param-type"><a href="fish.util.Vector.html">fish.util.Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is where to draw it on<br>
+the screen. If it's a vector then that is the centre.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scale</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">number</span>
 
 
 
-    </dd>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is used to scale the sprite if you used<br>
+a vector. If you used a rect it does nothing.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-518">line 518</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
 </dl>
 
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
         
+            
+<hr>
+<dt>
+    <h4 class="name" id="addCharacter"><span class="type-signature"></span>addCharacter(font, c, dst)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Batch to draw a single character from a bitmap font somewhere on the<br>
+screen.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>font</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the font to draw from.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>c</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>character code of character to draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dst</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+|
+
+<span class="param-type"><a href="fish.util.Vector.html">fish.util.Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>place to put the<br>
+character on the screen.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-656">line 656</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addComp"><span class="type-signature"></span>addComp(src, l, b, r, t)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Adds the given sprite onto the given spot.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>src</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Rect.html">fish.util.Rect</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the sprite to draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>l</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the distance from left of screen to draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the distance from bottom of screen to draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the distance from right of screen to stop draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>t</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the distance from top of screen to stop draw.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-478">line 478</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addPatch"><span class="type-signature"></span>addPatch(patch, dst)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Draws a 9 patch at the given place. If you give an area that is too<br>
+small it will look munted beware.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>patch</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the 9patch to draw.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dst</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is the place to draw it.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-546">line 546</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addText"><span class="type-signature"></span>addText(font, text, dst)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Draws text using a bitmap font.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>font</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the font that has the text<br>
+graphics and drawing info.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>text</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>what to write including all newlines and stuff.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dst</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="fish.util.Vector.html">fish.util.Vector</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>is where on the screen to write the<br>
+text. Successive lines will decrease in y position.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-620">line 620</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="clear"><span class="type-signature"></span>clear()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Blanks the contents of the batch to go again.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-666">line 666</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="render"><span class="type-signature"></span>render()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Renders what the batch currently has to the screen.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-672">line 672</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>

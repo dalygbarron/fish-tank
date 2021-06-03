@@ -135,40 +135,6 @@ fish.graphics.Atlas = function () {
 };
 
 /**
- * Represents a colour with parts from 0 to 1.
- * @constructor
- * @param {number} r is the red part.
- * @param {number} g is the green part.
- * @param {number} b is the blue part.
- * @param {number} a is the transparancy part.
- */
-fish.graphics.Colour = function (r=1, g=1, b=1, a=1) {
-    /** 
-     * Red component of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.r = r;
-
-    /**
-     * Green component of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.g = g;
-
-    /**
-     * Blue component of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.b = b;
-
-    /**
-     * The transparancy part of the colour from 0 to 1.
-     * @member {number}
-     */
-    this.a = a;
-};
-
-/**
  * Font that is drawn using an 16x16 grid of characters all having the same
  * dimensions.
  */
@@ -203,6 +169,40 @@ fish.graphics.BitmapFont = class {
      */
     getLineHeight() {
         return this.sprite.h / 16;
+    }
+
+    /**
+     * Gives you a rectangle made of characters from the font.
+     * @param {number} x is the left offset of the rectangle in characters.
+     * @param {number} y is the top offset of the rectangle in characters.
+     * @param {number} w is the width of the rectangle in characters.
+     * @param {number} h is the height of the rectangle in characters.
+     * @return {fish.util.Rect} such a rect as was requested.
+     */
+    getRect(x, y, w, h) {
+        return new fish.util.Rect(
+            this.sprite.x + x * this.sprite.w / 16,
+            this.sprite.y + y * this.sprite.h / 16,
+            this.sprite.w / 16 * w,
+            this.sprite.h / 16 * h
+        );
+    }
+
+    /**
+     * Creates a patch from a rectangle of characters in the font.
+     * @param {number} x is the left offset of the rectangle in characters.
+     * @param {number} y is the top offset of the rectangle in characters.
+     * @param {number} w is the width of the rectangle in characters.
+     * @param {number} h is the height of the rectangle in characters.
+     * @param {number} border is the border of the patch in characters.
+     * @return {fish.graphics.Patch} the relevant patch.
+     */
+    getPatch(x, y, w, h, border) {
+        return new fish.graphics.Patch(
+            this.getRect(x, y, w, h),
+            this.sprite.w / 16 * border,
+            this.sprite.h / 16 * border
+        );
     }
 };
 
@@ -323,12 +323,15 @@ fish.graphics.Patch = class {
      * becomes the non middle parts.
      * @param {fish.util.Rect} rect is the overall sprite to make the patch
      *        from.
-     * @param {number} bord is the number of pixels from the outer edge to the
-     *        interior.
+     * @param {number} sideBorder is the border size to use on the sides.
+     * @param {?number} [topBorder=null] is the border size to use on the top
+     *        and bottom of the patch. If you leave this to default as null
+     *        then it will just use sideBorder.
      */
-    constructor(rect, bord) {
-        let hMid = rect.w - bord * 2;
-        let vMid = rect.h - bord * 2;
+    constructor(rect, sideBorder, topBorder=null) {
+        if (topBorder === null) topBorder = sideBorder;
+        let hMid = rect.w - sideBorder * 2;
+        let vMid = rect.h - topBorder * 2;
         if (hMid < 1 || vMid < 1) {
             throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
         }
@@ -338,42 +341,49 @@ fish.graphics.Patch = class {
          * @readonly
          * @member {number}
          */
-        this.BORDER = bord;
+        this.SIDE_BORDER = sideBorder;
+
+        /**
+         * Border height of the patch.
+         * @readonly
+         * @member {number}
+         */
+        this.TOP_BORDER = topBorder;
 
         /**
          * Top left part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.TL = new fish.util.Rect(rect.x, rect.y, bord, bord);
+        this.TL = new fish.util.Rect(rect.x, rect.y, sideBorder, topBorder);
 
         /**
          * Top part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.T = new fish.util.Rect(rect.x + bord, rect.y, hMid, bord);
+        this.T = new fish.util.Rect(rect.x + sideBorder, rect.y, hMid, topBorder);
 
         /**
          * Top right part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.TR = new fish.util.Rect(rect.x + bord + hMid, rect.y, bord, bord);
+        this.TR = new fish.util.Rect(rect.x + sideBorder + hMid, rect.y, sideBorder, topBorder);
 
         /**
          * mid left part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.ML = new fish.util.Rect(rect.x, rect.y + bord, bord, vMid);
+        this.ML = new fish.util.Rect(rect.x, rect.y + topBorder, sideBorder, vMid);
 
         /**
          * middle part of the patch.
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.M = new fish.util.Rect(rect.x + bord, rect.y + bord, hMid, vMid);
+        this.M = new fish.util.Rect(rect.x + sideBorder, rect.y + topBorder, hMid, vMid);
 
         /**
          * mid right part of the patch.
@@ -381,9 +391,9 @@ fish.graphics.Patch = class {
          * @member {fish.util.Rect}
          */
         this.MR = new fish.util.Rect(
-            rect.x + bord + hMid,
-            rect.y + bord,
-            bord,
+            rect.x + sideBorder + hMid,
+            rect.y + topBorder,
+            sideBorder,
             vMid
         );
 
@@ -392,7 +402,7 @@ fish.graphics.Patch = class {
          * @readonly
          * @member {fish.util.Rect}
          */
-        this.BL = new fish.util.Rect(rect.x, rect.y + bord + vMid, bord, bord);
+        this.BL = new fish.util.Rect(rect.x, rect.y + topBorder + vMid, sideBorder, topBorder);
 
         /**
          * bottom part of the patch.
@@ -400,10 +410,10 @@ fish.graphics.Patch = class {
          * @member {fish.util.Rect}
          */
         this.B = new fish.util.Rect(
-            rect.x + bord,
-            rect.y + bord + vMid,
+            rect.x + sideBorder,
+            rect.y + topBorder + vMid,
             hMid,
-            bord
+            topBorder
         );
 
         /**
@@ -412,10 +422,10 @@ fish.graphics.Patch = class {
          * @member {fish.util.Rect}
          */
         this.BR = new fish.util.Rect(
-            rect.x + bord + hMid,
-            rect.y + bord + vMid,
-            bord,
-            bord
+            rect.x + sideBorder + hMid,
+            rect.y + topBorder + vMid,
+            sideBorder,
+            topBorder
         );
     }
 };
@@ -432,8 +442,10 @@ fish.graphics.Renderer = function (gl) {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.gl = gl;
-    this.width = gl.drawingBufferWidth;
-    this.height = gl.drawingBufferHeight;
+    this.size = new fish.util.Vector(
+        gl.drawingBufferWidth,
+        gl.drawingBufferHeight
+    );
 
 
     /**
@@ -536,62 +548,62 @@ fish.graphics.Renderer = function (gl) {
                 patch.BL,
                 dst.x,
                 dst.y,
-                dst.x + patch.BORDER,
-                dst.y + patch.BORDER
+                dst.x + patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER
             );
             this.addComp(
                 patch.B,
-                dst.x + patch.BORDER,
+                dst.x + patch.SIDE_BORDER,
                 dst.y,
-                dst.r - patch.BORDER,
-                dst.y + patch.BORDER
+                dst.r - patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER
             );
             this.addComp(
                 patch.BR,
-                dst.r - patch.BORDER,
+                dst.r - patch.SIDE_BORDER,
                 dst.y,
                 dst.r,
-                dst.y + patch.BORDER
+                dst.y + patch.TOP_BORDER
             );
             this.addComp(
                 patch.ML,
                 dst.x,
-                dst.y + patch.BORDER,
-                dst.x + patch.BORDER,
-                dst.t - patch.BORDER
+                dst.y + patch.TOP_BORDER,
+                dst.x + patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER
             );
             this.addComp(
                 patch.M,
-                dst.x + patch.BORDER,
-                dst.y + patch.BORDER,
-                dst.r - patch.BORDER,
-                dst.t - patch.BORDER
+                dst.x + patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER
             );
             this.addComp(
                 patch.MR,
-                dst.r - patch.BORDER,
-                dst.y + patch.BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER,
                 dst.r,
-                dst.t - patch.BORDER
+                dst.t - patch.TOP_BORDER
             );
             this.addComp(
                 patch.TL,
                 dst.x,
-                dst.t - patch.BORDER,
-                dst.x + patch.BORDER,
+                dst.t - patch.TOP_BORDER,
+                dst.x + patch.SIDE_BORDER,
                 dst.t
             );
             this.addComp(
                 patch.T,
-                dst.x + patch.BORDER,
-                dst.t - patch.BORDER,
-                dst.r - patch.BORDER,
+                dst.x + patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER,
+                dst.r - patch.SIDE_BORDER,
                 dst.t
             );
             this.addComp(
                 patch.TR,
-                dst.r - patch.BORDER,
-                dst.t - patch.BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER,
                 dst.r,
                 dst.t
             );
@@ -614,7 +626,7 @@ fish.graphics.Renderer = function (gl) {
             for (let i = 0; i < text.length; i++) {
                 let c = text.charCodeAt(i);
                 if (c == 10) {
-                    yOffset += height + font.getVerticalPadding();
+                    yOffset += height;
                     xOffset = 0;
                 } else {
                     spareRect.pos.set(
@@ -628,7 +640,7 @@ fish.graphics.Renderer = function (gl) {
                         dst.x + xOffset + width,
                         dst.y - yOffset
                     );
-                    xOffset += width + font.getHorizontalPadding();
+                    xOffset += width;
                 }
             }
         };
@@ -722,50 +734,4 @@ fish.graphics.Renderer = function (gl) {
         gl.clearColor(r, g, b, a);
         gl.clear(gl.COLOR_BUFFER_BIT);
     };
-
-    /**
-     * Clears the screen with a colour object.
-     * @param {fish.graphics.Colour} colour is the colour to clear with.
-     */
-    this.clearColour = colour => {
-        this.clear(colour.r, colour.g, colour.b, colour.a);
-    };
-
-    /** @inheritDoc */
-    this.getCompatability = () => {
-        return new fish.Compatability(
-            fish.COMPATABILITY_LEVEL.FULL,
-            'all g'
-        );
-    };
 };
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.BLACK = new fish.graphics.Colour(0, 0, 0, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.WHITE = new fish.graphics.Colour(1, 1, 1, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.RED = new fish.graphics.Colour(1, 0, 0, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.GREEN = new fish.graphics.Colour(0, 1, 0, 1);
-
-/**
- * @constant
- * @type fish.graphics.Colour
- */
-fish.graphics.BLUE = new fish.graphics.Colour(0, 0, 1, 1);

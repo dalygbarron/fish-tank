@@ -41,14 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.Compatability.html">fish.Compatability</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li><li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li><li><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></li><li><a href="fish.gui.Style.html">fish.gui.Style</a></li><li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+					<li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.audio.SoundPlayer.html">fish.audio.SoundPlayer</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.Renderer.html">fish.graphics.Renderer</a></li><li><a href="fish.graphics.Renderer_Batch.html">fish.graphics.Renderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.GuiScreen.html">fish.gui.GuiScreen</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.input.CodeError.html">fish.input.CodeError</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.SplashScreen.html">fish.screen.SplashScreen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -104,7 +97,7 @@ patch. This is just the object that holds the data for the 9 patch.</p></div>
         
 <hr>
 <dt>
-    <h4 class="name" id="Patch"><span class="type-signature"></span>new Patch(rect, bord)</h4>
+    <h4 class="name" id="Patch"><span class="type-signature"></span>new Patch(rect, sideBorder [, topBorder])</h4>
     
     
 </dt>
@@ -136,7 +129,11 @@ becomes the non middle parts.</p>
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -162,7 +159,19 @@ becomes the non middle parts.</p>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>is the overall sprite to make the patch<br>
@@ -173,7 +182,7 @@ from.</p></td>
 
         <tr>
             
-                <td class="name"><code>bord</code></td>
+                <td class="name"><code>sideBorder</code></td>
             
 
             <td class="type">
@@ -187,11 +196,66 @@ from.</p></td>
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
             
 
-            <td class="description last"><p>is the number of pixels from the outer edge to the<br>
-interior.</p></td>
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>is the border size to use on the sides.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>topBorder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"><p>is the border size to use on the top<br>
+and bottom of the patch. If you leave this to default as null<br>
+then it will just use sideBorder.</p></td>
         </tr>
 
     
@@ -236,7 +300,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-353">line 353</a>
+				 <a href="graphics.js.html#sunlight-1-line-320">line 320</a>
 			</li>
 		</ul>
 	</dd>
@@ -345,7 +409,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-435">line 435</a>
+				 <a href="graphics.js.html#sunlight-1-line-412">line 412</a>
 			</li>
 		</ul>
 	</dd>
@@ -426,88 +490,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-428">line 428</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id="BORDER">
-    <h4 id="BORDER"><span class="type-signature">&lt;readonly> </span>BORDER<span class="type-signature"> :number</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Border width of the patch.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">number</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-374">line 374</a>
+				 <a href="graphics.js.html#sunlight-1-line-405">line 405</a>
 			</li>
 		</ul>
 	</dd>
@@ -588,7 +571,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-447">line 447</a>
+				 <a href="graphics.js.html#sunlight-1-line-424">line 424</a>
 			</li>
 		</ul>
 	</dd>
@@ -669,7 +652,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-409">line 409</a>
+				 <a href="graphics.js.html#sunlight-1-line-386">line 386</a>
 			</li>
 		</ul>
 	</dd>
@@ -750,7 +733,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-402">line 402</a>
+				 <a href="graphics.js.html#sunlight-1-line-379">line 379</a>
 			</li>
 		</ul>
 	</dd>
@@ -831,7 +814,88 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-416">line 416</a>
+				 <a href="graphics.js.html#sunlight-1-line-393">line 393</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="SIDE_BORDER">
+    <h4 id="SIDE_BORDER"><span class="type-signature">&lt;readonly> </span>SIDE_BORDER<span class="type-signature"> :number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Border width of the patch.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-344">line 344</a>
 			</li>
 		</ul>
 	</dd>
@@ -912,7 +976,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-388">line 388</a>
+				 <a href="graphics.js.html#sunlight-1-line-365">line 365</a>
 			</li>
 		</ul>
 	</dd>
@@ -993,7 +1057,88 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-381">line 381</a>
+				 <a href="graphics.js.html#sunlight-1-line-358">line 358</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="TOP_BORDER">
+    <h4 id="TOP_BORDER"><span class="type-signature">&lt;readonly> </span>TOP_BORDER<span class="type-signature"> :number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Border height of the patch.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="graphics.js.html">graphics.js</a>,
+				 <a href="graphics.js.html#sunlight-1-line-351">line 351</a>
 			</li>
 		</ul>
 	</dd>
@@ -1074,7 +1219,7 @@ interior.</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="graphics.js.html">graphics.js</a>,
-				 <a href="graphics.js.html#sunlight-1-line-395">line 395</a>
+				 <a href="graphics.js.html#sunlight-1-line-372">line 372</a>
 			</li>
 		</ul>
 	</dd>
@@ -1147,7 +1292,7 @@ interior.</p></td>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Sun May 30th 2021
+		on Thu Jun 3rd 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

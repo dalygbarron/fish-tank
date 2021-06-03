@@ -41,14 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.Compatability.html">fish.Compatability</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li><li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li><li><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></li><li><a href="fish.gui.Style.html">fish.gui.Style</a></li><li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+					<li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.audio.SoundPlayer.html">fish.audio.SoundPlayer</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.Renderer.html">fish.graphics.Renderer</a></li><li><a href="fish.graphics.Renderer_Batch.html">fish.graphics.Renderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.GuiScreen.html">fish.gui.GuiScreen</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.input.CodeError.html">fish.input.CodeError</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.SplashScreen.html">fish.screen.SplashScreen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -103,75 +96,139 @@
 
 
     <section class="readme-section">
-        <article><p><img src="logo.png" alt="Logo"><br>
-<em>This is the fish-tank official mascot and he is named Vabongaringo. He is 600<br>
-years old and has committed multiple war crimes for which he was never caught.</em></p>
+        <article><p><img src="logo.png" alt="Logo"></p>
 <p>Every browser based game library sucks real bad real good UNTIL NOW... Wahooo,<br>
 we now have fish-tank; a browser based game library that takes loose<br>
 inspiration from lua love since it's real nice but not browser based obviously.</p>
-<p>We have:</p>
-<ul>
-<li>Not much state.</li>
-<li>Nice interfaces for default subsystems</li>
-<li>you can rewrite any subsystem you want as long as you implement a small<br>
-interface.</li>
-<li>cool looking gui system.</li>
-<li>batched sprite rendering on gpu with great performance.</li>
-</ul>
-<h2>The Subsystems</h2>
-<p>The core functionality of the engine is in it's subsystems.</p>
-<ul>
-<li>ctx.gfx: the renderer <code>fish.graphics.SpriteRenderer</code> by default</li>
-<li>ctx.in: the input handler <code>fish.input.BasicInput</code> by default</li>
-<li>ctx.snd: the sound player <code>fish.audio.BasicAudio</code> by default</li>
-<li>ctx.str: the asset store <code>fish.store.Store</code> by default</li>
-</ul>
-<p>Each of these has an intentionally quite specific but easy to use and nice<br>
-interface which is real nice 99% of the time since the interfaces on these<br>
-subsystems is basically the usable system that I end up building on top of<br>
-other game engine's systems when their built in interface to these features is<br>
-painful.</p>
-<p>For example, the renderer uses gpu accelerated sprite batching which provides a<br>
-really good tradeoff between speed and clean code and programmer ease. The<br>
-input system maps all connected gamepads and the keyboard to a single imaginary<br>
-game controller which you can then poll the buttons of in your game code.</p>
-<p>Right now the systems are pretty minimal, I might also add some more features<br>
-to them. Below is a section on adding new subsystems but there is no point<br>
-forcing people to create new subsystems just because I was too lazy to add<br>
-a few basic features, you know. If you wish they had a feature you could email<br>
-me or make a github ticket or whatever and I will discuss whether it should be<br>
-added to the built in subsystems or made into a custom subsystem. Pull Requests<br>
-would be appreciated but it's probably better if you talk to me first because<br>
-I'm not gonna merge things I don't want simply out of politeness.</p>
-<p>Now, as I said, these easy to use systems are real nice 99% of the time, but<br>
-sometimes you need a different way of doing things, which these rather imposing<br>
-interfaces can only support to a point. This brings us to the next section.</p>
-<h2>Implementing your own versions of the subsystems</h2>
-<p>99% of the functionality of the subsystem is only used in your actual game code<br>
-and so the engine doesn't care about it, there are just a couple of small<br>
-interfaces you will need to implement so that your new subsystem can interact<br>
-with the other ones.</p>
-<p>For graphics, there is the <code>fish.graphics.BaseRenderer</code> interface and the<br>
-<code>fish.graphics.PatchRenderer</code> interface, I know it seems weird that there are<br>
-two but you might not actually use the same object to perform both of those<br>
-tasks and you don't have to. The base renderer interface is the for basic stuff<br>
-like filling the screen with colour, and the patch renderer is for rendering<br>
-styled rectangles and text. There is also the <code>fish.graphics.Font</code> interface<br>
-which your renderer's font implementation that it uses to draw text must<br>
-implement. This is just for getting the size of pieces of text and stuff like<br>
-that, other than that your font and text rendering system can be whatever you<br>
-want.</p>
-<p>For audio, there is the <code>fish.audio.SamplePlayer</code> interface that requires your<br>
-audio implementation to be able to play samples on command.</p>
-<p>For input, there is the <code>fish.input.UiInput</code> interface which requires the input<br>
-subsystem to be able to provide information about the user interacting with the<br>
-ui. It is currently only based on button presses but you can map these to<br>
-whatever buttons or inputs you want to in your implementation.</p>
-<p>The asset store has no interface because it is only used in user code, but you<br>
-can replace it if you want to. I don't really know of a good reason to bother<br>
-though tbh.</p>
-<h2>Starting the Game</h2>
-<p><code>fish.start</code> takes a fairly complicated set of arguments.</p></article>
+<p>I guess another way of describing this library is that it's everything I ended<br>
+up implementing on top of other libraries implemented beforehand. The<br>
+interfaces are designed to be easy to use and not require reams of code, so<br>
+that you can make games quickly and with good code quality. For some reason or<br>
+other the web seems to hate both of those things.</p>
+<p>Admittedly, if you want maximum control, you might find the way this engine's<br>
+interfaces work a little bit too friendly for your liking. All I can say is<br>
+enjoy writing your own engine because I don't care.</p>
+<p><a href="/test">Check out the demo</a>.</p>
+<h1>Making a game with fish-tank</h1>
+<p>All the concepts talked about here can also be seen in the code of the demo<br>
+which can be found<br>
+<a href="https://github.com/dalygbarron/fish-tank/tree/master/test">here</a>.</p>
+<p>Also, this is more meant to give you an idea of how the engine works and get<br>
+you off the ground. It's not 100% thorough because there is full up to date API<br>
+documentation that you can use to get the finer points through your skull.</p>
+<h2>The HTML Page</h2>
+<p>I am going to make a yeoman generator for fish-tank projects, but until I do,<br>
+basically you are going to want to create an index containing a canvas with<br>
+a size fixed to whatever size you want. fish-tank does not handle resizing the<br>
+screen and it doesn't have capabilities for handling different sizes of screen.<br>
+Games must be built to have fixed dimensions. As you will see on the test<br>
+project, this doesn't mean that the canvas cannot be scaled via css to fill the<br>
+window, but the logical size from within the game engine should stay the same.</p>
+<p>Yeah so once you have a page with a canvas, you need to include the code of<br>
+fish-tank, and you need to include your own code. Your own code needs to find<br>
+the canvas webgl context and the webaudio context and then pass them to the<br>
+engine along with the setting up stuff like so:</p>
+<pre class="prettyprint source lang-javascript"><code>window.onload = () => {
+    const canvas = document.querySelector('#canvas');
+    const gl = canvas.getContext('webgl2');
+    const context = new AudioContext();
+    if (gl === null || context === null) {
+        alert('not compatible');
+        return;
+    }
+    fish.start({
+        rate: 30,
+        gl: gl,
+        ac: context,
+        storePrefix: '/test/'
+    }, init);
+};
+</code></pre>
+<p>So, you can see we have gotten the webgl context and webaudio context and<br>
+passed them to fish.start which takes an object containing arguments, and<br>
+a function.</p>
+<p>The arguments are documented elsewhere and fairly obvious, and the function is<br>
+one which returns a promise to create a {fish.screen.Screen}, the game's first<br>
+screen after the init/loading screen ends. In this init function you can<br>
+asynchronously load assets and whatever you want to do.</p>
+<h2>The Screen Stack</h2>
+<p>Sections of games in fish-tank are divided into screens, you can transition<br>
+from one screen to another, but as well as that, you can place one screen on<br>
+top of another, meaning the top screen will run until it ends, then return<br>
+control to the screen beneath at the same point it was at before it placed the<br>
+other screen on top.</p>
+<p>A screen can also return values to the screen below, much like function calls,<br>
+hence the term 'call stack'. For example, fish-tank has a built in<br>
+{fish.gui.GuiScreen} which is a screen that just displays a tree of gui<br>
+elements and when the gui elements generate a value, the screen pops itself<br>
+from the stack and returns the generated value to the screen below. This can be<br>
+used to pause the level while the user responds to dialogue, or whatever else<br>
+you want.</p>
+<p>Screens transition by returning a {fish.screen.Transition} from their update<br>
+function. If you do not want to transition then return null.</p>
+<h2>The GUI System aka Knobs</h2>
+<p>Fish-tank has a built in gui system which the demo program uses heavily. Before<br>
+you create any gui elements you need to set the global value<br>
+{fish.gui.defaultStyle} or the style that your created gui elements will have<br>
+will be undefined which ain't so good as it might crash the program or do<br>
+something stupid.</p>
+<pre class="prettyprint source lang-javascript"><code>class ButtonScreen extends fish.screen.Screen {
+    constructor(ctx) {
+        super(ctx);
+        this.batch = new ctx.gfx.Batch(ctx.usr.texture, 512);
+        fish.gui.defaultStyle = ctx.usr.style;
+        this.button = new fish.gui.ButtonKnob('hello');
+        this.button.fit(new fish.util.Rect(
+            0,
+            0,
+            ctx.gfx.size.x,
+            ctx.gfx.size.y
+        );
+    }
+
+    update(delta) {
+        this.button.update(this.ctx.in, this.ctx.snd, true);
+    }
+
+    render() {
+        this.button.render(this.batch, true);
+    }
+}
+</code></pre>
+<p>Here is some code for a screen that fills the entire window with a big button<br>
+that says hello on it. You will notice that we make use of a variable called<br>
+ctx.usr.style, and one called ctx.usr.texture. ctx.usr is essentially a little<br>
+object where you can place any data your game is going to need all over the<br>
+place. Essentially this just means in a game engine this could would have<br>
+already loaded some texture and created a style.</p>
+<p>First we set fish.gui.defaultStyle which is essential, then we create the<br>
+button object, then we fit the button. Fitting must be called on any tree of<br>
+gui knobs before they are updated or rendered. It is used to determine where<br>
+they appear on the screen. You simply set the boundaries for the parent gui<br>
+object and then rest are fitted in based on their size.</p>
+<h2>Sprite Batching</h2>
+<p>Sprite Batching is a very genius technique for 2d rendering that allows you to<br>
+take advantage of the speed of hardware accelerated rendering while drawing in<br>
+roughly the same way you would with software rendering. This allows you to make<br>
+the code way cleaner and have to babysit a lot less state and junk.</p>
+<pre class="prettyprint source lang-javascript"><code>render() {
+    batch.clear();
+    for (let thing of things) batch.add(thing.sprite, thing.pos);
+    batch.render();
+}
+</code></pre>
+<p>This is the basic process for rendering with a batch. First you clear it to<br>
+remove any junk currently in it, then you add all of the things you want to<br>
+render, then you call batch.render to render all of them in a single draw call.</p>
+<p>Now, of course there is a limitation which is that you need all of your images<br>
+to be sub images inside one texture, but you can see how the demo project uses<br>
+texture atlases to alleviate this. The first argument to batch.add is<br>
+a rectangle defining the portion of the batch texture to use.</p>
+<p>It is worth pointing out if all your screens are using the same texture for<br>
+sprites, they can all use the same batch object. The only thing is make sure<br>
+you seperately call clear and render for each screen that uses it because<br>
+otherwise you will run into weird issues with drawing order when using<br>
+rendering techniques that do not use the batch (eg ctx.gfx.clear).</p></article>
     </section>
 
 
@@ -221,7 +278,7 @@ though tbh.</p>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Sun May 30th 2021
+		on Thu Jun 3rd 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

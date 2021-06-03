@@ -85,12 +85,12 @@ class Rodent {
 }
 
 function makeMainMenu(styleA, styleB, ctx) {
-    let panel = new fish.gui.PanelKnob(styleA);
-    panel.addChild(new fish.gui.PanelKnob(styleA, false, [
-        new fish.gui.TextKnob(styleA, 'fish-tank-demo')
+    fish.gui.defaultStyle = styleA;
+    let panel = new fish.gui.PanelKnob();
+    panel.addChild(new fish.gui.PanelKnob(false, [
+        new fish.gui.TextKnob('fish-tank-demo')
     ]));
     panel.addChild(new fish.gui.TextKnob(
-        styleA,
         `Welcome to the wonderful world of fish-tank.
 
         Each of the following sections is supposed to showcase some 
@@ -100,51 +100,46 @@ function makeMainMenu(styleA, styleB, ctx) {
         Use the arrow keys to make your selection, and then press CTRL to
         seal the deal.`
     ));
-    panel.addChild(new fish.gui.HBoxKnob(
-        styleA,
-        [
-            new fish.gui.PanelKnob(styleA, false, [
-                new fish.gui.TextKnob(styleA, 'Gui'),
-                new fish.gui.ButtonKnob(styleA, 'Popup menu with some controls for the background'),
-                new fish.gui.ButtonKnob(styleA, 'Reskin', async function () {
-                    let style = styleB;
-                    if (this.usr.flipped) {
-                        this.usr.flipped = false;
-                        style = styleA;
-                    } else {
-                        this.usr.flipped = true;
-                    }
-                    panel.propagate((knob) => {
-                        knob.style = style;
-                    });
-                })
-            ]),
-            new fish.gui.PanelKnob(styleA, false, [
-                new fish.gui.TextKnob(styleA, 'Audio'),
-                new fish.gui.ButtonKnob(styleA, 'Play some cool music', async function () {
-                    if (this.usr.done) {
-                        ctx.snd.stopSong();
-                        this.usr.done = false;
-                        this.child.content = 'Play Some cool music';
-                    } else {
-                        this.usr.done = true;
-                        this.child.content = 'Loading...';
-                        await ctx.snd.loadSong(ctx.str, 'ging.ogg');
-                        this.child.content = 'Stop the Music';
-                    }
-                })
-            ]),
-            new fish.gui.PanelKnob(styleA, false, [
-                new fish.gui.TextKnob(styleA, 'Input'),
-                new fish.gui.ButtonKnob(styleA, 'a very boring game (but you can play it with a gamepad too hell yeah)')
-            ]),
-            new fish.gui.PanelKnob(styleA, false, [
-                new fish.gui.TextKnob(styleA, 'Graphics'),
-                new fish.gui.ButtonKnob(styleA, 'Seizure Screen', 'seizure'),
-                new fish.gui.ButtonKnob(styleA, 'Outer Space', 'space')
-            ])
-        ]
-    ));
+    panel.addChild(new fish.gui.HBoxKnob([
+        new fish.gui.PanelKnob(false, [
+            new fish.gui.TextKnob('Gui'),
+            new fish.gui.ButtonKnob('Popup menu with some controls for the background'),
+            new fish.gui.ButtonKnob('Reskin', async function () {
+                let style = styleB;
+                if (this.usr.flipped) {
+                    this.usr.flipped = false;
+                    style = styleA;
+                } else {
+                    this.usr.flipped = true;
+                }
+                panel.setStyle(style);
+            })
+        ]),
+        new fish.gui.PanelKnob(false, [
+            new fish.gui.TextKnob('Audio'),
+            new fish.gui.ButtonKnob('Play some cool music', async function () {
+                if (this.usr.done) {
+                    ctx.snd.stopSong();
+                    this.usr.done = false;
+                    this.child.content = 'Play Some cool music';
+                } else {
+                    this.usr.done = true;
+                    this.child.content = 'Loading...';
+                    await ctx.snd.loadSong(ctx.str, 'ging.ogg');
+                    this.child.content = 'Stop the Music';
+                }
+            })
+        ]),
+        new fish.gui.PanelKnob(false, [
+            new fish.gui.TextKnob('Input'),
+            new fish.gui.ButtonKnob('a very boring game (but you can play it with a gamepad too hell yeah)')
+        ]),
+        new fish.gui.PanelKnob(false, [
+            new fish.gui.TextKnob('Graphics'),
+            new fish.gui.ButtonKnob('Seizure Screen', 'seizure'),
+            new fish.gui.ButtonKnob('Outer Space', 'space')
+        ])
+    ]));
     return panel;
 }
 

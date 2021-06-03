@@ -15,10 +15,10 @@ module.exports = function(grunt) {
                     'src/graphics.js',
                     'src/audio.js',
                     'src/input.js',
-                    'src/gui.js',
                     'src/store.js',
                     'src/shader.js',
                     'src/screen.js',
+                    'src/gui.js',
                     'src/fish.js'
                 ],
                 dest: 'build/<%= pkg.name %>.js'
@@ -34,9 +34,9 @@ module.exports = function(grunt) {
         },
         sprite: {
             all: {
-                src: 'splashSprites/*.png',
-                dest: 'splash.png',
-                destCss: 'splash.json',
+                src: 'testSprites/*.png',
+                dest: 'test/sprites.png',
+                destCss: 'test/sprites.json',
                 padding: 1
             }
         },

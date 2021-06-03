@@ -90,12 +90,15 @@ fish.util.Rect = class {
      * Shrinks the rectangle by a certain amount from each of it's former
      * border lines.
      * @param {number} amount the amount to shrink it from each side.
+     * @param {?number} [yAmount=null] if given as a number this a seperate
+     *        amount to shrink it by on the top and bottom.
      */
-    shrink(amount) {
+    shrink(amount, yAmount=null) {
+        if (yAmount === null) yAmount = amount;
         this.pos.x += amount;
-        this.pos.y += amount;
+        this.pos.y += yAmount;
         this.size.x -= amount * 2;
-        this.size.y -= amount * 2;
+        this.size.y -= yAmount * 2;
     }
 
     /**
@@ -186,7 +189,7 @@ fish.util.fitText = (text, font, width) => {
         let tokens = line.split(/\s/);
         for (let token of tokens) {
             if (token.length == 0) continue;
-            let size = (token.length - 1) * font.getHorizontalPadding();
+            let size = 0;
             for (let i = 0; i < token.length; i++) {
                 size += font.getWidth(token.charAt(i));
             }
@@ -214,8 +217,7 @@ fish.util.fitText = (text, font, width) => {
  */
 fish.util.textHeight = (text, font) => {
     let lines = text.split(/\n(?=\S+)/).length;
-    return lines * font.getLineHeight() +
-        (lines - 1) * font.getVerticalPadding();
+    return lines * font.getLineHeight();
 };
 
 /**

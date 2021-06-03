@@ -41,14 +41,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.BasicAudio.html">fish.audio.BasicAudio</a></li><li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.Compatability.html">fish.Compatability</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Colour.html">fish.graphics.Colour</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.SpriteRenderer.html">fish.graphics.SpriteRenderer</a></li><li><a href="fish.graphics.SpriteRenderer_Batch.html">fish.graphics.SpriteRenderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="interfaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Interfaces<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="fish.audio.SamplePlayer.html">fish.audio.SamplePlayer</a></li><li><a href="fish.graphics.BaseRenderer.html">fish.graphics.BaseRenderer</a></li><li><a href="fish.graphics.Font.html">fish.graphics.Font</a></li><li><a href="fish.graphics.PatchRenderer.html">fish.graphics.PatchRenderer</a></li><li><a href="fish.gui.Style.html">fish.gui.Style</a></li><li><a href="fish.input.UiInput.html">fish.input.UiInput</a></li>
+					<li><a href="fish.audio.Sample.html">fish.audio.Sample</a></li><li><a href="fish.audio.SoundPlayer.html">fish.audio.SoundPlayer</a></li><li><a href="fish.graphics.Atlas.html">fish.graphics.Atlas</a></li><li><a href="fish.graphics.BitmapFont.html">fish.graphics.BitmapFont</a></li><li><a href="fish.graphics.Patch.html">fish.graphics.Patch</a></li><li><a href="fish.graphics.Renderer.html">fish.graphics.Renderer</a></li><li><a href="fish.graphics.Renderer_Batch.html">fish.graphics.Renderer#Batch</a></li><li><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></li><li><a href="fish.gui.ButtonKnob.html">fish.gui.ButtonKnob</a></li><li><a href="fish.gui.ContainerKnob.html">fish.gui.ContainerKnob</a></li><li><a href="fish.gui.GuiScreen.html">fish.gui.GuiScreen</a></li><li><a href="fish.gui.HBoxKnob.html">fish.gui.HBoxKnob</a></li><li><a href="fish.gui.Knob.html">fish.gui.Knob</a></li><li><a href="fish.gui.PanelKnob.html">fish.gui.PanelKnob</a></li><li><a href="fish.gui.PicKnob.html">fish.gui.PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">fish.gui.TextArrayKnob</a></li><li><a href="fish.gui.TextKnob.html">fish.gui.TextKnob</a></li><li><a href="fish.input.BasicInput.html">fish.input.BasicInput</a></li><li><a href="fish.input.CodeError.html">fish.input.CodeError</a></li><li><a href="fish.screen.Screen.html">fish.screen.Screen</a></li><li><a href="fish.screen.SplashScreen.html">fish.screen.SplashScreen</a></li><li><a href="fish.screen.Transition.html">fish.screen.Transition</a></li><li><a href="fish.Store.html">fish.Store</a></li><li><a href="fish.util.Rect.html">fish.util.Rect</a></li><li><a href="fish.util.Vector.html">fish.util.Vector</a></li>
 				</ul>
 			</li>
 			
@@ -169,6 +162,9 @@ will work with the gui system.</p></div>
         <dl>
             <dt><a href="fish.input.BasicInput.html">BasicInput</a></dt>
             <dd></dd>
+        
+            <dt><a href="fish.input.CodeError.html">CodeError</a></dt>
+            <dd></dd>
         </dl>
     
 
@@ -182,16 +178,15 @@ will work with the gui system.</p></div>
         <dl>
             
 <hr>
-<dt class="name" id=".UI_BUTTON">
-    <h4 id=".UI_BUTTON"><span class="type-signature">&lt;static, readonly> </span>UI_BUTTON<span class="type-signature"> :string</span></h4>
+<dt class="name" id=".BUTTON">
+    <h4 id=".BUTTON"><span class="type-signature">&lt;static, readonly> </span>BUTTON<span class="type-signature"> :string</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>UI buttons that all input handling subsystems have to handle (but they can<br>
-be mapped into your control scheme however you want).</p>
+        <p>The buttons that this imaginary controller provides.</p>
     </div>
     
 
@@ -263,7 +258,7 @@ be mapped into your control scheme however you want).</p>
                 </td>
             
 
-            <td class="description last"><p>move up in menus etc</p></td>
+            <td class="description last"><p>Left axis on controller pointed up.</p></td>
         </tr>
 
     
@@ -293,7 +288,7 @@ be mapped into your control scheme however you want).</p>
                 </td>
             
 
-            <td class="description last"><p>move down in menus etc</p></td>
+            <td class="description last"><p>Left axis on controller pointed down.</p></td>
         </tr>
 
     
@@ -323,7 +318,7 @@ be mapped into your control scheme however you want).</p>
                 </td>
             
 
-            <td class="description last"><p>move left in menus etc</p></td>
+            <td class="description last"><p>Left axis on controller pointed left.</p></td>
         </tr>
 
     
@@ -353,14 +348,14 @@ be mapped into your control scheme however you want).</p>
                 </td>
             
 
-            <td class="description last"><p>move right in menus etc</p></td>
+            <td class="description last"><p>Left axis on controller pointed right.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>ACCEPT</code></td>
+                <td class="name"><code>X</code></td>
             
 
             <td class="type">
@@ -378,19 +373,19 @@ be mapped into your control scheme however you want).</p>
             
                 <td class="default">
                 
-                    ACCEPT
+                    X
                 
                 </td>
             
 
-            <td class="description last"><p>accept dialogs and things</p></td>
+            <td class="description last"><p>X button like on xbox controller.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>CANCEL</code></td>
+                <td class="name"><code>Y</code></td>
             
 
             <td class="type">
@@ -408,12 +403,192 @@ be mapped into your control scheme however you want).</p>
             
                 <td class="default">
                 
-                    CANCEL
+                    Y
                 
                 </td>
             
 
-            <td class="description last"><p>go back and cancel things etc</p></td>
+            <td class="description last"><p>Y button like on xbox controller.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>A</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    A
+                
+                </td>
+            
+
+            <td class="description last"><p>A button like on xbox controller.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>B</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    B
+                
+                </td>
+            
+
+            <td class="description last"><p>B button like on xbox controller.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>L</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    L
+                
+                </td>
+            
+
+            <td class="description last"><p>left trigger button.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>R</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    R
+                
+                </td>
+            
+
+            <td class="description last"><p>right trigger button.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>SELECT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    SELECT
+                
+                </td>
+            
+
+            <td class="description last"><p>left menu button.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>START</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    START
+                
+                </td>
+            
+
+            <td class="description last"><p>right menu button thing. Generally the pause button.</p></td>
         </tr>
 
     
@@ -455,7 +630,7 @@ be mapped into your control scheme however you want).</p>
 		<ul class="dummy">
 			<li>
 				<a href="input.js.html">input.js</a>,
-				 <a href="input.js.html#sunlight-1-line-18">line 18</a>
+				 <a href="input.js.html#sunlight-1-line-17">line 17</a>
 			</li>
 		</ul>
 	</dd>
@@ -528,7 +703,7 @@ be mapped into your control scheme however you want).</p>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on Sun May 30th 2021
+		on Thu Jun 3rd 2021
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

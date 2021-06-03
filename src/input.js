@@ -10,57 +10,47 @@ var fish = fish || {};
 fish.input = {};
 
 /**
- * UI buttons that all input handling subsystems have to handle (but they can
- * be mapped into your control scheme however you want).
+ * The buttons that this imaginary controller provides.
  * @readonly
  * @enum {string}
  */
-fish.input.UI_BUTTON = {
-    /** move up in menus etc */
+fish.input.BUTTON = {
+    /** Left axis on controller pointed up. */
     UP: 'UP',
-    /** move down in menus etc */
+    /** Left axis on controller pointed down. */
     DOWN: 'DOWN',
-    /** move left in menus etc */
+    /** Left axis on controller pointed left. */
     LEFT: 'LEFT',
-    /** move right in menus etc */
+    /** Left axis on controller pointed right. */
     RIGHT: 'RIGHT',
-    /** accept dialogs and things */
-    ACCEPT: 'ACCEPT',
-    /** go back and cancel things etc */
-    CANCEL: 'CANCEL'
+    /** X button like on xbox controller. */
+    X: 'X',
+    /** Y button like on xbox controller. */
+    Y: 'Y',
+    /** A button like on xbox controller. */
+    A: 'A',
+    /** B button like on xbox controller. */
+    B: 'B',
+    /** left trigger button. */
+    L: 'L',
+    /** right trigger button. */
+    R: 'R',
+    /** left menu button. */
+    SELECT: 'SELECT',
+    /** right menu button thing. Generally the pause button. */
+    START: 'START'
 };
 
 /**
- * Basic ui operations required by the engine for an input system.
- * @interface
+ * Error representing when something that is not in fish.input.BUTTON is
+ * attempted to be used as an input code.
  */
-fish.input.UiInput = class {
+fish.input.CodeError = class extends Error {
     /**
-     * Tells you if the given ui button is currently down.
-     * @param {fish.input.UI_BUTTON} button is the button to check on.
-     * @return {boolean} true iff it is down.
+     * @param {string} code is the incorrect key code.
      */
-    uiDown(button) {
-        throw new Error('fish.input.UiInput.uiDown must be implemented');
-    }
-
-    /**
-     * Tells you if the given ui button just went down.
-     * @param {fish.input.UI_BUTTON} button is the button to check on.
-     * @return {boolean} true iff it is down.
-     */
-    uiJustDown(button) {
-        throw new Error('fish.input.UiInput.uiJustDown must be implemented');
-    }
-
-    /**
-     * Gives you the compatability level of the input system.
-     * @return {fish.Compatability} compatability report.
-     */
-    getCompatability() {
-        throw new Error(
-            'fish.input.UiInput.getCompatability must be implemented'
-        );
+    constructor(code) {
+        super(`${code} is not a valid input code`);
     }
 };
 
@@ -76,38 +66,6 @@ fish.input.UiInput = class {
  *        considered pressed.
  */
 fish.input.BasicInput = function (keymap={}, threshold=0.9) {
-    /**
-     * The buttons that this imaginary controller provides.
-     * @readonly
-     * @enum {string}
-     */
-    this.BUTTON = {
-        /** Left axis on controller pointed up. */
-        UP: 'UP',
-        /** Left axis on controller pointed down. */
-        DOWN: 'DOWN',
-        /** Left axis on controller pointed left. */
-        LEFT: 'LEFT',
-        /** Left axis on controller pointed right. */
-        RIGHT: 'RIGHT',
-        /** X button like on xbox controller. */
-        X: 'X',
-        /** Y button like on xbox controller. */
-        Y: 'Y',
-        /** A button like on xbox controller. */
-        A: 'A',
-        /** B button like on xbox controller. */
-        B: 'B',
-        /** left trigger button. */
-        L: 'L',
-        /** right trigger button. */
-        R: 'R',
-        /** left menu button. */
-        SELECT: 'SELECT',
-        /** right menu button thing. Generally the pause button. */
-        START: 'START'
-    };
-
     if (!keymap.UP) keymap.UP = 'ArrowUp';
     if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
     if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
@@ -123,7 +81,7 @@ fish.input.BasicInput = function (keymap={}, threshold=0.9) {
     let frame = 0;
     let keys = {};
     let buttonStates = {};
-    for (let button in this.BUTTON) {
+    for (let button in fish.input.BUTTON) {
         buttonStates[button] = 0;
     }
     document.addEventListener('keydown', (e) => {keys[e.key] = true;});
@@ -157,59 +115,50 @@ fish.input.BasicInput = function (keymap={}, threshold=0.9) {
     };
 
     /**
-     * Converts a ui button to an actual button on this controller thing.
-     * @param {string} uiCode is the code to convert.
-     * @return {string} the corresponding actual button.
-     */
-    let uiToButton = uiCode => {
-        switch (uiCode) {
-            case fish.input.UI_BUTTON.UP: return this.BUTTON.UP;
-            case fish.input.UI_BUTTON.DOWN: return this.BUTTON.DOWN;
-            case fish.input.UI_BUTTON.LEFT: return this.BUTTON.LEFT;
-            case fish.input.UI_BUTTON.RIGHT: return this.BUTTON.RIGHT;
-            case fish.input.UI_BUTTON.ACCEPT: return this.BUTTON.A;
-            case fish.input.UI_BUTTON.CANCEL: return this.BUTTON.B;
-        }
-        throw uiCode;
-    };
-
-    /**
      * Just iterates the frame number.
      */
     this.update = () => {
         frame++;
         let gamepads = navigator.getGamepads ? navigator.getGamepads() :
             (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-        for (let button in this.BUTTON) {
+        for (let button in fish.input.BUTTON) {
             updateButton(button, keys[keymap[button]]);
         }
         for (let pad of gamepads) {
             if (!pad) continue;
-            updateButton(this.BUTTON.A, pressed(pad.buttons[0]), true);
-            updateButton(this.BUTTON.B, pressed(pad.buttons[1]), true);
-            updateButton(this.BUTTON.X, pressed(pad.buttons[2]), true);
-            updateButton(this.BUTTON.Y, pressed(pad.buttons[3]), true);
-            updateButton(this.BUTTON.L, pressed(pad.buttons[4]), true);
-            updateButton(this.BUTTON.R, pressed(pad.buttons[5]), true);
-            updateButton(this.BUTTON.SELECT, pressed(pad.buttons[8]), true);
-            updateButton(this.BUTTON.START, pressed(pad.buttons[9]), true);
+            updateButton(fish.input.BUTTON.A, pressed(pad.buttons[0]), true);
+            updateButton(fish.input.BUTTON.B, pressed(pad.buttons[1]), true);
+            updateButton(fish.input.BUTTON.X, pressed(pad.buttons[2]), true);
+            updateButton(fish.input.BUTTON.Y, pressed(pad.buttons[3]), true);
+            updateButton(fish.input.BUTTON.L, pressed(pad.buttons[4]), true);
+            updateButton(fish.input.BUTTON.R, pressed(pad.buttons[5]), true);
             updateButton(
-                this.BUTTON.UP,
+                fish.input.BUTTON.SELECT,
+                pressed(pad.buttons[8]),
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.START,
+                pressed(pad.buttons[9]),
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.UP,
                 pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
                 true
             );
             updateButton(
-                this.BUTTON.DOWN,
+                fish.input.BUTTON.DOWN,
                 pressed(pad.buttons[13]) || pad.axes[1] > threshold,
                 true
             );
             updateButton(
-                this.BUTTON.LEFT,
+                fish.input.BUTTON.LEFT,
                 pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
                 true
             );
             updateButton(
-                this.BUTTON.RIGHT,
+                fish.input.BUTTON.RIGHT,
                 pressed(pad.buttons[15]) || pad.axes[0] > threshold,
                 true
             );
@@ -218,36 +167,54 @@ fish.input.BasicInput = function (keymap={}, threshold=0.9) {
 
     /**
      * Tells you if the given input is pressed.
-     * @param {string} code represents the iinput button thing.
+     * @param {fish.input.BUTTON} code represents the iinput button thing.
      * @return {boolean} true if it is pressed.
      */
     this.down = code => {
-        if (!(code in buttonStates)) throw code;
+        if (!(code in buttonStates)) throw new fish.input.CodeError(code);
         return buttonStates[code] > 0;
     };
 
     /**
      * Tells you if the given input was pressed this frame I think.
-     * @param {string} code is the code to represent or whatever.
+     * @param {fish.input.BUTTON} code is the code to represent or whatever.
      * @return {boolean} true if it was pressed this frame.
      */
     this.justDown = code => {
-        if (!(code in buttonStates)) throw code;
+        if (!(code in buttonStates)) throw new fish.input.CodeError(code);
         return buttonStates[code] == frame;
     };
 
-    /** @inheritDoc */
-    this.uiDown = uiCode => {
-        return this.down(uiToButton(uiCode));
+    /**
+     * Converts a button code to a ascii symbol for it.
+     * @param {fish.input.BUTTON} code is the code to convert.
+     * @return {number} the character code.
+     */
+    this.asciiCode = code => {
+        switch (code) {
+            case fish.input.BUTTON.UP: return 0xf0;
+            case fish.input.BUTTON.DOWN: return 0xf1;
+            case fish.input.BUTTON.LEFT: return 0xf2;
+            case fish.input.BUTTON.RIGHT: return 0xf3;
+            case fish.input.BUTTON.Y: return 0xf4;
+            case fish.input.BUTTON.A: return 0xf5;
+            case fish.input.BUTTON.X: return 0xf6;
+            case fish.input.BUTTON.B: return 0xf7;
+            case fish.input.BUTTON.SELECT: return 0xf8;
+            case fish.input.BUTTON.START: return 0xf9;
+        }
+        throw new fish.input.CodeError(code);
     };
 
-    /** @inheritDoc */
-    this.uiJustDown = uiCode => {
-        return this.justDown(uiToButton(uiCode));
-    };
+    /**
+     * Gives you a user readable name for a given input thingy code based on
+     * the keymap.
+     * @param {fish.input.BUTTON} code is the input to name.
+     * @return {string} a readable name for both keyboard and gamepad.
+     */
+    this.nameCode = code => {
+        let ascii = String.fromCharCode(this.asciiCode(code));
+        return `${keymap[code]} / ${ascii}`;
 
-    /** @inheritDoc */
-    this.getCompatability = () => {
-        return new fish.Compatability(fish.COMPATABILITY_LEVEL.FULL, 'all g');
     };
 };
