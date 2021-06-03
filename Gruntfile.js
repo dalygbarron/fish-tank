@@ -53,15 +53,23 @@ module.exports = function(grunt) {
                     template: 'node_modules/docdash'
                 },
             }
+        },
+        copy: {
+            main: {
+                files: [
+                    {src: ['logo.png'], dest: 'docs/', filter: 'isFile'}
+                ]
+            }
         }
     });
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-terser');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-spritesmith');
     grunt.registerTask(
         'default',
-        ['jshint', 'concat', 'terser:main', 'jsdoc', 'sprite']
+        ['jshint', 'concat', 'terser:main', 'jsdoc', 'sprite', 'copy']
     );
 };
