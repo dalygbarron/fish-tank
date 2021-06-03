@@ -57,7 +57,9 @@ module.exports = function(grunt) {
         copy: {
             main: {
                 files: [
-                    {src: ['logo.png'], dest: 'docs/', filter: 'isFile'}
+                    {src: ['logo.png'], dest: 'docs/'},
+                    {expand: true, src: ['test/*'], dest: 'docs/'},
+                    {src: ['build/fish-tank.min.js'], dest: 'docs/'}
                 ]
             }
         }
