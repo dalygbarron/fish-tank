@@ -18,7 +18,7 @@ var fish = fish || {};
  * @property {?fish.graphics.PatchRenderer} gfx graphics system to use if
  *           given.
  * @property {?fish.audio.SamplePlayer} snd sound system to use if given.
- * @property {?fish.input.UiInput} in input system to use if given
+ * @property {?fish.input.InputHandler} in input system to use if given
  * @property {?Object} str store the asset store object or nothing for default.
  * @property {?WebGLRenderingContext} gl the webgl rendering context for the
  *           default renderer. It is not needed if you passed a renderer.
@@ -65,7 +65,7 @@ var fish = fish || {};
         }
         gfx = new fish.graphics.Renderer(gl);
         snd = new fish.audio.SoundPlayer(ac);
-        input = new fish.input.BasicInput(keymap, threshold);
+        input = new fish.input.InputHandler(keymap, threshold);
         if (!loaders.texture) {
             loaders.texture = url => {
                 return gfx.loadTexture(url);

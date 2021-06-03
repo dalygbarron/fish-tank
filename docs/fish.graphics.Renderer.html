@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Renderer - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.audio.SoundPlayer.html">SoundPlayer</a><ul class='methods'><li data-type='method'><a href="fish.audio.SoundPlayer.html#loadNoise">loadNoise</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#loadSample">loadSample</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#loadSong">loadSong</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#makeSample">makeSample</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#playNoise">playNoise</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#playSample">playSample</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#playSong">playSong</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#stopNoise">stopNoise</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#stopSong">stopSong</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#update">update</a></li></ul></li><li><a href="fish.graphics.Atlas.html">Atlas</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Atlas.html#add">add</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#forEach">forEach</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#get">get</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#getPatch">getPatch</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#n">n</a></li></ul></li><li><a href="fish.graphics.BitmapFont.html">BitmapFont</a><ul class='methods'><li data-type='method'><a href="fish.graphics.BitmapFont.html#getLineHeight">getLineHeight</a></li><li data-type='method'><a href="fish.graphics.BitmapFont.html#getPatch">getPatch</a></li><li data-type='method'><a href="fish.graphics.BitmapFont.html#getRect">getRect</a></li><li data-type='method'><a href="fish.graphics.BitmapFont.html#getWidth">getWidth</a></li></ul></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.Renderer.html">Renderer</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Renderer.html#clear">clear</a></li><li data-type='method'><a href="fish.graphics.Renderer.html#loadTexture">loadTexture</a></li><li data-type='method'><a href="fish.graphics.Renderer.html#makeTexture">makeTexture</a></li></ul></li><li><a href="fish.graphics.Renderer_Batch.html">Batch</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#add">add</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addCharacter">addCharacter</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addComp">addComp</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addPatch">addPatch</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addText">addText</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#clear">clear</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#render">render</a></li></ul></li><li><a href="fish.graphics.Texture.html">Texture</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Texture.html#getGlTexture">getGlTexture</a></li><li data-type='method'><a href="fish.graphics.Texture.html#getHeight">getHeight</a></li><li data-type='method'><a href="fish.graphics.Texture.html#getRect">getRect</a></li><li data-type='method'><a href="fish.graphics.Texture.html#getWidth">getWidth</a></li></ul></li><li><a href="fish.gui.ButtonKnob.html">ButtonKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.ButtonKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#propagate">propagate</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#selectable">selectable</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#update">update</a></li></ul></li><li><a href="fish.gui.ContainerKnob.html">ContainerKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.ContainerKnob.html#addChild">addChild</a></li><li data-type='method'><a href="fish.gui.ContainerKnob.html#incrementSelection">incrementSelection</a></li><li data-type='method'><a href="fish.gui.ContainerKnob.html#propagate">propagate</a></li><li data-type='method'><a href="fish.gui.ContainerKnob.html#selectable">selectable</a></li></ul></li><li><a href="fish.gui.GuiScreen.html">GuiScreen</a><ul class='methods'><li data-type='method'><a href="fish.gui.GuiScreen.html#refresh">refresh</a></li><li data-type='method'><a href="fish.gui.GuiScreen.html#render">render</a></li><li data-type='method'><a href="fish.gui.GuiScreen.html#update">update</a></li></ul></li><li><a href="fish.gui.HBoxKnob.html">HBoxKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.HBoxKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.HBoxKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.HBoxKnob.html#update">update</a></li></ul></li><li><a href="fish.gui.Knob.html">Knob</a><ul class='methods'><li data-type='method'><a href="fish.gui.Knob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.Knob.html#propagate">propagate</a></li><li data-type='method'><a href="fish.gui.Knob.html#render">render</a></li><li data-type='method'><a href="fish.gui.Knob.html#selectable">selectable</a></li><li data-type='method'><a href="fish.gui.Knob.html#setStyle">setStyle</a></li><li data-type='method'><a href="fish.gui.Knob.html#update">update</a></li></ul></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.PanelKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.PanelKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.PanelKnob.html#update">update</a></li></ul></li><li><a href="fish.gui.PicKnob.html">PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">TextArrayKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.TextArrayKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.TextArrayKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.TextArrayKnob.html#setCharacter">setCharacter</a></li></ul></li><li><a href="fish.gui.TextKnob.html">TextKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.TextKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.TextKnob.html#render">render</a></li></ul></li><li><a href="fish.input.CodeError.html">CodeError</a></li><li><a href="fish.input.InputHandler.html">InputHandler</a><ul class='methods'><li data-type='method'><a href="fish.input.InputHandler.html#asciiCode">asciiCode</a></li><li data-type='method'><a href="fish.input.InputHandler.html#down">down</a></li><li data-type='method'><a href="fish.input.InputHandler.html#justDown">justDown</a></li><li data-type='method'><a href="fish.input.InputHandler.html#nameCode">nameCode</a></li><li data-type='method'><a href="fish.input.InputHandler.html#update">update</a></li><li data-type='method'><a href="fish.input.InputHandler.html#~pressed">pressed</a></li><li data-type='method'><a href="fish.input.InputHandler.html#~updateButton">updateButton</a></li></ul></li><li><a href="fish.screen.Screen.html">Screen</a><ul class='methods'><li data-type='method'><a href="fish.screen.Screen.html#refresh">refresh</a></li><li data-type='method'><a href="fish.screen.Screen.html#render">render</a></li><li data-type='method'><a href="fish.screen.Screen.html#update">update</a></li></ul></li><li><a href="fish.screen.SplashScreen.html">SplashScreen</a><ul class='methods'><li data-type='method'><a href="fish.screen.SplashScreen.html#refresh">refresh</a></li><li data-type='method'><a href="fish.screen.SplashScreen.html#render">render</a></li><li data-type='method'><a href="fish.screen.SplashScreen.html#update">update</a></li></ul></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a><ul class='methods'><li data-type='method'><a href="fish.Store.html#getAtlas">getAtlas</a></li><li data-type='method'><a href="fish.Store.html#getSample">getSample</a></li><li data-type='method'><a href="fish.Store.html#getTexture">getTexture</a></li><li data-type='method'><a href="fish.Store.html#~get">get</a></li></ul></li><li><a href="fish.util.Rect.html">Rect</a><ul class='methods'><li data-type='method'><a href="fish.util.Rect.html#shrink">shrink</a></li></ul></li><li><a href="fish.util.Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="fish.util.Vector.html#add">add</a></li><li data-type='method'><a href="fish.util.Vector.html#set">set</a></li><li data-type='method'><a href="fish.util.Vector.html#wrap">wrap</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a><ul class='methods'><li data-type='method'><a href="fish.html#.start">start</a></li></ul></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.constants.html">constants</a></li><li><a href="fish.graphics.html">graphics</a><ul class='methods'><li data-type='method'><a href="fish.graphics.html#.loadAtlas">loadAtlas</a></li><li data-type='method'><a href="fish.graphics.html#.loadTexture">loadTexture</a></li><li data-type='method'><a href="fish.graphics.html#.makeTexture">makeTexture</a></li></ul></li><li><a href="fish.gui.html">gui</a><ul class='methods'><li data-type='method'><a href="fish.gui.html#.messageScreen">messageScreen</a></li></ul></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a><ul class='methods'><li data-type='method'><a href="fish.util.html#.base64ToArrayBuffer">base64ToArrayBuffer</a></li><li data-type='method'><a href="fish.util.html#.fitText">fitText</a></li><li data-type='method'><a href="fish.util.html#.loadText">loadText</a></li><li data-type='method'><a href="fish.util.html#.textHeight">textHeight</a></li><li data-type='method'><a href="fish.util.html#.wait">wait</a></li><li data-type='method'><a href="fish.util.html#.wrap">wrap</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Renderer</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="fish.html">fish</a><a href="fish.graphics.html">.graphics</a>.</span>
+        
+        Renderer
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+    
+
+    <h4 class="name" id="Renderer"><span class="type-signature"></span>new Renderer<span class="signature">(gl)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line438">line 438</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    The graphics handler which uses a sprite batch to draw nice pictures.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">WebGLRenderingContext</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the opengl context.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="fish.graphics.Renderer_Batch.html">Batch</a></dt>
+            <dd></dd>
+        </dl>
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">(r, g, b, a)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line733">line 733</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Fill the screen with colour.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the red part from 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>g</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the green part from 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>b</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the blue part from 0 to 1.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the alpha part from 0 to 1.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="loadTexture"><span class="type-signature"></span>loadTexture<span class="signature">(url)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="fish.graphics.Texture.html">fish.graphics.Texture</a>>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line710">line 710</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Loads a texture using this graphics thing's gl context.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is the url of the texture to load.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the texture if it worked.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="fish.graphics.Texture.html">fish.graphics.Texture</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="makeTexture"><span class="type-signature"></span>makeTexture<span class="signature">(data, width, height, format)</span><span class="type-signature"> &rarr; {<a href="fish.graphics.Texture.html">fish.graphics.Texture</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="graphics.js.html">graphics.js</a>, <a href="graphics.js.html#line722">line 722</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Make a texture using this graphics thing's graphics context.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Uint8Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the data to make it from.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>width</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">image width.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>height</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">image height.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>format</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GLenum</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">pixel format of the data.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the created texture.
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="fish.graphics.Texture.html">fish.graphics.Texture</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Thu Jun 03 2021 22:40:22 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

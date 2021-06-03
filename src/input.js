@@ -65,7 +65,7 @@ fish.input.CodeError = class extends Error {
  * @param {number} [threshold=0.9] the threshold beyond which a gamepad axis is
  *        considered pressed.
  */
-fish.input.BasicInput = function (keymap={}, threshold=0.9) {
+fish.input.InputHandler = function (keymap={}, threshold=0.9) {
     if (!keymap.UP) keymap.UP = 'ArrowUp';
     if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
     if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
