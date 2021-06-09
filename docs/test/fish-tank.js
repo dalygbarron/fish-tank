@@ -1,48 +1,248 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    
-    <meta charset="utf-8">
-    <title>constants.js - Documentation</title>
-    
-    
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
-    <script src="scripts/nav.js" defer></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
+var fish = fish || {};
 
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
+/**
+ * Provides some basic utility stuff. Maths classes and whatever the hell ya
+ * know.
+ * @namespace
+ */
+fish.util = {};
 
-<label for="nav-trigger" class="overlay"></label>
+/**
+ * Wraps a number between another number and zero. Like modulus but it actually
+ * does what you want it to.
+ * @param {number} x is the number to wrap.
+ * @param {number} max is the point at which it wraps.
+ * @return {number} the result.
+ */
+fish.util.wrap = (x, max) => {
+    return (x < 0) ? max - Math.abs(x % max) : x % max;
+};
 
-<nav >
-    
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="fish.audio.Sample.html">Sample</a></li><li><a href="fish.audio.SoundPlayer.html">SoundPlayer</a><ul class='methods'><li data-type='method'><a href="fish.audio.SoundPlayer.html#loadNoise">loadNoise</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#loadSample">loadSample</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#loadSong">loadSong</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#makeSample">makeSample</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#playNoise">playNoise</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#playSample">playSample</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#playSong">playSong</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#stopNoise">stopNoise</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#stopSong">stopSong</a></li><li data-type='method'><a href="fish.audio.SoundPlayer.html#update">update</a></li></ul></li><li><a href="fish.graphics.Atlas.html">Atlas</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Atlas.html#add">add</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#forEach">forEach</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#get">get</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#getPatch">getPatch</a></li><li data-type='method'><a href="fish.graphics.Atlas.html#n">n</a></li></ul></li><li><a href="fish.graphics.BitmapFont.html">BitmapFont</a><ul class='methods'><li data-type='method'><a href="fish.graphics.BitmapFont.html#getLineHeight">getLineHeight</a></li><li data-type='method'><a href="fish.graphics.BitmapFont.html#getPatch">getPatch</a></li><li data-type='method'><a href="fish.graphics.BitmapFont.html#getRect">getRect</a></li><li data-type='method'><a href="fish.graphics.BitmapFont.html#getWidth">getWidth</a></li></ul></li><li><a href="fish.graphics.Patch.html">Patch</a></li><li><a href="fish.graphics.Renderer.html">Renderer</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Renderer.html#clear">clear</a></li><li data-type='method'><a href="fish.graphics.Renderer.html#loadTexture">loadTexture</a></li><li data-type='method'><a href="fish.graphics.Renderer.html#makeTexture">makeTexture</a></li></ul></li><li><a href="fish.graphics.Renderer_Batch.html">Batch</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#add">add</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addCharacter">addCharacter</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addComp">addComp</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addPatch">addPatch</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#addText">addText</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#clear">clear</a></li><li data-type='method'><a href="fish.graphics.Renderer_Batch.html#render">render</a></li></ul></li><li><a href="fish.graphics.Texture.html">Texture</a><ul class='methods'><li data-type='method'><a href="fish.graphics.Texture.html#getGlTexture">getGlTexture</a></li><li data-type='method'><a href="fish.graphics.Texture.html#getHeight">getHeight</a></li><li data-type='method'><a href="fish.graphics.Texture.html#getRect">getRect</a></li><li data-type='method'><a href="fish.graphics.Texture.html#getWidth">getWidth</a></li></ul></li><li><a href="fish.gui.ButtonKnob.html">ButtonKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.ButtonKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#propagate">propagate</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#selectable">selectable</a></li><li data-type='method'><a href="fish.gui.ButtonKnob.html#update">update</a></li></ul></li><li><a href="fish.gui.ContainerKnob.html">ContainerKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.ContainerKnob.html#addChild">addChild</a></li><li data-type='method'><a href="fish.gui.ContainerKnob.html#incrementSelection">incrementSelection</a></li><li data-type='method'><a href="fish.gui.ContainerKnob.html#propagate">propagate</a></li><li data-type='method'><a href="fish.gui.ContainerKnob.html#selectable">selectable</a></li></ul></li><li><a href="fish.gui.GuiScreen.html">GuiScreen</a><ul class='methods'><li data-type='method'><a href="fish.gui.GuiScreen.html#refresh">refresh</a></li><li data-type='method'><a href="fish.gui.GuiScreen.html#render">render</a></li><li data-type='method'><a href="fish.gui.GuiScreen.html#update">update</a></li></ul></li><li><a href="fish.gui.HBoxKnob.html">HBoxKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.HBoxKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.HBoxKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.HBoxKnob.html#update">update</a></li></ul></li><li><a href="fish.gui.Knob.html">Knob</a><ul class='methods'><li data-type='method'><a href="fish.gui.Knob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.Knob.html#propagate">propagate</a></li><li data-type='method'><a href="fish.gui.Knob.html#render">render</a></li><li data-type='method'><a href="fish.gui.Knob.html#selectable">selectable</a></li><li data-type='method'><a href="fish.gui.Knob.html#setStyle">setStyle</a></li><li data-type='method'><a href="fish.gui.Knob.html#update">update</a></li></ul></li><li><a href="fish.gui.PanelKnob.html">PanelKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.PanelKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.PanelKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.PanelKnob.html#update">update</a></li></ul></li><li><a href="fish.gui.PicKnob.html">PicKnob</a></li><li><a href="fish.gui.TextArrayKnob.html">TextArrayKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.TextArrayKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.TextArrayKnob.html#render">render</a></li><li data-type='method'><a href="fish.gui.TextArrayKnob.html#setCharacter">setCharacter</a></li></ul></li><li><a href="fish.gui.TextKnob.html">TextKnob</a><ul class='methods'><li data-type='method'><a href="fish.gui.TextKnob.html#fit">fit</a></li><li data-type='method'><a href="fish.gui.TextKnob.html#render">render</a></li></ul></li><li><a href="fish.input.CodeError.html">CodeError</a></li><li><a href="fish.input.InputHandler.html">InputHandler</a><ul class='methods'><li data-type='method'><a href="fish.input.InputHandler.html#asciiCode">asciiCode</a></li><li data-type='method'><a href="fish.input.InputHandler.html#down">down</a></li><li data-type='method'><a href="fish.input.InputHandler.html#justDown">justDown</a></li><li data-type='method'><a href="fish.input.InputHandler.html#nameCode">nameCode</a></li><li data-type='method'><a href="fish.input.InputHandler.html#update">update</a></li><li data-type='method'><a href="fish.input.InputHandler.html#~pressed">pressed</a></li><li data-type='method'><a href="fish.input.InputHandler.html#~updateButton">updateButton</a></li></ul></li><li><a href="fish.screen.Screen.html">Screen</a><ul class='methods'><li data-type='method'><a href="fish.screen.Screen.html#refresh">refresh</a></li><li data-type='method'><a href="fish.screen.Screen.html#render">render</a></li><li data-type='method'><a href="fish.screen.Screen.html#update">update</a></li></ul></li><li><a href="fish.screen.SplashScreen.html">SplashScreen</a><ul class='methods'><li data-type='method'><a href="fish.screen.SplashScreen.html#refresh">refresh</a></li><li data-type='method'><a href="fish.screen.SplashScreen.html#render">render</a></li><li data-type='method'><a href="fish.screen.SplashScreen.html#update">update</a></li></ul></li><li><a href="fish.screen.Transition.html">Transition</a></li><li><a href="fish.Store.html">Store</a><ul class='methods'><li data-type='method'><a href="fish.Store.html#getAtlas">getAtlas</a></li><li data-type='method'><a href="fish.Store.html#getSample">getSample</a></li><li data-type='method'><a href="fish.Store.html#getTexture">getTexture</a></li><li data-type='method'><a href="fish.Store.html#~get">get</a></li></ul></li><li><a href="fish.util.Rect.html">Rect</a><ul class='methods'><li data-type='method'><a href="fish.util.Rect.html#shrink">shrink</a></li></ul></li><li><a href="fish.util.Vector.html">Vector</a><ul class='methods'><li data-type='method'><a href="fish.util.Vector.html#add">add</a></li><li data-type='method'><a href="fish.util.Vector.html#set">set</a></li><li data-type='method'><a href="fish.util.Vector.html#wrap">wrap</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="fish.html">fish</a><ul class='methods'><li data-type='method'><a href="fish.html#.start">start</a></li></ul></li><li><a href="fish.audio.html">audio</a></li><li><a href="fish.constants.html">constants</a></li><li><a href="fish.graphics.html">graphics</a><ul class='methods'><li data-type='method'><a href="fish.graphics.html#.loadAtlas">loadAtlas</a></li><li data-type='method'><a href="fish.graphics.html#.loadTexture">loadTexture</a></li><li data-type='method'><a href="fish.graphics.html#.makeTexture">makeTexture</a></li></ul></li><li><a href="fish.gui.html">gui</a><ul class='methods'><li data-type='method'><a href="fish.gui.html#.messageScreen">messageScreen</a></li></ul></li><li><a href="fish.input.html">input</a></li><li><a href="fish.screen.html">screen</a></li><li><a href="fish.util.html">util</a><ul class='methods'><li data-type='method'><a href="fish.util.html#.base64ToArrayBuffer">base64ToArrayBuffer</a></li><li data-type='method'><a href="fish.util.html#.fitText">fitText</a></li><li data-type='method'><a href="fish.util.html#.loadText">loadText</a></li><li data-type='method'><a href="fish.util.html#.textHeight">textHeight</a></li><li data-type='method'><a href="fish.util.html#.wait">wait</a></li><li data-type='method'><a href="fish.util.html#.wrap">wrap</a></li></ul></li></ul>
-</nav>
+/**
+ * Represents a two dimensional point / direction via cartesian coordinates.
+ * You will notice there is no functional style stuff and that is because it
+ * requires instantiating objects and in the kinds of contexts where a vector
+ * class is most used, that is not really acceptable so yeah.
+ * @constructor
+ * @param {number} [x=0] is the horizontal part.
+ * @param {number} [y=0] is the vector part.
+ */
+fish.util.Vector = function (x=0, y=0) {
+    this.x = x;
+    this.y = y;
 
-<div id="main">
-    
-    <h1 class="page-title">constants.js</h1>
-    
+    /**
+     * Sets both parts of the vector to new values.
+     * @param {number} [x=0] is the new x part.
+     * @param {number} [y=0] is the new y part.
+     */
+    this.set = (x=0, y=0) => {
+        this.x = x;
+        this.y = y;
+    };
 
-    
+    /**
+     * Adds another vector onto this one component wise.
+     * @param {fish.util.Vector} other is the other vector.
+     * @param {number} [mag=1] is the amount to multiply the other one by
+     *        first. I know it's not really that relevant to adding but it is
+     *        the main use case so I might as well make it efficient and easy.
+     */
+    this.add = (other, mag=1) => {
+        this.x += other.x * mag;
+        this.y += other.y * mag;
+    };
 
+    /**
+     * Wraps this vector in a rectangle that starts at (0, 0) then goes to
+     * bounds.
+     * @param {fish.util.Vector} bounds is a vector representing the far
+     *                           corner.
+     */
+    this.wrap = bounds => {
+        this.x = fish.util.wrap(this.x, bounds.x);
+        this.y = fish.util.wrap(this.y, bounds.y);
+    };
+};
 
+/**
+ * Represents an axis aligned rectangle and it should be immutable I think.
+ * wait no. But I should make it immutable maybe.
+ */
+fish.util.Rect = class {
+    /**
+     * Creates the rectangle.
+     * @param {number} [x=0] is the horizontal position of the rectangle.
+     * @param {number} [y=0] is the vertical position of the rectangle.
+     * @param {number} [w=0] is the width of the rectangle.
+     * @param {number} [h=0] is the height of the rectangle.
+     */
+    constructor(x=0, y=0, w=0, h=0) {
+        this.pos = new fish.util.Vector(x, y);
+        this.size = new fish.util.Vector(w, h);
+    }
 
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>var fish = fish || {};
+    copy() {
+        return new fish.util.Rect(this.x, this.y, this.w, this.h);
+    }
+
+    /**
+     * Shrinks the rectangle by a certain amount from each of it's former
+     * border lines.
+     * @param {number} amount the amount to shrink it from each side.
+     * @param {?number} [yAmount=null] if given as a number this a seperate
+     *        amount to shrink it by on the top and bottom.
+     */
+    shrink(amount, yAmount=null) {
+        if (yAmount === null) yAmount = amount;
+        this.pos.x += amount;
+        this.pos.y += yAmount;
+        this.size.x -= amount * 2;
+        this.size.y -= yAmount * 2;
+    }
+
+    /**
+     * Gets the horizontal position of the rectangle.
+     * @return {number} x
+     */
+    get x() {
+        return this.pos.x;
+    }
+
+    /**
+     * Gets the vertical position of the rectangle.
+     * @return {number} y
+     */
+    get y() {
+        return this.pos.y;
+    }
+
+    /**
+     * Gets the width of the rectangle.
+     * @return {number} w
+     */
+    get w() {
+        return this.size.x;
+    }
+
+    /**
+     * Gets the height of the rectangle.
+     * @return {number} h
+     */
+    get h() {
+        return this.size.y;
+    }
+
+    /**
+     * Gets the position of the right hand side of the rectangle. Or left
+     * depending on how you look at it. Essentially it's x + w.
+     * @return {number} x + w
+     */
+    get r() {
+        return this.pos.x + this.size.x;
+    }
+
+    /**
+     * Gets the position of the top of the rectangle. Or bottom depending on
+     * how you are thinking about it. Point is it's y + h.
+     * @return {number} y + h
+     */
+    get t() {
+        return this.pos.y + this.size.y;
+    }
+};
+
+/**
+ * Asynchronously loads a text file in.
+ * @param {string} url is the url to load the file from.
+ * @return {Promise<string>} that resolves to the loaded file content.
+ */
+fish.util.loadText = function (url) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) resolve(this.responseText);
+                else reject(
+                    `couldn't get file '${url}', response code ${this.status}`
+                );
+            }
+        };
+        xhr.open('GET', url, true);
+        xhr.send();
+    });
+};
+
+/**
+ * Takes a piece of text and fits it so that when drawn with a given font it
+ * will fit into a given width space. It ignores single newlines, and turns two
+ * or more newlines in a row into a single newline.
+ * @param {string} text the text to fit.
+ * @param {fish.graphics.Font} font the font to give size to the text.
+ * @param {number} width the width to fit the text into.
+ */
+fish.util.fitText = (text, font, width) => {
+    let fitted = '';
+    let lines = text.split(/\n\n+/);
+    for (let line of lines) {
+        let offset = 0;
+        let tokens = line.split(/\s/);
+        for (let token of tokens) {
+            if (token.length == 0) continue;
+            let size = 0;
+            for (let i = 0; i < token.length; i++) {
+                size += font.getWidth(token.charAt(i));
+            }
+            if (offset + size > width) {
+                fitted += `\n${token}`;
+                offset = size;
+            } else {
+                fitted += token;
+                offset += size;
+            }
+            offset += font.getWidth(' ');
+            fitted += ' ';
+        }
+        fitted += '\n';
+    }
+    return fitted;
+};
+
+/**
+ * Takes a fitted piece of text and tells you how high it is gonna be in the
+ * given font.
+ * @param {string} text is text where every newline is taken seriously.
+ * @param {fish.graphics.Font} font is the font used to measure it.
+ * @return {number} the number of pixels high it will be.
+ */
+fish.util.textHeight = (text, font) => {
+    let lines = text.split(/\n(?=\S+)/).length;
+    return lines * font.getLineHeight();
+};
+
+/**
+ * Converts a base64 string to an arraybuffer which is useful for converting
+ * into data stuff with browser apis.
+ * @param {string} base64 is the base64 string to convert.
+ * @return {Uint8Array} created arraybuffer.
+ */
+fish.util.base64ToArrayBuffer = base64 => {
+    let binary = atob(base64);
+    let bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+};
+
+/**
+ * Waits for the given amount of time asynchronously.
+ * @param {number} time time to wait in seconds.
+ * @return {Promise<mixed>} nothing in particular.
+ */
+fish.util.wait = function (time) {
+    return new Promise(resolve => setTimeout(resolve, time * 1000));
+};
+
+var fish = fish || {};
 
 /** @namespace */
 fish.constants = {};
@@ -63,14 +263,14 @@ fish.constants = {};
      */
     fish.constants.SPLASH = new Uint16Array(splashSize);
     let splashBinary = atob(SPLASH);
-    for (let i = 0; i &lt; splashSize; i++) {
+    for (let i = 0; i < splashSize; i++) {
         let c = splashBinary.charCodeAt(i * 2);
         let c2 = splashBinary.charCodeAt(i * 2 + 1);
         let red = (c >>> 4);
-        let green = (c &amp; 0xf);
+        let green = (c & 0xf);
         let blue = (c2 >>> 4);
-        let alpha = (c2 &amp; 0xf);
-        fish.constants.SPLASH[i] = red &lt;&lt; 12 | green &lt;&lt; 8 | blue &lt;&lt; 4 | alpha;
+        let alpha = (c2 & 0xf);
+        fish.constants.SPLASH[i] = red << 12 | green << 8 | blue << 4 | alpha;
     }
     /**
      * array of audio data for the init screen music.
@@ -85,28 +285,2268 @@ fish.constants = {};
      */
     fish.constants.VERSION = '0.1.0';
 })();
-</code></pre>
-        </article>
-    </section>
+
+var fish = fish || {};
+
+/**
+ * This file provides functionality for doing graphics stuff. A lot of it is
+ * made publically accessible so that if you don't like the SpriteRenderer
+ * class for rendering, you can create your own class and use as much existing
+ * functionality as possible to save you some time and potentially make
+ * different rendering classes as interoperable as practical.
+ * So, unless you want to make your own rendering class, probably the only
+ * thing you are going to use from this file is SpriteRenderer.
+ * @namespace
+ */
+fish.graphics = {};
+
+/**
+ * Creates a texture object out of a gl texture. You probably don't want to
+ * instantiate one of these directly unless you are creating your own graphics
+ * system.
+ * @constructor
+ * @param {number} glTexture is the open gl reference to the texture.
+ * @param {number} width     is the width of the texture.
+ * @param {number} height    is the height of the texture.
+ */
+fish.graphics.Texture = function (glTexture, width, height) {
+    /**
+     * Gives you the opengl texture.
+     * @return {number} the opengl reference to the texture.
+     */
+    this.getGlTexture = () => {
+        return glTexture;
+    };
+
+    /**
+     * Gives you the width of the texture.
+     * @return {number} the width.
+     */
+    this.getWidth = () => {
+        return width;
+    };
+
+    /**
+     * Gives you the height of the texture.
+     * @return {number} the height.
+     */
+    this.getHeight = () => {
+        return height;
+    };
+
+    /**
+     * Creates a rectangle object for the size of the texture with the corner
+     * at (0, 0).
+     * @return {fish.util.Rect} the rect.
+     */
+    this.getRect = () => {
+        return new fish.util.Rect(0, 0, width, height);
+    };
+};
+
+/**
+ * Stores sprites. You probably don't want to instantiate one of these directly
+ * unless you are creating your own graphics system.
+ * @constructor
+ */
+fish.graphics.Atlas = function () {
+    let sprites = {};
+
+    /**
+     * Adds a sprite into the atlas.
+     * @param {string}         name   is the name of the atlas.
+     * @param {fish.util.Rect} sprite is the sprite to add.
+     */
+    this.add = (name, sprite) => {
+        sprites[name] = sprite;
+    };
+
+    /**
+     * Gets a sprite out of the atlas.
+     * @param {string} name is the name of the sprite to get.
+     * @return {fish.util.Rect} the sprite found or an empty one if it lacks it.
+     */
+    this.get = name => {
+        if (name in sprites) return sprites[name];
+        console.error(`unknown sprite name ${name}`);
+        return new fish.util.Rect(0, 0, 0, 0);
+    };
+
+    /**
+     * Gets a 9-patch out of the atlas and makes it for you. If you pass the
+     * border argument then it is used to create the patch, but if you leave it
+     * as 0 then it tries to use the name to discern the border size of the
+     * patch by looking for a number at the end of the name. If neither of
+     * those things are present then an error will be thrown.
+     * @param {string} name name of the sprite the patch is made of.
+     * @param {number} [border=0] the width of the borders of the patch.
+     * @return {fish.graphics.Patch} the created patch.
+     */
+    this.getPatch = (name, border=0) => {
+        let sprite = this.get(name);
+        if (border <= 0) {
+            let match = name.match(/\d+/);
+            if (!match) {
+                throw new Error(
+                    'fish.graphics.Atlas.getPatch requires a border number ' +
+                    'or a sprite with a name that ends with a number'
+                );
+            }
+            border = parseInt(match[0]);
+        }
+        return new fish.graphics.Patch(sprite, border);
+    };
+
+    /**
+     * Tells you the number of sprites.
+     * @return {number} the number of sprites.
+     */
+    this.n = () => {
+        return Object.keys(sprites).length;
+    };
+
+    /**
+     * The atlas foreach callback structure which gets called on each sprite in
+     * the atlas.
+     * @callback fish.graphics.Atlas~callback
+     * @param {string}         name   is the name of the sprite.
+     * @param {fish.util.Rect} sprite is the sprite.
+     */
+
+    /**
+     * Iterates over all sprites in the atlas.
+     * @param {fish.graphics.Atlas~callback} callback is a callback to run for each one.
+     */
+    this.forEach = callback => {
+        for (let sprite in sprites) callback(sprite, sprites[sprite]);
+    };
+};
+
+/**
+ * Font that is drawn using an 16x16 grid of characters all having the same
+ * dimensions.
+ */
+fish.graphics.BitmapFont = class {
+    /**
+     * Creates it and adds the sprite to it yeah.
+     * @param {fish.util.Rect} sprite is the sprite from which we get the
+     *        characters.
+     */
+    constructor(sprite) {
+        /**
+         * The font's actual sprite.
+         * @member
+         * @type {fish.util.Rect}
+         * @readonly
+         */
+        this.sprite = sprite;
+    }
+
+    /**
+     * Gives you the width of the given character.
+     * @param {number} c character code of the character to measure.
+     * @return {number} the width of the character in pixels.
+     */
+    getWidth(c) {
+        return this.sprite.w / 16;
+    }
+
+    /**
+     * Gives you the height of lines in this font.
+     * @return {number} the height of the line in pixels.
+     */
+    getLineHeight() {
+        return this.sprite.h / 16;
+    }
+
+    /**
+     * Gives you a rectangle made of characters from the font.
+     * @param {number} x is the left offset of the rectangle in characters.
+     * @param {number} y is the top offset of the rectangle in characters.
+     * @param {number} w is the width of the rectangle in characters.
+     * @param {number} h is the height of the rectangle in characters.
+     * @return {fish.util.Rect} such a rect as was requested.
+     */
+    getRect(x, y, w, h) {
+        return new fish.util.Rect(
+            this.sprite.x + x * this.sprite.w / 16,
+            this.sprite.y + y * this.sprite.h / 16,
+            this.sprite.w / 16 * w,
+            this.sprite.h / 16 * h
+        );
+    }
+
+    /**
+     * Creates a patch from a rectangle of characters in the font.
+     * @param {number} x is the left offset of the rectangle in characters.
+     * @param {number} y is the top offset of the rectangle in characters.
+     * @param {number} w is the width of the rectangle in characters.
+     * @param {number} h is the height of the rectangle in characters.
+     * @param {number} border is the border of the patch in characters.
+     * @return {fish.graphics.Patch} the relevant patch.
+     */
+    getPatch(x, y, w, h, border) {
+        return new fish.graphics.Patch(
+            this.getRect(x, y, w, h),
+            this.sprite.w / 16 * border,
+            this.sprite.h / 16 * border
+        );
+    }
+};
+
+/**
+ * Asynchronously loads a texture out of a url. This function requires you to
+ * pass a gl context so you probably want to use the version built into the
+ * renderer unless you are making your own graphics system.
+ * @async
+ * @param {WebGLRenderingContext} gl the rendering context.
+ * @param {string} url is the url to load the texture from.
+ * @return {Promise<fish.graphics.Texture>} the loaded texture.
+ */
+fish.graphics.loadTexture = async function (gl, url) {
+    return await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+            const texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(
+                gl.TEXTURE_2D,
+                0,
+                gl.RGBA,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                image
+            );
+            gl.texParameteri(
+                gl.TEXTURE_2D,
+                gl.TEXTURE_WRAP_S,
+                gl.CLAMP_TO_EDGE
+            );
+            gl.texParameteri(
+                gl.TEXTURE_2D,
+                gl.TEXTURE_WRAP_T,
+                gl.CLAMP_TO_EDGE
+            );
+            gl.texParameteri(
+                gl.TEXTURE_2D,
+                gl.TEXTURE_MIN_FILTER,
+                gl.NEAREST
+            );
+            gl.texParameteri(
+                gl.TEXTURE_2D,
+                gl.TEXTURE_MAG_FILTER,
+                gl.NEAREST
+            );
+            resolve(new fish.graphics.Texture(
+                texture,
+                image.width,
+                image.height
+            ));
+        };
+        image.onerror = () => {
+            reject(`failed loading image ${url}`);
+        };
+        image.src = url;
+    });
+};
+
+/**
+ * Make a texture out of an arraybuffer.
+ * @param {WebGLRenderingContext} gl the rendering context.
+ * @param {Uint8Array} data is the data to convert.
+ * @param {number} width image width.
+ * @param {number} height image height.
+ * @param {GLenum} format is the pixel format of the data.
+ * @return {fish.graphics.Texture} the created texture.
+ */
+fish.graphics.makeTexture = (gl, data, width, height, format) => {
+    const glTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, glTexture);
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        format,
+        width,
+        height,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_SHORT_4_4_4_4,
+        data
+    );
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    return new fish.graphics.Texture(glTexture, width, height);
+};
+
+/**
+ * Loads in the data part of a texture atlas.
+ * @async
+ * @param {string} url is the url to load it from.
+ * @return {Promise<fish.graphics.Atlas>} the created atlas.
+ */
+fish.graphics.loadAtlas = async function (url) {
+    let text = await fish.util.loadText(url);
+    if (text == null) return null;
+    let data = JSON.parse(text);
+    let atlas = new fish.graphics.Atlas();
+    for (let frame in data) {
+        let rect = data[frame];
+        atlas.add(
+            frame,
+            new fish.util.Rect(rect.x, rect.y, rect.width, rect.height)
+        );
+    }
+    return atlas;
+};
+
+/**
+ * 9 patch implementation that uses a sprite rectangle for each part of the
+ * patch. This is just the object that holds the data for the 9 patch.
+ */
+fish.graphics.Patch = class {
+    /**
+     * Creates it by giving a sprite and a border around the outside which
+     * becomes the non middle parts.
+     * @param {fish.util.Rect} rect is the overall sprite to make the patch
+     *        from.
+     * @param {number} sideBorder is the border size to use on the sides.
+     * @param {?number} [topBorder=null] is the border size to use on the top
+     *        and bottom of the patch. If you leave this to default as null
+     *        then it will just use sideBorder.
+     */
+    constructor(rect, sideBorder, topBorder=null) {
+        if (topBorder === null) topBorder = sideBorder;
+        let hMid = rect.w - sideBorder * 2;
+        let vMid = rect.h - topBorder * 2;
+        if (hMid < 1 || vMid < 1) {
+            throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
+        }
+
+        /**
+         * Border width of the patch.
+         * @readonly
+         * @member {number}
+         */
+        this.SIDE_BORDER = sideBorder;
+
+        /**
+         * Border height of the patch.
+         * @readonly
+         * @member {number}
+         */
+        this.TOP_BORDER = topBorder;
+
+        /**
+         * Top left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.TL = new fish.util.Rect(rect.x, rect.y, sideBorder, topBorder);
+
+        /**
+         * Top part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.T = new fish.util.Rect(rect.x + sideBorder, rect.y, hMid, topBorder);
+
+        /**
+         * Top right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.TR = new fish.util.Rect(rect.x + sideBorder + hMid, rect.y, sideBorder, topBorder);
+
+        /**
+         * mid left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.ML = new fish.util.Rect(rect.x, rect.y + topBorder, sideBorder, vMid);
+
+        /**
+         * middle part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.M = new fish.util.Rect(rect.x + sideBorder, rect.y + topBorder, hMid, vMid);
+
+        /**
+         * mid right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.MR = new fish.util.Rect(
+            rect.x + sideBorder + hMid,
+            rect.y + topBorder,
+            sideBorder,
+            vMid
+        );
+
+        /**
+         * bottom left part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.BL = new fish.util.Rect(rect.x, rect.y + topBorder + vMid, sideBorder, topBorder);
+
+        /**
+         * bottom part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.B = new fish.util.Rect(
+            rect.x + sideBorder,
+            rect.y + topBorder + vMid,
+            hMid,
+            topBorder
+        );
+
+        /**
+         * bottom right part of the patch.
+         * @readonly
+         * @member {fish.util.Rect}
+         */
+        this.BR = new fish.util.Rect(
+            rect.x + sideBorder + hMid,
+            rect.y + topBorder + vMid,
+            sideBorder,
+            topBorder
+        );
+    }
+};
+
+/**
+ * The graphics handler which uses a sprite batch to draw nice pictures.
+ * @constructor
+ * @param {WebGLRenderingContext} gl is the opengl context.
+ */
+fish.graphics.Renderer = function (gl) {
+    let spareRect = new fish.util.Rect();
+    let usedTextures = [];
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    this.gl = gl;
+    this.size = new fish.util.Vector(
+        gl.drawingBufferWidth,
+        gl.drawingBufferHeight
+    );
 
 
+    /**
+     * A thing that batches draw calls.
+     * @constructor
+     * @param {fish.graphics.Texture} texture is the texture all the draws must
+     *        be from.
+     * @param {number} max the max things to draw.
+     */
+    this.Batch = function (texture, max) {
+        let items = new Float32Array(max * 12);
+        let textureItems = new Float32Array(max * 12);
+        let n = 0;
+        let rendered = false;
+        const buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, items, gl.DYNAMIC_DRAW);
+        const textureBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, textureItems, gl.DYNAMIC_DRAW);
+
+        /**
+         * Adds the given sprite onto the given spot.
+         * @param {fish.util.Rect} src is the sprite to draw.
+         * @param {number} l the distance from left of screen to draw.
+         * @param {number} b the distance from bottom of screen to draw.
+         * @param {number} r the distance from right of screen to stop draw.
+         * @param {number} t the distance from top of screen to stop draw.
+         */
+        this.addComp = (src, l, b, r, t) => {
+            if (n >= max) return;
+            const offset = n * 12;
+            items[offset] = l;
+            items[offset + 1] = b;
+            items[offset + 2] = r;
+            items[offset + 3] = b;
+            items[offset + 4] = l;
+            items[offset + 5] = t;
+            items[offset + 6] = r;
+            items[offset + 7] = b;
+            items[offset + 8] = r;
+            items[offset + 9] = t;
+            items[offset + 10] = l;
+            items[offset + 11] = t;
+            textureItems[offset] = src.x;
+            textureItems[offset + 1] = src.t;
+            textureItems[offset + 2] = src.r;
+            textureItems[offset + 3] = src.t;
+            textureItems[offset + 4] = src.x;
+            textureItems[offset + 5] = src.y;
+            textureItems[offset + 6] = src.r;
+            textureItems[offset + 7] = src.t;
+            textureItems[offset + 8] = src.r;
+            textureItems[offset + 9] = src.y;
+            textureItems[offset + 10] = src.x;
+            textureItems[offset + 11] = src.y;
+            n++;
+        };
+
+        /**
+         * Adds a sprite to the list of those to draw. I guess rotating would
+         * be good but I would have to do it in software and I dunno what the
+         * performance would be like.
+         * @param {fish.util.Rect} src is the src rectangle from the texture.
+         * @param {fish.util.Rect|fish.util.Vector} dst is where to draw it on
+         * the screen. If it's a vector then that is the centre.
+         * @param {number} scale is used to scale the sprite if you used
+         * a vector. If you used a rect it does nothing.
+         */
+        this.add = (src, dst, scale=1) => {
+            let l, r, t, b;
+            if (dst instanceof fish.util.Rect) {
+                l = dst.x;
+                r = dst.r;
+                b = dst.y;
+                t = dst.t;
+            } else if (dst instanceof fish.util.Vector) {
+                let halfScale = scale * 0.5;
+                l = dst.x - src.w * halfScale;
+                r = dst.x + src.w * halfScale;
+                b = dst.y + src.h * halfScale;
+                t = dst.y - src.h * halfScale;
+            } else {
+                throw new TypeError(
+                    'SpriteRenderer.Batch.add requres a Vector or a Rect'
+                );
+            }
+            this.addComp(src, l, t, r, b);
+        };
 
 
+        /**
+         * Draws a 9 patch at the given place. If you give an area that is too
+         * small it will look munted beware.
+         * @param patch is the 9patch to draw.
+         * @param dst   is the place to draw it.
+         */
+        this.addPatch = (patch, dst) => {
+            this.addComp(
+                patch.BL,
+                dst.x,
+                dst.y,
+                dst.x + patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER
+            );
+            this.addComp(
+                patch.B,
+                dst.x + patch.SIDE_BORDER,
+                dst.y,
+                dst.r - patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER
+            );
+            this.addComp(
+                patch.BR,
+                dst.r - patch.SIDE_BORDER,
+                dst.y,
+                dst.r,
+                dst.y + patch.TOP_BORDER
+            );
+            this.addComp(
+                patch.ML,
+                dst.x,
+                dst.y + patch.TOP_BORDER,
+                dst.x + patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER
+            );
+            this.addComp(
+                patch.M,
+                dst.x + patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER
+            );
+            this.addComp(
+                patch.MR,
+                dst.r - patch.SIDE_BORDER,
+                dst.y + patch.TOP_BORDER,
+                dst.r,
+                dst.t - patch.TOP_BORDER
+            );
+            this.addComp(
+                patch.TL,
+                dst.x,
+                dst.t - patch.TOP_BORDER,
+                dst.x + patch.SIDE_BORDER,
+                dst.t
+            );
+            this.addComp(
+                patch.T,
+                dst.x + patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER,
+                dst.r - patch.SIDE_BORDER,
+                dst.t
+            );
+            this.addComp(
+                patch.TR,
+                dst.r - patch.SIDE_BORDER,
+                dst.t - patch.TOP_BORDER,
+                dst.r,
+                dst.t
+            );
+        };
+
+        /**
+         * Draws text using a bitmap font.
+         * @param {fish.graphics.BitmapFont} font the font that has the text
+         *        graphics and drawing info.
+         * @param {string} text what to write including all newlines and stuff.
+         * @param {fish.util.Vector} dst is where on the screen to write the
+         *        text. Successive lines will decrease in y position.
+         */
+        this.addText = (font, text, dst) => {
+            let width = font.getWidth('n');
+            let height = font.getLineHeight();
+            let xOffset = 0;
+            let yOffset = 0;
+            spareRect.size.set(width, height);
+            for (let i = 0; i < text.length; i++) {
+                let c = text.charCodeAt(i);
+                if (c == 10) {
+                    yOffset += height;
+                    xOffset = 0;
+                } else {
+                    spareRect.pos.set(
+                        font.sprite.x + Math.floor(c % 16) * width,
+                        font.sprite.y + Math.floor(c / 16) * height
+                    );
+                    this.addComp(
+                        spareRect,
+                        dst.x + xOffset,
+                        dst.y - yOffset - height,
+                        dst.x + xOffset + width,
+                        dst.y - yOffset
+                    );
+                    xOffset += width;
+                }
+            }
+        };
+
+        /**
+         * Batch to draw a single character from a bitmap font somewhere on the
+         * screen.
+         * @param {fish.graphics.BitmapFont} font is the font to draw from.
+         * @param {number} c character code of character to draw.
+         * @param {fish.util.Rect|fish.util.Vector} dst place to put the
+         *        character on the screen.
+         */
+        this.addCharacter = (font, c, dst) => {
+            spareRect.size.set(font.getWidth(c), font.getLineHeight());
+            spareRect.pos.set(
+                font.sprite.x + Math.floor(c % 16) * spareRect.w,
+                font.sprite.y + Math.floor(c / 16) * spareRect.h
+            );
+            this.add(spareRect, dst);
+        };
+
+        /** Blanks the contents of the batch to go again. */
+        this.clear = () => {
+            rendered = false;
+            n = 0;
+        };
+
+        /** Renders what the batch currently has to the screen. */
+        this.render = () => {
+            if (rendered) {
+                console.error('repeat batch rendering without clear');
+                return;
+            }
+            rendered = true;
+            let shader = fish.shader.bindDefaultShader(gl);
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, items);
+            gl.vertexAttribPointer(shader.position, 2, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(shader.position);
+            gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+            gl.bufferSubData(gl.ARRAY_BUFFER, 0, textureItems);
+            gl.vertexAttribPointer(
+                shader.textureCoord,
+                2,
+                gl.FLOAT,
+                false,
+                0,
+                0
+            );
+            gl.enableVertexAttribArray(shader.textureCoord);
+            gl.bindTexture(gl.TEXTURE_2D, texture.getGlTexture());
+            gl.uniform1i(shader.sampler, 0);
+            gl.uniform2f(
+                shader.invTextureSize,
+                1 / texture.getWidth(),
+                1 / texture.getHeight()
+            );
+            gl.drawArrays(gl.TRIANGLES, 0, n * 6);
+        };
+    };
+
+    /**
+     * Loads a texture using this graphics thing's gl context.
+     * @param {string} url is the url of the texture to load.
+     * @return {Promise<fish.graphics.Texture>} the texture if it worked.
+     */
+    this.loadTexture = async function (url) {
+        return await fish.graphics.loadTexture(gl, url);
+    };
+
+    /**
+     * Make a texture using this graphics thing's graphics context.
+     * @param {Uint8Array} data the data to make it from.
+     * @param {number} width image width.
+     * @param {number} height image height.
+     * @param {GLenum} format pixel format of the data.
+     * @return {fish.graphics.Texture} the created texture.
+     */
+    this.makeTexture = (data, width, height, format) => {
+        return fish.graphics.makeTexture(gl, data, width, height, format);
+    };
+
+    /**
+     * Fill the screen with colour.
+     * @param {number} r is the red part from 0 to 1.
+     * @param {number} g is the green part from 0 to 1.
+     * @param {number} b is the blue part from 0 to 1.
+     * @param {number} a is the alpha part from 0 to 1.
+     */
+    this.clear = (r=1, g=1, b=1, a=1) => {
+        gl.clearColor(r, g, b, a);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+    };
+};
+
+var fish = fish || {};
+
+/**
+ * This file provides audio playing and loading functionality and a basic sound
+ * player class. This player only supports playing audio files that are fully
+ * loaded into memory, there is no audio streaming because it would lag and
+ * suck.
+ * If you need more flexible audio playing then feel free to create your own
+ * class that does what you need.
+ * @namespace
+ */
+fish.audio = {};
+
+/**
+ * Represents a piece of fully loaded sampled audio.
+ */
+fish.audio.Sample = class {
+    /**
+     * @param {string} name the name of the sample to keep track of it with.
+     * @param {AudioBuffer} buffer the audio data.
+     */
+    constructor(name, buffer) {
+        this.name = name;
+        this.buffer = buffer;
+    }
+};
+
+/**
+ * Controller of all things audio within the engine.
+ */
+fish.audio.SoundPlayer = class {
+    /**
+     * @param {AudioContext} context web audio context it requires to work.
+     */
+    constructor(context) {
+        this.context = context;
+        this.songPlayer = null;
+        this.noisePlayer = null;
+        this.playingSong = '';
+        this.playingNoise = '';
+        this.playingSounds = {};
+        this.frame = 0;
+    }
+
+    /** Updates the sound player. */
+    update() {
+        this.frame++;
+    }
+
+    /**
+     * Play the given sample if possible with the given priority.
+     * @param {fish.audio.Sample} sample the sample to play.
+     */
+    playSample(sample) {
+        if (this.playingSounds[sample.name] == this.frame) return;
+        this.playingSounds[sample.name] = this.frame;
+        let source = this.context.createBufferSource();
+        source.buffer = sample.buffer;
+        source.connect(this.context.destination);
+        source.start();
+    }
+
+    /**
+     * Play the given song and if it is already playing then do nothing.
+     * @param {fish.audio.Sample} sample is the audio to play.
+     */
+    playSong(sample) {
+        if (this.playingSong == sample.name) return;
+        this.playingSong = sample.name;
+        if (this.songPlayer) this.songPlayer.stop();
+        this.songPlayer = this.context.createBufferSource();
+        this.songPlayer.connect(this.context.destination);
+        this.songPlayer.buffer = sample.buffer;
+        this.songPlayer.loop = true;
+        this.songPlayer.start(0);
+    }
+
+    /** Stop the playing song. */
+    stopSong() {
+        this.playingSong = '';
+        if (this.songPlayer) this.songPlayer.stop();
+    }
+
+    /**
+     * Load a song from the store and then play it right away.
+     * @param {fish.Store} store is the store to load from.
+     * @param {string} name  is the key to the song as you would normally
+     *        use to load it from the store.
+     */
+    async loadSong(store, name) {
+        let sample = await store.getSample(name);
+        if (sample) this.playSong(sample);
+    }
+
+    /**
+     * Play the given noise and if it is already playing then do nothing.
+     * @param {fish.audio.Sample} sample is the audio to play.
+     */
+    playNoise(sample) {
+        if (this.playingNoise == sample.name) return;
+        this.playingNoise = sample.name;
+        if (this.noisePlayer) this.noisePlayer.stop();
+        this.noisePlayer = this.context.createBufferSource();
+        this.noisePlayer.connect(this.context.destination);
+        this.noisePlayer.buffer = sample.buffer;
+        this.noisePlayer.loop = true;
+        this.noisePlayer.start(0);
+    }
+
+    /** Stop the playing song. */
+    stopNoise() {
+        playingNoise = '';
+        if (noisePlayer) noisePlayer.stop();
+    }
+
+    /**
+     * Load a noise from the store and then play it right away.
+     * @param {fish.Store} store is the store to load from.
+     * @param {string} name is the key to the noise as you would normally
+     *        use to load it from the store.
+     */
+    async loadNoise(store, name) {
+        let sample = await store.getSample(name);
+        if (sample) this.playSong(sample);
+    }
+
+    /**
+     * Loads a piece of audio into memory from soem url.
+     * @param {string} url is the joint to load from.
+     * @return {Promise<fish.audio.Sample>} the sound I guess assuming it
+     *         didn't fuck up.
+     */
+    loadSample(url) {
+        let request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.responseType = 'arraybuffer';
+        return new Promise((resolve, reject) => {
+            request.onload = () => {
+                this.context.decodeAudioData(
+                    request.response,
+                    buffer => {
+                        resolve(new fish.audio.Sample(url, buffer));
+                    },
+                    () => {
+                        reject(`Couldn't load sample ${url}`);
+                    }
+                );
+            };
+            request.send();
+        });
+    }
+
+    /**
+     * Makes a sample out of a base64 encoded string.
+     * @param {Uint8Array} data is the data to make into a sample.
+     * @return {Promise<fish.audio.Sample>} the created sample.
+     */
+    makeSample(data) {
+        return new Promise((resolve, reject) => {
+            this.context.decodeAudioData(
+                data.buffer,
+                buffer => {
+                    // TODO: can't just call it anon, will clash.
+                    resolve(new fish.audio.Sample('anon', buffer));
+                },
+                () => {
+                    reject('Could not make sampke from data');
+                }
+            );
+        });
+    }
+};
+
+var fish = fish || {};
+
+/**
+ * Contains the base input handler and a couple of button constants that are
+ * required to be handled by the gui system. If you create your input handler
+ * you just need to make sure you implement uiDown and uiJustDown so that it
+ * will work with the gui system.
+ * @namespace
+ */
+fish.input = {};
+
+/**
+ * The buttons that this imaginary controller provides.
+ * @readonly
+ * @enum {string}
+ */
+fish.input.BUTTON = {
+    /** Left axis on controller pointed up. */
+    UP: 'UP',
+    /** Left axis on controller pointed down. */
+    DOWN: 'DOWN',
+    /** Left axis on controller pointed left. */
+    LEFT: 'LEFT',
+    /** Left axis on controller pointed right. */
+    RIGHT: 'RIGHT',
+    /** X button like on xbox controller. */
+    X: 'X',
+    /** Y button like on xbox controller. */
+    Y: 'Y',
+    /** A button like on xbox controller. */
+    A: 'A',
+    /** B button like on xbox controller. */
+    B: 'B',
+    /** left trigger button. */
+    L: 'L',
+    /** right trigger button. */
+    R: 'R',
+    /** left menu button. */
+    SELECT: 'SELECT',
+    /** right menu button thing. Generally the pause button. */
+    START: 'START'
+};
+
+/**
+ * Error representing when something that is not in fish.input.BUTTON is
+ * attempted to be used as an input code.
+ */
+fish.input.CodeError = class extends Error {
+    /**
+     * @param {string} code is the incorrect key code.
+     */
+    constructor(code) {
+        super(`${code} is not a valid input code`);
+    }
+};
+
+/**
+ * An input handler system that unifies all input from gamepads / keyboard
+ * into one abstract input which is supposed to work like a gamepad basically.
+ * It only works with 1 player games for that reason.
+ * @constructor
+ * @implements {fish.input.UiInput}
+ * @param {Object.<string, string>} [keymap={}] a mapping from html key names
+ *        to button on the virtual controller.
+ * @param {number} [threshold=0.9] the threshold beyond which a gamepad axis is
+ *        considered pressed.
+ */
+fish.input.InputHandler = function (keymap={}, threshold=0.9) {
+    if (!keymap.UP) keymap.UP = 'ArrowUp';
+    if (!keymap.DOWN) keymap.DOWN = 'ArrowDown';
+    if (!keymap.LEFT) keymap.LEFT = 'ArrowLeft';
+    if (!keymap.RIGHT) keymap.RIGHT = 'ArrowRight';
+    if (!keymap.A) keymap.A = 'Shift';
+    if (!keymap.B) keymap.B = 'z';
+    if (!keymap.X) keymap.X = 'a';
+    if (!keymap.Y) keymap.Y = 'x';
+    if (!keymap.L) keymap.L = 'd';
+    if (!keymap.R) keymap.R = 'c';
+    if (!keymap.SELECT) keymap.SELECT = 'Escape';
+    if (!keymap.START) keymap.START = 'Enter';
+    let frame = 0;
+    let keys = {};
+    let buttonStates = {};
+    for (let button in fish.input.BUTTON) {
+        buttonStates[button] = 0;
+    }
+    document.addEventListener('keydown', (e) => {keys[e.key] = true;});
+    document.addEventListener('keyup', (e) => {keys[e.key] = false;});
+
+    /**
+     * Tells you if the given button is pressed whether it is a number or
+     * a button object thing.
+     * @param {string|number} button is either a number or a button object thingo.
+     * @return {boolean} true iff it is pressed.
+     */
+    let pressed = button => {
+        if (typeof(button) == 'object') {
+            return button.pressed;
+        }
+        return button == 1.0;
+    };
+
+    /**
+     * Sets a button to the correct value based on whether it is pressed or not
+     * rn.
+     * @param {string}  button is the button to update.
+     * @param {boolean} value  is whether or not it is pressed right now.
+     * @param {boolean} include is whether to keep the value that is already
+     *        there.
+     */
+    let updateButton = (button, value, include=false) => {
+        if (include) value = value || buttonStates[button] > 0;
+        if (!value) buttonStates[button] = 0;
+        else if (buttonStates[button] == 0) buttonStates[button] = frame;
+    };
+
+    /**
+     * Just iterates the frame number.
+     */
+    this.update = () => {
+        frame++;
+        let gamepads = navigator.getGamepads ? navigator.getGamepads() :
+            (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+        for (let button in fish.input.BUTTON) {
+            updateButton(button, keys[keymap[button]]);
+        }
+        for (let pad of gamepads) {
+            if (!pad) continue;
+            updateButton(fish.input.BUTTON.A, pressed(pad.buttons[0]), true);
+            updateButton(fish.input.BUTTON.B, pressed(pad.buttons[1]), true);
+            updateButton(fish.input.BUTTON.X, pressed(pad.buttons[2]), true);
+            updateButton(fish.input.BUTTON.Y, pressed(pad.buttons[3]), true);
+            updateButton(fish.input.BUTTON.L, pressed(pad.buttons[4]), true);
+            updateButton(fish.input.BUTTON.R, pressed(pad.buttons[5]), true);
+            updateButton(
+                fish.input.BUTTON.SELECT,
+                pressed(pad.buttons[8]),
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.START,
+                pressed(pad.buttons[9]),
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.UP,
+                pressed(pad.buttons[12]) || pad.axes[1] < -threshold,
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.DOWN,
+                pressed(pad.buttons[13]) || pad.axes[1] > threshold,
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.LEFT,
+                pressed(pad.buttons[14]) || pad.axes[0] < -threshold,
+                true
+            );
+            updateButton(
+                fish.input.BUTTON.RIGHT,
+                pressed(pad.buttons[15]) || pad.axes[0] > threshold,
+                true
+            );
+        }
+    };
+
+    /**
+     * Tells you if the given input is pressed.
+     * @param {fish.input.BUTTON} code represents the iinput button thing.
+     * @return {boolean} true if it is pressed.
+     */
+    this.down = code => {
+        if (!(code in buttonStates)) throw new fish.input.CodeError(code);
+        return buttonStates[code] > 0;
+    };
+
+    /**
+     * Tells you if the given input was pressed this frame I think.
+     * @param {fish.input.BUTTON} code is the code to represent or whatever.
+     * @return {boolean} true if it was pressed this frame.
+     */
+    this.justDown = code => {
+        if (!(code in buttonStates)) throw new fish.input.CodeError(code);
+        return buttonStates[code] == frame;
+    };
+
+    /**
+     * Converts a button code to a ascii symbol for it.
+     * @param {fish.input.BUTTON} code is the code to convert.
+     * @return {number} the character code.
+     */
+    this.asciiCode = code => {
+        switch (code) {
+            case fish.input.BUTTON.UP: return 0xf0;
+            case fish.input.BUTTON.DOWN: return 0xf1;
+            case fish.input.BUTTON.LEFT: return 0xf2;
+            case fish.input.BUTTON.RIGHT: return 0xf3;
+            case fish.input.BUTTON.Y: return 0xf4;
+            case fish.input.BUTTON.A: return 0xf5;
+            case fish.input.BUTTON.X: return 0xf6;
+            case fish.input.BUTTON.B: return 0xf7;
+            case fish.input.BUTTON.SELECT: return 0xf8;
+            case fish.input.BUTTON.START: return 0xf9;
+        }
+        throw new fish.input.CodeError(code);
+    };
+
+    /**
+     * Gives you a user readable name for a given input thingy code based on
+     * the keymap.
+     * @param {fish.input.BUTTON} code is the input to name.
+     * @return {string} a readable name for both keyboard and gamepad.
+     */
+    this.nameCode = code => {
+        let ascii = String.fromCharCode(this.asciiCode(code));
+        return `${keymap[code]} / ${ascii}`;
+
+    };
+};
+
+var fish = fish || {};
+
+/**
+ * Class that stores assets.
+ * @constructor
+ * @param {Map.<string, function>} loaders map from asset type names to loaders
+ *        for them.
+ * @param {string} prefix   is a prefix appended to urls.
+ */
+fish.Store = function (loaders, prefix) {
+    let assets = {};
+
+    /**
+     * Gets a thing of arbitrary type from the asset store, or creates and adds
+     * it if it cannot be found.
+     * @param {string} name is the name of the thing to find.
+     * @param {string} type is the type of the thing to find.
+     * @return the thing if it is found or null.
+     */
+    let get = async function (name, type) {
+        if (!(name in assets)) {
+            if (type in loaders) {
+                assets[name] = loaders[type](prefix + name);
+            } else {
+                console.error(`${type} is a not a valid asset type`);
+                assets[name] = null;
+            }
+        }
+        return await assets[name];
+    };
+
+    /**
+     * Gets a texture.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
+     * @async
+     * @param {string} name is the name of the texture to get.
+     * @return {fish.graphics.Texture} the texture it got.
+     */
+    this.getTexture = async function (name) {
+        return await get(name, 'texture');
+    };
+
+    /**
+     * Gets a texture atlas thingy.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
+     * @async
+     * @param {string} name is the name of the atlas to get.
+     * @return {fish.graphics.Atlas} the thingy.
+     */
+    this.getAtlas = async function (name) {
+        return await get(name, 'atlas');
+    };
+
+    /**
+     * Loads a sound sample.
+     * If you didn't set this asset type up to work in the
+     * atlas it will crash, this is just a shorthand.
+     * @async
+     * @param {string} name is the name of the sample to g4et.
+     * @return {fish.audio.Sample} the sample or null if it screwed up.
+     */
+    this.getSample = async function (name) {
+        return await get(name, 'sample');
+    };
+};
+
+var fish = fish || {};
+
+fish.shader = (() => {
+    const defaultVertexShader = `
+    attribute vec4 position;
+    attribute vec4 textureCoord;
+    uniform vec4 invCanvas;
+    uniform vec2 invTextureSize;
+    varying highp vec2 vTextureCoord;
+    void main() {
+        gl_Position = position * (invCanvas * vec4(2, 2, 1.0, 1.0)) - vec4(1.0, 1.0, 0, 0);
+        vTextureCoord = textureCoord.xy * invTextureSize;
+    }`;
+
+    const defaultFragmentShader = `
+    uniform sampler2D sampler;
+    varying highp vec2 vTextureCoord;
+    void main() {
+        gl_FragColor = texture2D(sampler, vTextureCoord);
+    }`;
+
+    let defaultShader = null;
+    let shader = {};
     
+    /**
+     * Loads a shader from text source.
+     * @param gl     is the opengl context.
+     * @param type   is the type of shader to load.
+     * @param source is the text source code.
+     * @return the created shader or null if it screwed up.
+     */
+     shader.loadShader = (gl, type, source) => {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error(
+                'Could not compiler shader: ' + gl.getShaderInfoLog(shader)
+            );
+            return null;
+        }
+        return shader;
+    };
+
+    /**
+     * Creates a shader out of the source of a vertex and fragment shader.
+     * @param gl          is the opengl context.
+     * @param fragmentSrc is the source of the fragment shader which when null
+     *                    uses a default one.
+     * @param vertexSrc   is the source of the vertex shader which when null
+     *                    uses a default one.
+     * @return the new shader program or null if it failed.
+     */
+    shader.createShaderProgram = (gl, vertexSrc=null, fragmentSrc=null) => {
+        const vertex = shader.loadShader(
+            gl,
+            gl.VERTEX_SHADER,
+            vertexSrc ? vertexSrc : defaultVertexShader
+        );
+        const fragment = shader.loadShader(
+            gl,
+            gl.FRAGMENT_SHADER,
+            fragmentSrc ? fragmentSrc : defaultFragmentShader
+        );
+        const program = gl.createProgram();
+        gl.attachShader(program, vertex);
+        gl.attachShader(program, fragment);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.error(
+                'Could not init shader program: ' +
+                    gl.getProgramInfoLog(program)
+            );
+            return null;
+        }
+        const width = gl.drawingBufferWidth;
+        const height = gl.drawingBufferHeight;
+        gl.useProgram(program);
+        const invCanvas = gl.getUniformLocation(program, 'invCanvas');
+        gl.uniform4f(invCanvas, 1 / width, 1 / height, 1, 1);
+        return {
+            program: program,
+            position: gl.getAttribLocation(program, 'position'),
+            textureCoord: gl.getAttribLocation(program, 'textureCoord'),
+            invTextureSize: gl.getUniformLocation(program, 'invTextureSize'),
+            invCanvas: invCanvas,
+            sampler: gl.getUniformLocation(program, 'sampler')
+        };
+    };
+
+    /**
+     * Binds the default shader for some nice default rendering.
+     * @param gl is the opengl context.
+     */
+    shader.bindDefaultShader = (gl) => {
+        if (defaultShader == null) {
+            defaultShader = shader.createShaderProgram(gl);
+        }
+        gl.useProgram(defaultShader.program);
+        return defaultShader;
+    };
+
+    return shader;
+})();
+
+var fish = fish || {};
+
+/**
+ * Contains the screen class and the context class which holds the subsystem
+ * for screens.
+ * @namespace
+ */
+fish.screen = {};
+
+/**
+ * Stores all the game's subsystems. Now, you will notice that these are all
+ * interface types that the engine provides. You will control what the
+ * implementing type is and for god's sake don't try to do any static type
+ * crazy bullshit with this. Just accept that the actual implementing types of
+ * these are the ones you asked for in your game.
+ * These interfaces are just the basic amount of functionality that the engine
+ * requires from each subsystem.
+ * @typedef {Object} fish.screen~Context
+ * @param {fish.graphics.BaseRenderer} gfx the graphics subsystem.
+ * @param {fish.audio.SamplePlayer} snd the audio subsystem.
+ * @param {fish.input.UiInput} in the input subsystem.
+ * @param {fish.store.Store} str the asset store.
+ * @param {Object} usr basically a namespace where you can store your own junk
+ *        without fear of future versions of the engine overwriting it.
+ */
+
+/**
+ * Represents a transition between screens on the screen stack.
+ */
+fish.screen.Transition = class {
+    /**
+     * There are three different configurations that this constructor allows.
+     * When pop is true the current screen is removed, when screen is not null
+     * then that screen is placed on the stack. Thus, you can push a screen on
+     * this screen, replace this screen with another, or you can just pop this
+     * screen. If you set pop to false and screen to null then nothing will
+     * happen.
+     * @param {boolean} pop whether to pop the returning screen from the screen
+     *        stack.
+     * @param {?fish.screen.Screen} screen is a screen to add to the screen
+     *        stack if given.
+     * @param {?Object} message a message that will be given to whatever screen
+     *        is going to next have reveal called on it.
+     */
+    constructor(pop, screen=null, message=null) {
+        this.pop = pop;
+        this.screen = screen;
+        this.message = message;
+    }
+};
+
+/**
+ * Basic screen class which does nothing and should be extended.
+ */
+fish.screen.Screen = class {
+    /**
+     * Creates the screen and gives it the context object that contains all the
+     * subsystems and stuff.
+     * @param {fish.screen~Context} ctx is stored by the base screen class so you
+     *        always have access to it.
+     */
+    constructor(ctx) {
+        this.ctx = ctx;
+    }
+
+    /**
+     * Called by the engine whenever the screen gets onto the top of the screen
+     * stack.
+     * @param {?Object} message something sent from the screen that allowed
+     *        this screen to be revealed. Could be a return value from a screen
+     *        this one pushed on top of itself or whatever you want.
+     */
+    refresh(message) {
+        // by default does nothing.
+    }
+
+    /**
+     * Updates the screen.
+     * @param {number} delta is the amount of time passage to update for in
+     *        seconds.
+     * @return {?fish.screen.Transition} the update thing that tells the engine
+     *         what to do next with regards to the screen stack. If null is
+     *         returned then nothing is done.
+     */
+    update(delta) {
+        // by default does nothing.
+        return null;
+    }
+
+    /**
+     * Renders the screen.
+     * @param {boolean} front is whether this screen is the top one being
+     *        rendered.
+     */
+    render(front) {
+        // does nothing by default.
+    }
+};
+
+
+var fish = fish || {};
+
+/**
+ * This file provides a kinda basic gui system for the user to interact with.
+ * It only uses button input by default but it should be able to do menu type
+ * stuff as well as game dialogue and basic hud if need be etc.
+ * In the future I might add mouse support to the default input system in which
+ * case I will also make the gui be able to use mouse at least if you want it
+ * to.
+ * Oh yeah, there is a field called default style. You need to set that field
+ * to something before using the gui system, or you must call set style on all
+ * gui nodes after or they will just crash.
+ * @namespace
+ */
+fish.gui = {};
+
+/**
+ * Stores all the style information used to draw gui elements in one place.
+ * It's just an object so that if I add more style stuff later it won't break
+ * your code and you won't be using the new gui things that use the new stuff
+ * anyway. Obviously you need to use the correct texture/batch for the drawing.
+ * @typedef {Object} fish.gui~Style
+ * @property {fish.graphics.BitmapFont} font font for writing text.
+ * @property {fish.graphics.Patch} panel patch used for panel drawing.
+ * @property {fish.graphics.Patch} button patch for normal button.
+ * @property {fish.graphics.Patch} buttonSelected patch for selected button.
+ * @property {fish.graphics.Patch} buttonDepressed patch for down button.
+ * @property {fish.audio.Sample} tap sound for moving selection.
+ * @property {fish.audio.Sample} click sound for clicking a button.
+ */
+
+/**
+ * The style that knobs are given when they are created. You can change the
+ * style afterwards. You can also change this value whenever you want, but if
+ * you change it often just be cautious about what it is going to be next time.
+ * @type fish.gui.Style
+ */
+fish.gui.defaultStyle = null;
+
+/**
+ * Base gui knob class. Yeah I call it knob instead of element or something
+ * because element is long as hell and gay.
+ */
+fish.gui.Knob = class {
+    constructor() {
+        console.assert(fish.gui.defaultStyle);
+        this.style = fish.gui.defaultStyle;
+        this.fitted = false;
+        this.bounds = null;
+        this.usr = {};
+    }
+
+    /**
+     * Tells you if this type of gui knob is selectable. If not then you cannot
+     * interact with it.
+     * @return {boolean} true iff you can interact.
+     */
+    selectable() {
+        return false;
+    }
+
+    /**
+     * Call a callback on this gui element and all of it's children.
+     * @param {function} callback is the function to call on this.
+     */
+    propagate(callback) {
+        callback(this);
+    }
+
+    /**
+     * Sets the style of this knob and all it's children.
+     * @param {fish.gui.Style} style is the style to set it to.
+     */
+    setStyle(style) {
+        this.propagate(knob => {knob.style = style;});
+    }
     
-</div>
+    /**
+     * Fits the gui knob to the given area. Probably needs to be extended to be
+     * useful a lot of the time.
+     * @param {fish.util.Rect} bounds is the area to fit the element into.
+     * @param {boolean} greedy whether to fill all available space even if not
+     *        needed. This is what is wanted generally if user code calls fit,
+     *        and sometimes it's needed for inner gui bits, but you obviously
+     *        can't use it for every situation. Also, keep in mind it's more
+     *        like a guideline than a rule, some things really can't be
+     *        greedy, and some have no choice but to be greedy.
+     */
+    fit(bounds, greedy=true) {
+        this.bounds = bounds;
+        this.fitted = true;
+    }
 
-<br class="clear">
+    /**
+     * Updates the knob so that it can react to user input and potentially
+     * return some stuff. Should recurse for nested elements.
+     * @param {fish.input.InputHandler} input is used to check if keys are
+     *        pressed or whatever.
+     * @param {fish.audio.SoundPlayer} audio is used to play sound effects 
+     *        like buttons clicking and shit.
+     * @param {boolean} selected is whether this thing is actually selected. It
+     *        can still do stuff without being selected though don't worry.
+     * @return {?Object} whatever you want to return, this is handled by user
+     *         code. If you return from a nested gui element the outer ones
+     *         should just return it recursively. If you return null that is
+     *         considered to mean nothing happened.
+     */
+    update(input, audio, selected) {
+        return null;
+    }
 
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Jun 09 2021 21:43:02 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
-</footer>
+    /**
+     * Renders the gui element using the given patch renderer.
+     * @abstract
+     * @param {fish.graphics.Renderer.Batch} batch does the rendering.
+     * @param {boolean} selected is whether the knob is currently selected.
+     */
+    render(batch, selected) {
+        throw new Error('fish.gui.knob.render must be implemented');
+    }
+};
 
-<script>prettyPrint();</script>
-<script src="scripts/polyfill.js"></script>
-<script src="scripts/linenumber.js"></script>
+/**
+ * Holds basic code for knobs that contain a bunch of other knobs so you don't
+ * have to write a million variations of the same basic functionality.
+ */
+fish.gui.ContainerKnob = class extends fish.gui.Knob {
+    /**
+     * @param {Array.<fish.gui.Knob>} children is a list of children to add
+     *        stright away.
+     */
+    constructor(children) {
+        super();
+        this.hasSelectable = false;
+        this.selection = 0;
+        this.children = [];
+        for (let child of children) this.addChild(child);
+    }
 
+    /** @inheritDoc */
+    selectable() {
+        return this.hasSelectable;
+    }
 
+    /** @inheritDoc */
+    propagate(callback) {
+        super.propagate(callback);
+        for (let child of this.children) child.propagate(callback);
+    }
 
-</body>
-</html>
+    /**
+     * Increases or decreases the currently selected child.
+     * @param {fish.audio.SoundPlayer} audio is to make a nice sound.
+     * @param {number} direction is whether to go forward (> 0) or back (< 0).
+     *        If you pass 0 nothing will happen.
+     */
+    incrementSelection(audio, direction) {
+        if (direction == 0 || !this.hasSelectable) return;
+        if (this.style.tap) audio.playSample(this.style.tap);
+        let change = Math.sign(direction);
+        for (let i = 0; i < this.children.length && change != 0; i++) {
+            this.selection += change;
+            if (this.selection < 0) this.selection = this.children.length - 1;
+            if (this.selection >= this.children.length) this.selection = 0;
+            if (this.children[this.selection].selectable()) change = 0;
+        }
+    }
+
+    /**
+     * Adds a child to the container.
+     * @param {fish.gui.Knob} child is the thing to add.
+     */
+    addChild(child) {
+        this.children.push(child);
+        if (child.selectable() && !this.hasSelectable) {
+            this.hasSelectable = true;
+            this.selection = this.children.length - 1;
+        }
+    }
+};
+
+/**
+ * Creates a panel that can stack contents vertically or horizontally in a nice
+ * box.
+ * @implements fish.gui.Knob
+ */
+fish.gui.PanelKnob = class extends fish.gui.ContainerKnob {
+    /**
+     * @param {boolean} [cancellable=false] is if pressing BUTTON.A
+     *        will cause the panel to return null on the next update.
+     * @param {Array.<fish.gui.Knob>} [children=[]] is a list of knobs to add as
+     *        children to this panel.
+     */
+    constructor(cancellable=false, children=[]) {
+        super(children);
+        this.cancellable = cancellable;
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        interior.shrink(
+            this.style.panel.SIDE_BORDER,
+            this.style.panel.TOP_BORDER
+        );
+        for (let i in this.children) {
+            this.children[i].fit(
+                interior.copy(),
+                i == this.children.length - 1 && greedy
+            );
+            interior.size.y -= this.children[i].bounds.h;
+        }
+        if (greedy) {
+            super.fit(bounds);
+        } else {
+            super.fit(new fish.util.Rect(
+                bounds.x,
+                bounds.y + interior.h,
+                bounds.w,
+                bounds.h - interior.h
+            ));
+        }
+    }
+
+    /** @inheritDoc */
+    update(input, audio, selected) {
+        if (selected && this.cancellable && input.down(fish.input.BUTTON.A)) {
+            return null;
+        }
+        if (selected && this.children.length > 0) {
+            if (input.justDown(fish.input.BUTTON.UP)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.justDown(fish.input.BUTTON.DOWN)) {
+                this.incrementSelection(audio, 1);
+            }
+        }
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection && selected
+            );
+            if (result !== null) return result;
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(batch, selected) {
+        batch.addPatch(this.style.panel, this.bounds);
+        for (let i in this.children) {
+            this.children[i].render(
+                batch,
+                selected && i == this.selection
+            );
+        }
+    }
+
+};
+
+/**
+ * Knob that just holds some text and does nothing.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextKnob = class extends fish.gui.Knob {
+    /**
+     * @param {string} text the unwrapped text in which only multiple newlines
+     *        are counted as newlines.
+     */
+    constructor(text) {
+        super();
+        this._text = text;
+        this.fittedText = '';
+        this.origin = new fish.util.Vector();
+    }
+
+    get content() {
+        return this._text;
+    }
+
+    set content(value) {
+        this._text = value;
+        if (this.fitted) this.fit(this.bounds, false);
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        this.origin.x = bounds.x + 1;
+        this.origin.y = bounds.t - 1;
+        this.fittedText = fish.util.fitText(
+            this._text,
+            this.style.font,
+            bounds.w - 2
+        );
+        let height = fish.util.textHeight(
+            this.fittedText,
+            this.style.font
+        ) + 2;
+        bounds.pos.y += bounds.size.y - height;
+        bounds.size.y = height;
+        super.fit(bounds);
+    }
+
+    /** @inheritDoc */
+    render(batch, selected) {
+        batch.addText(
+            this.style.font,
+            this.fittedText,
+            this.origin
+        );
+    }
+};
+
+/**
+ * A button that you can have a nice click of.
+ * @implements fish.gui.Knob
+ */
+fish.gui.ButtonKnob = class extends fish.gui.Knob {
+    /**
+     * @param {string|fish.gui.Knob} child is the child to put inside the
+     *        button. If you passed text it is assumed you want it to be made
+     *        into a text knob.
+     * @param {?mixed} result is the thing to return from update if the button
+     *        is pressed. Be warned, though, if this is a function it will be
+     *        executed and then it's return value will be returned instead.
+     */
+    constructor(child, result=null) {
+        super();
+        this.down = false;
+        this.result = result;
+        if (typeof child == 'string') {
+            this.child = new fish.gui.TextKnob(child);
+        } else {
+            this.child = child;
+        }
+    }
+
+    /** @inheritDoc */
+    selectable() {
+        return true;
+    }
+
+    /** @inheritDoc */
+    propagate(callback) {
+        super.propagate(callback);
+        if (this.child instanceof fish.gui.Knob) {
+            this.child.propagate(callback);
+        }
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        interior.shrink(
+            this.style.button.SIDE_BORDER,
+            this.style.button.TOP_BORDER
+        );
+        this.child.fit(interior);
+        if (!greedy) {
+            bounds.size.y = this.child.bounds.size.y +
+                this.style.button.TOP_BORDER * 2;
+            bounds.pos.y = this.child.bounds.pos.y -
+                this.style.button.TOP_BORDER;
+        }
+        super.fit(bounds);
+    }
+
+    /** @inheritDoc */
+    update(input, audio, selected) {
+        if (input.down(fish.input.BUTTON.B) && selected) {
+            if (!this.down) {
+                this.down = true;
+                if (this.style.click) audio.playSample(this.style.click);
+            }
+        } else if (this.down) {
+            this.down = false;
+            if (selected) {
+                if (typeof this.result == 'function') {
+                    return this.result.call(this);
+                }
+                return this.result;
+            }
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(batch, selected) {
+        let patch = selected ?
+            (this.down ? this.style.buttonDepressed : this.style.buttonSelected) :
+            this.style.button;
+        batch.addPatch(patch, this.bounds);
+        this.child.render(batch, selected);
+    }
+};
+
+/**
+ * Displays a picture nestled within the gui system.
+ */
+fish.gui.PicKnob = class extends fish.gui.Knob {
+    /**
+     * @param {mixed} sprite the pic to draw.
+     * @param {number} [scale=1] is the scale to draw it at. If the knob ends
+     *        up being fitted greedily this will be ignored.
+     * @param {boolean} [stretch=false] is whether the image should eschew it's
+     *        aspect ratio to fill all the space it is given.
+     */
+    constructor(sprite, scale=1, stretch=false) {
+        super();
+        this.sprite = sprite;
+        this.scale = scale;
+        this.stretch = stretch;
+    }
+};
+
+/**
+ * Like a panel but it stores it's contents in equally sized areas separated
+ * by vertical lines.
+ */
+fish.gui.HBoxKnob = class extends fish.gui.ContainerKnob {
+    /**
+     * @param {Array.<fish.gui.Knob>} [children=[]] is a list of children to
+     *        add to the hbox right away.
+     */
+    constructor(children=[]) {
+        super(children);
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        let interior = bounds.copy();
+        let maxHeight = 0;
+        interior.size.x /= this.children.length;
+        for (let child of this.children) {
+            child.fit(interior.copy(), greedy);
+            interior.pos.x += interior.size.x;
+            maxHeight = Math.max(maxHeight, child.bounds.size.y);
+        }
+        if (!greedy) bounds.size.y = maxHeight;
+        super.fit(bounds, greedy);
+    }
+
+    /** @inheritDoc */
+    update(input, audio, selected) {
+        if (selected && this.children.length > 0) {
+            if (input.justDown(fish.input.BUTTON.LEFT)) {
+                this.incrementSelection(audio, -1);
+            } else if (input.justDown(fish.input.BUTTON.RIGHT)) {
+                this.incrementSelection(audio, 1);
+            }
+        }
+        for (let i in this.children) {
+            let result = this.children[i].update(
+                input,
+                audio,
+                i == this.selection && selected
+            );
+            if (result) return result;
+        }
+    }
+
+    /** @inheritDoc */
+    render(batch, selected) {
+        for (let i in this.children) {
+            this.children[i].render(batch, selected && i == this.selection);
+        }
+    }
+};
+
+/**
+ * A knob that shows an array of text characters that you can edit whenever.
+ * @implements fish.gui.Knob
+ */
+fish.gui.TextArrayKnob = class extends fish.gui.Knob {
+    constructor(width, height=1) {
+        super();
+        this.spareRect = new fish.util.Rect();
+        this.width = width;
+        this.height = height;
+        this.scale = new fish.util.Vector(1, 1);
+        this.array = [];
+        for (let y = 0; y < height; y++) {
+            let line = [];
+            for (let x = 0; x < width; x++) {
+                line.push(Math.floor(Math.random() * 200));
+            }
+            this.array.push(line);
+        }
+    }
+
+    /** @inheritDoc */
+    fit(bounds, greedy=true) {
+        if (greedy) {
+            super.fit(bounds, greedy);
+            this.scale.x = bounds.size.x /
+                (this.width * this.style.font.getWidth('n'));
+            this.scale.y = bounds.size.y /
+                (this.height * this.style.font.getLineHeight());
+        } else {
+            let newHeight = this.height * this.style.font.getLineHeight();
+            bounds.pos.y += bounds.size.y - newHeight;
+            bounds.size.y = newHeight;
+            bounds.size.x = this.width * this.style.font.getWidth('n');
+            super.fit(bounds, greedy);
+        }
+    }
+
+    /** @inheritDoc */
+    render(patchRenderer, selected) {
+        let cWidth = this.style.font.getWidth('n') * this.scale.x;
+        let cHeight = this.style.font.getLineHeight() * this.scale.y;
+        this.spareRect.size.x = cWidth;
+        this.spareRect.size.y = cHeight;
+        for (let y = 0; y < this.height; y++) {
+            for (let x = 0; x < this.width; x++) {
+                this.spareRect.pos.x = this.bounds.x + x * cWidth;
+                this.spareRect.pos.y = this.bounds.y + y * cHeight;
+                patchRenderer.renderCharacter(
+                    this.style.font,
+                    this.array[y][x],
+                    this.spareRect
+                );
+            }
+        }
+    }
+
+    /**
+     * Sets the point in the array given to the given character code.
+     * @param {number} x is the column of the character to move.
+     * @param {number} y is the row of the character to move.
+     * @param {number} c is the character code to set it to.
+     */
+    setCharacter(x, y, c) {
+        if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
+        this.array[y][x] = c;
+    }
+};
+
+/**
+ * Starting screen of the game that shows some crap and makes you click or
+ * buttonise or whatever.
+ */
+fish.screen.SplashScreen = class extends fish.screen.Screen {
+    constructor(ctx, init) {
+        super(ctx);
+        this.messaged = false;
+        this.next = null;
+        this.batch = null;
+        this.font = null;
+        this.sound = null;
+        this.loaded = false;
+        this.spot = new fish.util.Vector();
+        this.timer = 9;
+        this.sprite = new fish.util.Rect(0, 0, 0, 0);
+        this.lines = [
+            `fish-tank engine version ${fish.constants.VERSION}`,
+            'Created by Dany Burton',
+            'Game is loading...'
+        ];
+        this.roaches = [];
+        for (let i = 0; i < 100; i++) {
+            let size = i * 0.03;
+            this.roaches.push({
+                pos: new fish.util.Vector(
+                    i % 30 * 50,
+                    i / 30 * 100
+                ),
+                size: size,
+                velocity: new fish.util.Vector(
+                    (Math.random() - 0.5) * size * 24,
+                    (Math.random() - 0.5) * size * 24
+                )
+            });
+        }
+        Promise.all([
+            ctx.gfx.makeTexture(
+                fish.constants.SPLASH,
+                fish.constants.SPLASH_WIDTH,
+                fish.constants.SPLASH_HEIGHT,
+                ctx.gfx.gl.RGBA4
+            ),
+            ctx.snd.makeSample(fish.constants.JINGLE)
+        ]).then(values => {
+            this.font = new fish.graphics.BitmapFont(values[0].getRect());
+            this.batch = new ctx.gfx.Batch(values[0], 512);
+            this.logo = this.font.getRect(3, 11, 4, 4);
+            this.logo.shrink(0.5);
+            this.sound = values[1];
+            this.loaded = true;
+        });
+        init.then((v) => {this.next = v;});
+    }
+
+    /** @inheritDoc */
+    refresh(message) {
+        if (this.sound) this.ctx.snd.playSong(this.sound);
+    }
+
+    /** @inheritDoc */
+    update(delta) {
+        for (let roach of this.roaches) {
+            roach.pos.add(roach.velocity, delta);
+            roach.pos.y += delta * 20;
+            roach.pos.wrap(this.ctx.gfx.size);
+        }
+        if (this.loaded) {
+            if (!this.messaged) {
+                this.messaged = true;
+                fish.gui.defaultStyle = {
+                    font: this.font,
+                    panel: this.font.getPatch(0, 11, 3, 3, 1),
+                    button: this.font.getPatch(7, 11, 3, 3, 1),
+                    buttonSelected: this.font.getPatch(10, 11, 3, 3, 1),
+                    buttonDepressed: this.font.getPatch(13, 11, 3, 3, 1)
+                };
+                return new fish.screen.Transition(
+                    false,
+                    fish.gui.messageScreen(
+                        this.ctx,
+                        this.batch,
+                        `Press ${this.ctx.in.nameCode(fish.input.BUTTON.B)} to start the game`,
+                        '',
+                        'OK'
+
+                    )
+                );
+            }
+            this.timer -= delta;
+            if (this.timer < 0) {
+                return new fish.screen.Transition(true, this.next);
+            }
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(front) {
+        if (!this.batch) return;
+        this.ctx.gfx.clear(0, 0, 0, 1);
+        this.batch.clear();
+        for (let roach of this.roaches) {
+            this.batch.add(this.logo, roach.pos, roach.size);
+        }
+        this.spot.x = 0;
+        for (let i = 0; i < this.lines.length; i++) {
+            this.spot.y = 600 - this.font.getLineHeight() * i;
+            this.batch.addText(this.font, this.lines[i], this.spot);
+        }
+        this.batch.render();
+    }
+};
+
+/**
+ * Screen that hosts some gui stuff and returns when it finishes.
+ * @extends {fish.screen.Screen}
+ */
+fish.gui.GuiScreen = class extends fish.screen.Screen {
+    /**
+     * @param {fish.Context} ctx usual screen context.
+     * @param {fish.gui.Knob} knob gui stuff to display in this screen.
+     */
+    constructor(ctx, batch, knob) {
+        super(ctx);
+        this.knob = knob;
+        this.batch = batch;
+    }
+
+    /** @inheritDoc */
+    update(delta) {
+        let result = this.knob.update(this.ctx.in, this.ctx.snd, true);
+        if (result !== null) {
+            return new fish.screen.Transition(true, null, result);
+        }
+        return null;
+    }
+
+    /** @inheritDoc */
+    render(front) {
+        this.batch.clear();
+        this.knob.render(this.batch, true);
+        this.batch.render();
+    }
+};
+
+/**
+ * Creates a screen which shows a message and one or more confirmation buttons.
+ * @param {fish.Context} ctx is the context which the screen needs.
+ * @param {fish.graphics.Renderer.Batch} batch does rendering.
+ * @param {string} heading is the heading of the message box.
+ * @param {...string} choices is all the choices you can choose, when the
+ *        screen pops off the screen stack the screen beneath will receive the
+ *        number of the choice chosen. If you provide no choices then it will
+ *        just add a generic one.
+ */
+fish.gui.messageScreen = (ctx, batch, heading, message, ...choices) => {
+    if (choices.length == 0) choices[0] = '...';
+    let panel = new fish.gui.PanelKnob(false, [
+        new fish.gui.PanelKnob(false, [new fish.gui.TextKnob(heading)]),
+        new fish.gui.TextKnob(message)
+    ]);
+    for (let i = 0; i < choices.length; i++) {
+        panel.addChild(new fish.gui.ButtonKnob(choices[i], i));
+    }
+    let widthBit = ctx.gfx.size.x / 4;
+    let heightBit = ctx.gfx.size.y / 4;
+    panel.fit(
+        new fish.util.Rect(widthBit, heightBit, widthBit * 2, heightBit * 2),
+        true
+    );
+    return new fish.gui.GuiScreen(ctx, batch, panel);
+};
+
+/** @namespace */
+var fish = fish || {};
+
+/**
+ * Init callback which creates the game's starting screen.
+ * @callback fish~Init
+ * @param {fish.screen.Context} ctx is the game context with all the subsystems
+ *        and stuff.
+ * @return {Promise<fish.screen.Screen>} the screen created.
+ */
+
+/**
+ * The format of the argument object to fish.start.
+ * @typedef {Object} fish~StartArgs
+ * @property {number} rate is the logical frame rate to give the game. If this
+ *           is not given it defaults to 30.
+ * @property {Object} usr copied to game context usr object.
+ * @property {?fish.graphics.PatchRenderer} gfx graphics system to use if
+ *           given.
+ * @property {?fish.audio.SamplePlayer} snd sound system to use if given.
+ * @property {?fish.input.InputHandler} in input system to use if given
+ * @property {?Object} str store the asset store object or nothing for default.
+ * @property {?WebGLRenderingContext} gl the webgl rendering context for the
+ *           default renderer. It is not needed if you passed a renderer.
+ * @property {?AudioContext} ac the audio context needed to create the default
+ *           sound player. If you have passed a sound player it is not needed
+ *           or used.
+ * @property {?number} nSamples the number of times the same sample can be
+ *           playing at once in the default sound player.
+ * @property {?Object} keymap is the mapping of keys to the default input's
+ *           input.
+ * @property {?number} axisThreshold is the threshold for the default input to
+ *           detect axes being depressed.
+ * @property {?string} assetPrefix is the prefix to prepend to the names of all
+ *           things you try to load through the default store.
+ */
+
+(() => {
+    /**
+     * Creates the game engine context which contains all the subsystems and is
+     * given to all the screens.
+     * @param {fish~StartArgs} args contains all the details of how to
+     *        set up the engine. If there are invalidities with the settings in
+     *        this object an exception will be thrown containing a readable
+     *        error message.
+     * @return {Promise<fish.screen.Context>} created according to the args.
+     */
+    let createContext = args => {
+        let loaders = args.loaders ? args.loaders : {};
+        let gl = args.gl;
+        let ac = args.ac;
+        let keymap = args.keymap ? args.keymap : {};
+        let threshold = args.axisThreshold ? args.axisThreshold : 0.9;
+        if (!gl) {
+            throw new RuntimeError(
+                'In order to use the default renderer, gl argument ' +
+                'must be provided'
+            );
+        }
+        if (!ac) {
+            throw new RuntimeError(
+                'In order to use the default sound player, ac ' +
+                'argument must be provided'
+            );
+        }
+        gfx = new fish.graphics.Renderer(gl);
+        snd = new fish.audio.SoundPlayer(ac);
+        input = new fish.input.InputHandler(keymap, threshold);
+        if (!loaders.texture) {
+            loaders.texture = url => {
+                return gfx.loadTexture(url);
+            };
+        }
+        if (!loaders.atlas) {
+            loaders.atlas = url => {
+                return fish.graphics.loadAtlas(url);
+            };
+        }
+        if (!loaders.sample) {
+            loaders.sample = url => {
+                return snd.loadSample(url);
+            };
+        }
+        return {
+            gfx: gfx,
+            snd: snd,
+            in: input,
+            str: new fish.Store(
+                loaders,
+                ('storePrefix' in args) ? args.storePrefix : '/'
+            ),
+            usr: args.usr ? args.usr : {}
+        };
+    };
+
+    /**
+     * Real function that starts the application running.
+     * @param {fish~StartArgs} args 
+     * @param {fish~Init} init initialisation function that generates the first
+     *        screen of the game.
+     */
+    fish.start = async function (args, init) {
+        const FRAME_LENGTH = 1 / (args.rate ? args.rate : 30);
+        let ctx = null;
+        try {
+            ctx = createContext(args);
+        } catch (err) {
+            alert(err + err.stack ? err.stack : '');
+            throw err;
+        }
+        let initScreen = init(ctx);
+        let screen = new fish.screen.SplashScreen(ctx, initScreen);
+        let screens = [screen];
+        let logicInterval;
+        let visualInterval;
+        screen.refresh();
+        const updateScreens = () => {
+            if (screens.length == 0) {
+                window.clearInterval(logicInterval);
+                return;
+            }
+            const response = screens[screens.length - 1].update(FRAME_LENGTH);
+            if (response) {
+                if (response.pop) screens.pop();
+                if (response.screen) screens.push(response.screen);
+                if (screens.length >= 1) {
+                    screens[screens.length - 1].refresh(response.message);
+                }
+            }
+        };
+        const render = (timestamp) => {
+            ctx.gfx.clear(0, 0, 0, 1);
+            for (let i in screens) {
+                screens[i].render(i == screens.length - 1);
+            }
+            if (screens.length > 0) window.requestAnimationFrame(render);
+        };
+        logicInterval = window.setInterval(() => {
+            if (screens.length > 0) {
+                ctx.snd.update();
+                ctx.in.update();
+                updateScreens();
+            }
+        }, FRAME_LENGTH);
+        window.requestAnimationFrame(render);
+    };
+})();

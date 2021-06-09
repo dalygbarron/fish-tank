@@ -21,15 +21,8 @@ module.exports = function(grunt) {
                     'src/gui.js',
                     'src/fish.js'
                 ],
+                sourceMap: true,
                 dest: 'build/<%= pkg.name %>.js'
-            }
-        },
-        terser: {
-            options: {ecma: 2017},
-            main: {
-                files: {
-                    'build/fish-tank.min.js': ['build/fish-tank.js']
-                }
             }
         },
         sprite: {
@@ -58,7 +51,7 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {src: ['logo.png'], dest: 'docs/'},
-                    {src: ['build/fish-tank.min.js'], dest: 'test/fish-tank.min.js'},
+                    {src: ['build/fish-tank.js'], dest: 'test/fish-tank.js'},
                     {expand: true, src: ['test/*'], dest: 'docs/'}
                 ]
             }
@@ -66,12 +59,11 @@ module.exports = function(grunt) {
     });
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-terser');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-spritesmith');
     grunt.registerTask(
         'default',
-        ['jshint', 'concat', 'terser:main', 'jsdoc', 'sprite', 'copy']
+        ['jshint', 'concat', 'jsdoc', 'sprite', 'copy']
     );
 };
