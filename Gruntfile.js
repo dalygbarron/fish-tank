@@ -10,16 +10,16 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: [
-                    'src/util.js',
-                    'src/constants.js',
-                    'src/graphics.js',
-                    'src/audio.js',
-                    'src/input.js',
-                    'src/store.js',
-                    'src/shader.js',
-                    'src/screen.js',
-                    'src/gui.js',
-                    'src/fish.js'
+                    'src/util.ts',
+                    'src/constants.ts',
+                    'src/graphics.ts',
+                    'src/audio.ts',
+                    'src/input.ts',
+                    'src/store.ts',
+                    'src/shader.ts',
+                    'src/screen.ts',
+                    'src/gui.ts',
+                    'src/fish.ts'
                 ],
                 sourceMap: true,
                 dest: 'build/<%= pkg.name %>.js'

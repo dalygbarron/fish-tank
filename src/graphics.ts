@@ -1,137 +1,138 @@
-var fish = fish || {};
+import * as util from './util'
 
 /**
- * This file provides functionality for doing graphics stuff. A lot of it is
- * made publically accessible so that if you don't like the SpriteRenderer
- * class for rendering, you can create your own class and use as much existing
- * functionality as possible to save you some time and potentially make
- * different rendering classes as interoperable as practical.
- * So, unless you want to make your own rendering class, probably the only
- * thing you are going to use from this file is SpriteRenderer.
- * @namespace
+ * Wraps a webgl texture and stores it's width and height so you don't need to
+ * query them whenever you need that info.
  */
-fish.graphics = {};
-
-/**
- * Creates a texture object out of a gl texture. You probably don't want to
- * instantiate one of these directly unless you are creating your own graphics
- * system.
- * @constructor
- * @param {number} glTexture is the open gl reference to the texture.
- * @param {number} width     is the width of the texture.
- * @param {number} height    is the height of the texture.
- */
-fish.graphics.Texture = function (glTexture, width, height) {
-    /**
-     * Gives you the opengl texture.
-     * @return {number} the opengl reference to the texture.
-     */
-    this.getGlTexture = () => {
-        return glTexture;
-    };
+export class Texture {
+    readonly glTexture: number;
+    readonly w;
+    readonly h;
 
     /**
-     * Gives you the width of the texture.
-     * @return {number} the width.
+     * Creates a texture wrapper.
+     * @param glTexture opengl texture handle
+     * @param w width of the texture
+     * @param h height of the texture
      */
-    this.getWidth = () => {
-        return width;
-    };
+    constructor(glTexture: number, w: number, h: number) {
+        this.glTexture = glTexture;
+        this.w = w;
+        this.h = h;
+    }
 
     /**
-     * Gives you the height of the texture.
-     * @return {number} the height.
+     * gives you the size of the texture as a vector.
+     * @returns size of the texture as a vector.
      */
-    this.getHeight = () => {
-        return height;
-    };
+    getSize(): util.Vector2 {
+        return {x: this.w, y: this.h};
+    }
 
     /**
-     * Creates a rectangle object for the size of the texture with the corner
-     * at (0, 0).
-     * @return {fish.util.Rect} the rect.
+     * Gives you the size of the texture as a rectangle.
+     * @returns dimensions as a rectangle with top left corner at zero.
      */
-    this.getRect = () => {
-        return new fish.util.Rect(0, 0, width, height);
-    };
+    getRect(): util.Rect {
+        return {x: 0, y: 0, w: this.w, h: this.h};
+    }
 };
 
 /**
- * Stores sprites. You probably don't want to instantiate one of these directly
- * unless you are creating your own graphics system.
- * @constructor
+ * Representation of a 9 patch sprite that can be used to draw rectangles with
+ * borders.
  */
-fish.graphics.Atlas = function () {
-    let sprites = {};
+export class Patch {
+    readonly border: number;
+    readonly tl: util.Rect;
+    readonly top: util.Rect;
+    readonly tr: util.Rect;
+    readonly ml: util.Rect;
+    readonly mid: util.Rect;
+    readonly mr: util.Rect;
+    readonly bl: util.Rect;
+    readonly bottom: util.Rect;
+    readonly br: util.Rect;
 
     /**
-     * Adds a sprite into the atlas.
-     * @param {string}         name   is the name of the atlas.
-     * @param {fish.util.Rect} sprite is the sprite to add.
+     * Creates the 9 patch from an existing sprite rectangle.
+     * @param rect the area of the sprite to make into a 9patch.
+     * @param border is amount of pixels on each side to become border.
      */
-    this.add = (name, sprite) => {
-        sprites[name] = sprite;
-    };
+    constructor(rect: util.Rect, border: number) {
+        const b = border;
+        this.border = b;
+        let hMid = Math.max(1, rect.w - border * 2);
+        let vMid = Math.max(1, rect.h - border * 2);
+        this.tl = {x: rect.x, y: rect.y, w: b, h: b};
+        this.top = {x: rect.x + b, y: rect.y, w: hMid, h: b};
+        this.tr = {x: rect.x + b + hMid, y: rect.y, w: b, h: b};
+        this.ml = {x: rect.x, y: rect.y + b, w: b, h: vMid};
+        this.mid = {x: rect.x + b, y: rect.y + b, w: hMid, h: vMid};
+        this.mr = {x: rect.x + b + hMid, y: rect.y + b, w: border, h: vMid};
+        this.bl = {x: rect.x, y: rect.y + b + vMid, w: b, h: b};
+        this.bottom = {x: rect.x + b, y: rect.y + b + vMid, w: hMid, h: b};
+        this.br = {x: rect.x + b + hMid, y: rect.y + b + vMid, w: b, h: b};
+    }
+}
+
+
+/**
+ * Texture atlas that can store a bunch of sprites in one texture.
+ */
+export class Atlas {
+    private sprites: {[id: string]: util.Rect};
 
     /**
-     * Gets a sprite out of the atlas.
-     * @param {string} name is the name of the sprite to get.
-     * @return {fish.util.Rect} the sprite found or an empty one if it lacks it.
+     * Adds a sprite location to the atlas.
+     * @param id name to use to find the sprite later.
+     * @param sprite the sprite rectangle to add.
      */
-    this.get = name => {
-        if (name in sprites) return sprites[name];
-        console.error(`unknown sprite name ${name}`);
-        return new fish.util.Rect(0, 0, 0, 0);
-    };
+    add(id: string, sprite: util.Rect): void {
+        this.sprites[id] = sprite;
+    }
 
     /**
-     * Gets a 9-patch out of the atlas and makes it for you. If you pass the
-     * border argument then it is used to create the patch, but if you leave it
-     * as 0 then it tries to use the name to discern the border size of the
-     * patch by looking for a number at the end of the name. If neither of
-     * those things are present then an error will be thrown.
-     * @param {string} name name of the sprite the patch is made of.
-     * @param {number} [border=0] the width of the borders of the patch.
-     * @return {fish.graphics.Patch} the created patch.
+     * Gets a sprite out of the atlas if it exists.
+     * @param id name for the sprite to find.
+     * @returns the found sprite rect or an empty one if not found.
      */
-    this.getPatch = (name, border=0) => {
-        let sprite = this.get(name);
-        if (border <= 0) {
-            let match = name.match(/\d+/);
-            if (!match) {
-                throw new Error(
-                    'fish.graphics.Atlas.getPatch requires a border number ' +
-                    'or a sprite with a name that ends with a number'
-                );
-            }
+    get(id: string): util.Rect {
+        if (id in this.sprites) return this.sprites[id];
+        console.error(`unknown sprite id ${id}`);
+        return {x: 0, y: 0, w: 0, h: 0};
+    }
+
+    /**
+     * Finds a given sprite and instantiates it as a 9patch with border width
+     * in pixels determined by number at the start of the id. If these are not
+     * present then an error will be printed and the 9patch returned will have a
+     * border thickness of 1.
+     * @param id the name of the sprite to find and create a 9patch from.
+     * @returns the created 9patch.
+     */
+    getPatch(id: string): Patch {
+        let sprite = this.get(id);
+        let match = id.match(/\d+/);
+        let border = 1;
+        if (!match) {
+            console.error(
+                'attempting to create 9patch from sprite with no border number'
+            );
+        } else {
             border = parseInt(match[0]);
         }
-        return new fish.graphics.Patch(sprite, border);
-    };
+        return new Patch(sprite, border);
+    }
 
     /**
-     * Tells you the number of sprites.
-     * @return {number} the number of sprites.
+     * Calls a callback for all sprites in the atlas. Admittedly I dunno what
+     * you would use this for besides debugging but it's here anyway.
+     * @param callback function called for all sprites.
      */
-    this.n = () => {
-        return Object.keys(sprites).length;
-    };
-
-    /**
-     * The atlas foreach callback structure which gets called on each sprite in
-     * the atlas.
-     * @callback fish.graphics.Atlas~callback
-     * @param {string}         name   is the name of the sprite.
-     * @param {fish.util.Rect} sprite is the sprite.
-     */
-
-    /**
-     * Iterates over all sprites in the atlas.
-     * @param {fish.graphics.Atlas~callback} callback is a callback to run for each one.
-     */
-    this.forEach = callback => {
-        for (let sprite in sprites) callback(sprite, sprites[sprite]);
-    };
+    forEach(callback: (id: string, sprite: util.Rect) => void): void {
+        for (let sprite in this.sprites) callback(sprite, this.sprites[sprite]);
+    }
 };
 
 /**
@@ -311,123 +312,6 @@ fish.graphics.loadAtlas = async function (url) {
         );
     }
     return atlas;
-};
-
-/**
- * 9 patch implementation that uses a sprite rectangle for each part of the
- * patch. This is just the object that holds the data for the 9 patch.
- */
-fish.graphics.Patch = class {
-    /**
-     * Creates it by giving a sprite and a border around the outside which
-     * becomes the non middle parts.
-     * @param {fish.util.Rect} rect is the overall sprite to make the patch
-     *        from.
-     * @param {number} sideBorder is the border size to use on the sides.
-     * @param {?number} [topBorder=null] is the border size to use on the top
-     *        and bottom of the patch. If you leave this to default as null
-     *        then it will just use sideBorder.
-     */
-    constructor(rect, sideBorder, topBorder=null) {
-        if (topBorder === null) topBorder = sideBorder;
-        let hMid = rect.w - sideBorder * 2;
-        let vMid = rect.h - topBorder * 2;
-        if (hMid < 1 || vMid < 1) {
-            throw `${bord} is too wide a border for ${rect.w},${rect.h}`;
-        }
-
-        /**
-         * Border width of the patch.
-         * @readonly
-         * @member {number}
-         */
-        this.SIDE_BORDER = sideBorder;
-
-        /**
-         * Border height of the patch.
-         * @readonly
-         * @member {number}
-         */
-        this.TOP_BORDER = topBorder;
-
-        /**
-         * Top left part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.TL = new fish.util.Rect(rect.x, rect.y, sideBorder, topBorder);
-
-        /**
-         * Top part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.T = new fish.util.Rect(rect.x + sideBorder, rect.y, hMid, topBorder);
-
-        /**
-         * Top right part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.TR = new fish.util.Rect(rect.x + sideBorder + hMid, rect.y, sideBorder, topBorder);
-
-        /**
-         * mid left part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.ML = new fish.util.Rect(rect.x, rect.y + topBorder, sideBorder, vMid);
-
-        /**
-         * middle part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.M = new fish.util.Rect(rect.x + sideBorder, rect.y + topBorder, hMid, vMid);
-
-        /**
-         * mid right part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.MR = new fish.util.Rect(
-            rect.x + sideBorder + hMid,
-            rect.y + topBorder,
-            sideBorder,
-            vMid
-        );
-
-        /**
-         * bottom left part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.BL = new fish.util.Rect(rect.x, rect.y + topBorder + vMid, sideBorder, topBorder);
-
-        /**
-         * bottom part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.B = new fish.util.Rect(
-            rect.x + sideBorder,
-            rect.y + topBorder + vMid,
-            hMid,
-            topBorder
-        );
-
-        /**
-         * bottom right part of the patch.
-         * @readonly
-         * @member {fish.util.Rect}
-         */
-        this.BR = new fish.util.Rect(
-            rect.x + sideBorder + hMid,
-            rect.y + topBorder + vMid,
-            sideBorder,
-            topBorder
-        );
-    }
 };
 
 /**
