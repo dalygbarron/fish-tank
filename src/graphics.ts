@@ -5,7 +5,7 @@ import * as util from './util'
  * query them whenever you need that info.
  */
 export class Texture {
-    readonly glTexture: number;
+    readonly glTexture: WebGLTexture;
     readonly w;
     readonly h;
 
@@ -15,7 +15,7 @@ export class Texture {
      * @param w width of the texture
      * @param h height of the texture
      */
-    constructor(glTexture: number, w: number, h: number) {
+    constructor(glTexture: WebGLTexture, w: number, h: number) {
         this.glTexture = glTexture;
         this.w = w;
         this.h = h;
@@ -136,88 +136,77 @@ export class Atlas {
 };
 
 /**
- * Font that is drawn using an 16x16 grid of characters all having the same
- * dimensions.
+ * A single character of a font.
  */
-fish.graphics.BitmapFont = class {
-    /**
-     * Creates it and adds the sprite to it yeah.
-     * @param {fish.util.Rect} sprite is the sprite from which we get the
-     *        characters.
-     */
-    constructor(sprite) {
-        /**
-         * The font's actual sprite.
-         * @member
-         * @type {fish.util.Rect}
-         * @readonly
-         */
-        this.sprite = sprite;
-    }
+export class Glyph {
+    readonly src: util.Rect;
+    readonly offset: util.Vector2;
+    readonly advance: number;
+    readonly kerning: {[to: number]: number};
 
     /**
-     * Gives you the width of the given character.
-     * @param {number} c character code of the character to measure.
-     * @return {number} the width of the character in pixels.
+     * Creates the glyph object.
+     * @param src is where in the texture used to render the glyph it appears.
+     * @param offset is how much to offset the top left corner of this glyph
+     *        when rendering.
+     * @param advance base amount to advance horizontally for the next glyph.
+     * @param kerning special advance distance modifiers per character. If not
+     *        present for a given pair defaults to zero.
      */
-    getWidth(c) {
-        return this.sprite.w / 16;
-    }
-
-    /**
-     * Gives you the height of lines in this font.
-     * @return {number} the height of the line in pixels.
-     */
-    getLineHeight() {
-        return this.sprite.h / 16;
-    }
-
-    /**
-     * Gives you a rectangle made of characters from the font.
-     * @param {number} x is the left offset of the rectangle in characters.
-     * @param {number} y is the top offset of the rectangle in characters.
-     * @param {number} w is the width of the rectangle in characters.
-     * @param {number} h is the height of the rectangle in characters.
-     * @return {fish.util.Rect} such a rect as was requested.
-     */
-    getRect(x, y, w, h) {
-        return new fish.util.Rect(
-            this.sprite.x + x * this.sprite.w / 16,
-            this.sprite.y + y * this.sprite.h / 16,
-            this.sprite.w / 16 * w,
-            this.sprite.h / 16 * h
-        );
-    }
-
-    /**
-     * Creates a patch from a rectangle of characters in the font.
-     * @param {number} x is the left offset of the rectangle in characters.
-     * @param {number} y is the top offset of the rectangle in characters.
-     * @param {number} w is the width of the rectangle in characters.
-     * @param {number} h is the height of the rectangle in characters.
-     * @param {number} border is the border of the patch in characters.
-     * @return {fish.graphics.Patch} the relevant patch.
-     */
-    getPatch(x, y, w, h, border) {
-        return new fish.graphics.Patch(
-            this.getRect(x, y, w, h),
-            this.sprite.w / 16 * border,
-            this.sprite.h / 16 * border
-        );
+    constructor(
+        src: util.Rect,
+        offset: util.Vector2,
+        advance: number,
+        kerning: {[to: number]: number}
+    ) {
+        this.src = src;
+        this.offset = offset;
+        this.advance = advance;
     }
 };
 
 /**
- * Asynchronously loads a texture out of a url. This function requires you to
- * pass a gl context so you probably want to use the version built into the
- * renderer unless you are making your own graphics system.
- * @async
- * @param {WebGLRenderingContext} gl the rendering context.
- * @param {string} url is the url to load the texture from.
- * @return {Promise<fish.graphics.Texture>} the loaded texture.
+ * A font that can be used to render text on the screen. It is always some kind
+ * of bitmap font, but the source of it's data and whether it's a monospace
+ * font or whatever is a matter of configuration.
  */
-fish.graphics.loadTexture = async function (gl, url) {
+export class Font {
+    readonly size: number;
+    readonly lineHeight: number;
+    readonly glyphs: {[id: number]: Glyph};
+
+    /**
+     * 
+     * @param size is the base font size.
+     * @param lineHeight is the offset from one line to the next.
+     * @param glyphs is the list of glyphs the font can draw enumerated by the
+     *        utf16 codepoint.
+     */
+    constructor(
+        size: number,
+        lineHeight: number,
+        glyphs: {[id: number]: Glyph}
+    ) {
+        this.size = size;
+        this.lineHeight = lineHeight;
+        this.glyphs = glyphs;
+    }
+};
+
+/**
+ * Asynchronously loads a texture from the given url. This version requires
+ * you to pass in a webgl context so you might as well use the version built
+ * into the Renderer object unless you aren't using that or something.
+ * @param gl webgl context to create the texture.
+ * @param url loads the texture data from here.
+ * @returns promise to the created texture.
+ */
+export async function loadTexture(
+    gl: WebGLRenderingContext,
+    url: string
+): Promise<Texture> {
     return await new Promise((resolve, reject) => {
+        // TODO: should let you set these parameters.
         const image = new Image();
         image.onload = () => {
             const texture = gl.createTexture();
@@ -250,29 +239,28 @@ fish.graphics.loadTexture = async function (gl, url) {
                 gl.TEXTURE_MAG_FILTER,
                 gl.NEAREST
             );
-            resolve(new fish.graphics.Texture(
-                texture,
-                image.width,
-                image.height
-            ));
+            resolve(new Texture(texture!, image.width, image.height));
         };
-        image.onerror = () => {
-            reject(`failed loading image ${url}`);
-        };
+        image.onerror = () => reject(`failed loading image ${url}`);
         image.src = url;
     });
-};
+}
 
 /**
- * Make a texture out of an arraybuffer.
- * @param {WebGLRenderingContext} gl the rendering context.
- * @param {Uint8Array} data is the data to convert.
- * @param {number} width image width.
- * @param {number} height image height.
- * @param {GLenum} format is the pixel format of the data.
- * @return {fish.graphics.Texture} the created texture.
+ * Makes a texture from an array buffer of data. Again renderer should have
+ * a version of this with no need to pass the gl context.
+ * @param gl webgl context.
+ * @param data pixel data.
+ * @param size final dimensions of texture.
+ * @param format webgl image data format.
+ * @returns created texture.
  */
-fish.graphics.makeTexture = (gl, data, width, height, format) => {
+export function makeTexture(
+    gl: WebGLRenderingContext,
+    data: Uint8Array,
+    size: util.Vector2,
+    format: GLenum
+): Texture {
     const glTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, glTexture);
     gl.texImage2D(
@@ -290,7 +278,20 @@ fish.graphics.makeTexture = (gl, data, width, height, format) => {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    return new fish.graphics.Texture(glTexture, width, height);
+    return new Texture(glTexture!, width, height);
+}
+
+/**
+ * Make a texture out of an arraybuffer.
+ * @param {WebGLRenderingContext} gl the rendering context.
+ * @param {Uint8Array} data is the data to convert.
+ * @param {number} width image width.
+ * @param {number} height image height.
+ * @param {GLenum} format is the pixel format of the data.
+ * @return {fish.graphics.Texture} the created texture.
+ */
+fish.graphics.makeTexture = (gl, data, width, height, format) => {
+    
 };
 
 /**
