@@ -1,23 +1,17 @@
 <html>
     <head>
         <title>fish-tank test</title>
-        <script src="fish-tank.min.js" defer></script>
+        <script src="https://requirejs.org/docs/release/2.3.6/comments/require.js" defer></script>
+        <script src="/dist/index.js" defer></script>
         <script src="test.js" defer></script>
         <script defer>
             window.onload = () => {
                 const canvas = document.querySelector('#canvas');
                 const gl = canvas.getContext('webgl2');
-                const context = new AudioContext();
-                if (gl === null || context === null) {
-                    alert('Your browser is not compatible lmao');
-                    return;
-                }
-                fish.start({
-                    rate: 30,
-                    gl: gl,
-                    ac: context,
-                    storePrefix: ''
-                }, createBasedScreen);
+                
+                const texture = new Texture();
+                texture.loadFromURL('sprites.png');
+
             };
         </script>
         <style>

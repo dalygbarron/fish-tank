@@ -51,9 +51,34 @@ function loadShader(
  * names that is useful, also it makes keeping track of what shader is for what
  * feel more natural in my humble opinion.
  */
-export class Drawable {
-    private textures: Texture[];
-    protected gl: WebGLRenderingContext|null = null;
+export abstract class Drawable extends util.Initialised {
+    protected gl: WebGLRenderingContext;
+
+    /**
+     * Gives you all the drawable's textures. This should probably only be
+     * called by Shader but I have no control over that so whatever.
+     * @returns array of all textures associated with this drawable.
+     */
+    abstract getTextures(): Texture[];
+
+    /**
+     * Gives you the drawable's buffer of vertices for rendering.
+     * @returns buffer of vertices.
+     */
+    abstract getVertexBuffer(): WebGLBuffer;
+
+    /**
+     * Gives you the drawable's buffer of uv mapping data for rendering.
+     * @returns the buffer of uv positions.
+     */
+    abstract getUVBuffer(): WebGLBuffer;
+
+    /**
+     * Called immediately before the drawable is rendered and allows it to
+     * update it's buffers or whatever.
+     * @returns the number of vertices to be drawn.
+     */
+    abstract draw(): number;
 }
 
 /**
@@ -68,10 +93,10 @@ export default class Shader extends util.Initialised {
     private uv: number;
     private invCanvas: WebGLUniformLocation|null;
     private time: WebGLUniformLocation|null;
-    private samplers: {[id: string]: {
+    private samplers: {
         sampler: WebGLUniformLocation|null,
         invSize: WebGLUniformLocation|null
-    }};
+    }[];
     private extras: {[id: string]: WebGLUniformLocation|null};
 
     /**
@@ -104,8 +129,8 @@ export default class Shader extends util.Initialised {
         extras: string[] = []
     ): boolean {
         this.gl = gl;
-        let fragName = fragSrc ? fragSrc : 'defaultFrag';
-        let vertName = vertSrc ? vertSrc : 'defaultVert';
+        let fragName = fragSrc || 'defaultFrag';
+        let vertName = vertSrc || 'defaultVert';
         let programName = `shaderProgram(${fragName}, ${vertName})`;
         // Compiling the shader program.
         const frag = loadShader(gl, gl.FRAGMENT_SHADER, fragSrc || defaultFrag);
@@ -132,6 +157,8 @@ export default class Shader extends util.Initialised {
         // Setting up engine wide attribs and uniforms.
         this.position = gl.getAttribLocation(program, 'position');
         this.uv = gl.getAttribLocation(program, 'uv');
+        this.gl.enableVertexAttribArray(this.position);
+        this.gl.enableVertexAttribArray(this.uv);
         this.invCanvas = gl.getUniformLocation(program, 'canvasInv');
         this.time = gl.getUniformLocation(program, 'time');
         if (this.invCanvas) {
@@ -151,10 +178,10 @@ export default class Shader extends util.Initialised {
             if (!invSize) {
                 console.error(`${programName} lacks uniform ${name}Inv`);
             }
-            this.samplers[name] = {
+            this.samplers.push({
                 sampler: sampler,
                 invSize: invSize
-            };
+            });
         }
         for (const name of extras) {
             const uniform = gl.getUniformLocation(program, name);
@@ -171,6 +198,35 @@ export default class Shader extends util.Initialised {
     }
 
     draw(item: Drawable): void {
-
+        if (!this.ready()) {
+            console.error('Trying to draw with uninitialised shader');
+            return;
+        }
+        this.gl.useProgram(this.program);
+        const n = item.draw();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getVertexBuffer());
+        this.gl.vertexAttribPointer(this.position, 2, this.gl.FLOAT, false, 0, 0);
+        //this.gl.enableVertexAttribArray(this.position);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getUVBuffer());
+        this.gl.vertexAttribPointer(this.uv, 2, this.gl.FLOAT, false, 0, 0);
+        //this.gl.enableVertexAttribArray(this.uv);
+        const textures = item.getTextures();
+        for (let i = 0; i < this.samplers.length; i++) {
+            this.gl.activeTexture(this.gl.TEXTURE0 + i);
+            textures[i].bind();
+            if (this.samplers[i].sampler) {
+                this.gl.uniform1i(this.samplers[i].sampler, i)
+            }
+            if (this.samplers[i].invSize) {
+                const invWidth = 1 / textures[i].getWidth();
+                const invHeight = 1 / textures[i].getHeight();
+                this.gl.uniform2f(
+                    this.samplers[i].invSize,
+                    invWidth,
+                    invHeight
+                );
+            }
+        }
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, n);
     }
-};
+}

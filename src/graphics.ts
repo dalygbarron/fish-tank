@@ -161,41 +161,6 @@ export class Font {
 };
 
 /**
- * Makes a texture from an array buffer of data. Again renderer should have
- * a version of this with no need to pass the gl context.
- * @param gl webgl context.
- * @param data pixel data.
- * @param size final dimensions of texture.
- * @param format webgl image data format.
- * @returns created texture.
- */
-export function makeTexture(
-    gl: WebGLRenderingContext,
-    data: Uint8Array,
-    size: util.Vector2,
-    format: GLenum
-): Texture {
-    const glTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, glTexture);
-    gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        format,
-        size.x,
-        size.y,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_SHORT_4_4_4_4,
-        data
-    );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    return new Texture(glTexture!, size);
-}
-
-/**
  * Loads in the data part of a texture atlas.
  * @param url where the data is loaded from.
  * @returns a promise that resolves to the loaded atlas object.

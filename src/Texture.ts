@@ -26,6 +26,7 @@ import * as util from './util'
  * query them whenever you need that info.
  */
 export default class Texture extends util.Initialised {
+    private gl: WebGLRenderingContext;
     private glTexture: WebGLTexture;
     private size: util.Vector2;
 
@@ -33,10 +34,40 @@ export default class Texture extends util.Initialised {
      * Frees resources used by this texture and sets it as uninitialised.
      * @param gl webgl context.
      */
-    free(gl: WebGLRenderingContext): void {
+    free(): void {
         if (!this.ready()) return;
-        gl.deleteTexture(this.glTexture);
+        this.gl.deleteTexture(this.glTexture);
         this.initialised = false;
+    }
+
+    loadFromData(
+        gl: WebGLRenderingContext,
+        data: Uint8Array,
+        size: util.Vector2,
+        format: GLenum
+    ): boolean {
+        const glTexture = gl.createTexture();
+        if (!glTexture) {
+            console.error('Failed to create webgl texture');
+            return false;
+        }
+        gl.bindTexture(gl.TEXTURE_2D, glTexture);
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            format,
+            size.x,
+            size.y,
+            0,
+            gl.RGBA,
+            gl.UNSIGNED_SHORT_4_4_4_4,
+            data
+        );
+        this.gl = gl;
+        this.glTexture = glTexture;
+        this.size = size;
+        this.initialised = true;
+        return true;
     }
 
     /**
@@ -52,7 +83,8 @@ export default class Texture extends util.Initialised {
         gl: WebGLRenderingContext,
         url: string
     ): Promise<boolean> {
-        this.free(gl);
+        this.free();
+        this.gl = gl;
         return await new Promise(resolve => {
             const image = new Image();
             image.onload = () => {
@@ -87,7 +119,7 @@ export default class Texture extends util.Initialised {
     }
 
     /**
-     * Sets a webgl parameter for the texture.
+     * Sets a webgl parameter for the texture.fas
      * @param gl webgl context.
      * @param param parameter to set.
      * @param value value to give the parameter.
@@ -95,6 +127,29 @@ export default class Texture extends util.Initialised {
     setParameter(gl: WebGLRenderingContext, param: GLenum, value: number) {
         gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
         gl.texParameteri(gl.TEXTURE_2D, param, value);
+    }
+
+    /**
+     * Binds the texture in the webgl context.
+     */
+    bind(): void {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
+    }
+
+    /**
+     * Tells you the texture's width.
+     * @returns width number.
+     */
+    getWidth(): number {
+        return this.size.x;
+    }
+
+    /**
+     * tells you the texture's height.
+     * @returns height number.
+     */
+    getHeight(): number {
+        return this.size.y;
     }
 
     /**

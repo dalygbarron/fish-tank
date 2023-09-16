@@ -66,6 +66,22 @@ export class Rect {
     t(): number {
         return this.y + this.h;
     }
+
+    /**
+     * Creates an inverted version of the rectangle. Inverted rectangles
+     * shouldn't break most things but they might break some stuff idk.
+     * @param verticalAxis whether to flip on the vertical axis.
+     * @param horizontalAxis whether to flip on the horizontal axis.
+     * @returns flipped version of rect.
+     */
+    flipped(verticalAxis: boolean, horizontalAxis: boolean): Rect {
+        return new Rect(
+            this.x + (verticalAxis ? this.w : 0),
+            this.y + (horizontalAxis ? this.h : 0),
+            verticalAxis ? this.w : -this.w,
+            horizontalAxis ? this.h : -this.h
+        );
+    }
 }
 
 /**
