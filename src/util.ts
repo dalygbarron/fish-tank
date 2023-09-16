@@ -1,165 +1,90 @@
-export type Vector2 = {x: number, y: number};
-export type Rect = {x: number, y: number, w: number, h: number};
-
-
 /**
- * Provides some basic utility stuff. Maths classes and whatever the hell ya
- * know.
- * @namespace
+ * Represents a 2 dimensional vector real nice.
  */
-fish.util = {};
-
-/**
- * Wraps a number between another number and zero. Like modulus but it actually
- * does what you want it to.
- * @param {number} x is the number to wrap.
- * @param {number} max is the point at which it wraps.
- * @return {number} the result.
- */
-fish.util.wrap = (x, max) => {
-    return (x < 0) ? max - Math.abs(x % max) : x % max;
-};
-
-/**
- * Represents a two dimensional point / direction via cartesian coordinates.
- * You will notice there is no functional style stuff and that is because it
- * requires instantiating objects and in the kinds of contexts where a vector
- * class is most used, that is not really acceptable so yeah.
- * @constructor
- * @param {number} [x=0] is the horizontal part.
- * @param {number} [y=0] is the vector part.
- */
-fish.util.Vector = function (x=0, y=0) {
-    this.x = x;
-    this.y = y;
+export class Vector2 {
+    x: number;
+    y: number;
 
     /**
-     * Sets both parts of the vector to new values.
-     * @param {number} [x=0] is the new x part.
-     * @param {number} [y=0] is the new y part.
+     * Creates the vector.
+     * @param x horizontal parameter.
+     * @param y vertical parameter.
      */
-    this.set = (x=0, y=0) => {
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
-    };
+    }
 
     /**
-     * Adds another vector onto this one component wise.
-     * @param {fish.util.Vector} other is the other vector.
-     * @param {number} [mag=1] is the amount to multiply the other one by
-     *        first. I know it's not really that relevant to adding but it is
-     *        the main use case so I might as well make it efficient and easy.
+     * Sets both parts of the vector in one call.
+     * @param x value to give x component.
+     * @param y value to give y component.
      */
-    this.add = (other, mag=1) => {
-        this.x += other.x * mag;
-        this.y += other.y * mag;
-    };
-
-    /**
-     * Wraps this vector in a rectangle that starts at (0, 0) then goes to
-     * bounds.
-     * @param {fish.util.Vector} bounds is a vector representing the far
-     *                           corner.
-     */
-    this.wrap = bounds => {
-        this.x = fish.util.wrap(this.x, bounds.x);
-        this.y = fish.util.wrap(this.y, bounds.y);
-    };
+    set(x: number, y: number): void {
+        this.x = x;
+        this.y = y;
+    }
 };
 
 /**
- * Represents an axis aligned rectangle and it should be immutable I think.
- * wait no. But I should make it immutable maybe.
+ * Represents a 2 dimensional rectangle.
  */
-fish.util.Rect = class {
+export class Rect {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+
     /**
      * Creates the rectangle.
-     * @param {number} [x=0] is the horizontal position of the rectangle.
-     * @param {number} [y=0] is the vertical position of the rectangle.
-     * @param {number} [w=0] is the width of the rectangle.
-     * @param {number} [h=0] is the height of the rectangle.
+     * @param x distance from left.
+     * @param y distance from bottom.
+     * @param w width.
+     * @param h height.
      */
-    constructor(x=0, y=0, w=0, h=0) {
-        this.pos = new fish.util.Vector(x, y);
-        this.size = new fish.util.Vector(w, h);
-    }
-
-    copy() {
-        return new fish.util.Rect(this.x, this.y, this.w, this.h);
+    constructor(x: number, y: number, w: number, h: number) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
     }
 
     /**
-     * Shrinks the rectangle by a certain amount from each of it's former
-     * border lines.
-     * @param {number} amount the amount to shrink it from each side.
-     * @param {?number} [yAmount=null] if given as a number this a seperate
-     *        amount to shrink it by on the top and bottom.
+     * Tells you the distance of the right side of the rect from the vertical
+     * origin.
+     * @returns right side.
      */
-    shrink(amount, yAmount=null) {
-        if (yAmount === null) yAmount = amount;
-        this.pos.x += amount;
-        this.pos.y += yAmount;
-        this.size.x -= amount * 2;
-        this.size.y -= yAmount * 2;
+    r(): number {
+        return this.x + this.w;
     }
 
     /**
-     * Gets the horizontal position of the rectangle.
-     * @return {number} x
+     * Tells you the distance of the top side of the rect from the horizontal
+     * origin.
+     * @returns top side.
      */
-    get x() {
-        return this.pos.x;
+    t(): number {
+        return this.y + this.h;
     }
-
-    /**
-     * Gets the vertical position of the rectangle.
-     * @return {number} y
-     */
-    get y() {
-        return this.pos.y;
-    }
-
-    /**
-     * Gets the width of the rectangle.
-     * @return {number} w
-     */
-    get w() {
-        return this.size.x;
-    }
-
-    /**
-     * Gets the height of the rectangle.
-     * @return {number} h
-     */
-    get h() {
-        return this.size.y;
-    }
-
-    /**
-     * Gets the position of the right hand side of the rectangle. Or left
-     * depending on how you look at it. Essentially it's x + w.
-     * @return {number} x + w
-     */
-    get r() {
-        return this.pos.x + this.size.x;
-    }
-
-    /**
-     * Gets the position of the top of the rectangle. Or bottom depending on
-     * how you are thinking about it. Point is it's y + h.
-     * @return {number} y + h
-     */
-    get t() {
-        return this.pos.y + this.size.y;
-    }
-};
+}
 
 /**
- * Asynchronously loads a text file in.
- * @param {string} url is the url to load the file from.
- * @return {Promise<string>} that resolves to the loaded file content.
+ * Wraps a number between [0, max). Like modulus if it wasn't fucking annoying
+ * with negative numbers.
+ * @param x is the number to wrap.
+ * @param max is the point where it wraps.
+ * @returns wrapped version.
  */
-fish.util.loadText = function (url) {
+export function wrap(x: number, max: number): number {
+    return (x < 0) ? max - Math.abs(x % max) : x % max;
+}
+
+/**
+ * Loads some text from some url.
+ * @param url is where to load the text from.
+ * @returns a promise that resolves to the loaded text.
+ */
+export function loadText(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
@@ -173,7 +98,7 @@ fish.util.loadText = function (url) {
         xhr.open('GET', url, true);
         xhr.send();
     });
-};
+}
 
 /**
  * Takes a piece of text and fits it so that when drawn with a given font it
@@ -183,12 +108,13 @@ fish.util.loadText = function (url) {
  * @param {fish.graphics.Font} font the font to give size to the text.
  * @param {number} width the width to fit the text into.
  */
-fish.util.fitText = (text, font, width) => {
+export function fitText(text, font, width) {
+    // TODO: needs to handle non monospaced fonts now.
     let fitted = '';
-    let lines = text.split(/\n\n+/);
+    const lines = text.split(/\n\n+/);
     for (let line of lines) {
         let offset = 0;
-        let tokens = line.split(/\s/);
+        const tokens = line.split(/\s/);
         for (let token of tokens) {
             if (token.length == 0) continue;
             let size = 0;
@@ -217,29 +143,43 @@ fish.util.fitText = (text, font, width) => {
  * @param {fish.graphics.Font} font is the font used to measure it.
  * @return {number} the number of pixels high it will be.
  */
-fish.util.textHeight = (text, font) => {
-    let lines = text.split(/\n(?=\S+)/).length;
+export function textHeight(text, font) {
+    // TODO: this won't work anymore.
+    const lines = text.split(/\n(?=\S+)/).length;
     return lines * font.getLineHeight();
 };
 
 /**
- * Converts a base64 string to an arraybuffer which is useful for converting
- * into data stuff with browser apis.
- * @param {string} base64 is the base64 string to convert.
- * @return {Uint8Array} created arraybuffer.
+ * Converts a string containing base64 encoded data into an array of bytes.
+ * @param base64 base64 string to convert.
+ * @returns byte array of parsed data.
  */
-fish.util.base64ToArrayBuffer = base64 => {
-    let binary = atob(base64);
-    let bytes = new Uint8Array(binary.length);
+export function base64ToArrayBuffer(base64: string): Uint8Array {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return bytes;
-};
+}
 
 /**
- * Waits for the given amount of time asynchronously.
- * @param {number} time time to wait in seconds.
- * @return {Promise<mixed>} nothing in particular.
+ * Waits for a given time then returns.
+ * @param time seconds to wait.
  */
-fish.util.wait = function (time) {
-    return new Promise(resolve => setTimeout(resolve, time * 1000));
-};
+export async function wait(time: number): Promise<void> {
+    return await new Promise(resolve => setTimeout(resolve, time * 1000));
+}
+
+/**
+ * Super class for types that need to be initialised before they can be used.
+ */
+export class Initialised {
+    protected initialised = false;
+
+    /**
+     * Check if the object has been initialised yet.
+     * @returns true iff the object is ready to roll.
+     */
+    ready(): boolean {
+        return this.initialised;
+    }
+}

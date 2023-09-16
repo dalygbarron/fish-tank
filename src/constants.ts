@@ -39,5 +39,5 @@ fish.constants = {};
      * @readonly
      * @type string
      */
-    fish.constants.VERSION = '0.1.0';
+    fish.constants.VERSION = '0.2.0';
 })();

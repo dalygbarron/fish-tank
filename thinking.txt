@@ -1,0 +1,47 @@
+Basic demo so that I can test this shit out.
+We need lots of sprites flying around in the foreground, and in the background
+we will have a shader that features 2 textures flying around.
+
+Well, I think our very first test should just be a background that uses a shader
+with two different textures.
+
+
+Just thinking about how to structure stuff, it might be a good idea to take a
+leaf out of SFML's book and create classes that handle their own shit, but
+rather than doing it in their constructor, objects can be in an uninitialised
+state where they do nothing, and then there is some kind of init function
+that loads their crap and can fail more elegantly than constructors can.
+
+Destructors are not particularly necessary because webgl is garbage collected
+apparently. So yeah, this should work well.
+
+It does mean we should probably make more fields private tho.
+
+
+
+rendering text every frame sort of feels like a waste of time a lot of the time,
+especially if it's text in a gui box that literally doesn't change 90% of the
+time. I kind of feel as though the gui system should have special rendering
+set up that allows it to render more conservatively. Even if we rerun the gpu
+rendering of the quads, most frames the quads would stay very similar which
+would mean that we would not need to reupload them to the gpu (which is probably
+slower than the actual rendering).
+
+The problem here that I see though is that it would not work very well with
+the rendering order. I guess though that gui stuff generally appears on top
+of everything else, though, so perhaps we could make it that there is a
+second render thingy that is more persistent and also it renders on top of
+the normal one.
+
+Come to think of it this could be acheived in game land if the dev was able
+to create a second sprite batcher and we added the facilities to modify
+the existing data as well as just clearing and adding more.
+
+Yeah so I will not bother implementing this myself in the library right now,
+but I will strive to design the system such that the creation of the sprite
+batcher is a matter for the game dev and does not happen automatically.
+
+Good thing to note though is that doing a full redraw of the gui every once in
+a while, even if it was every time something actually happened, would not be
+bad at all. It's only redrawing it literally every frame that sorta sucks since
+it means the gpu literally never gets a break.
