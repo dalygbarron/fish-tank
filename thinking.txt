@@ -1,3 +1,13 @@
+Next thing to work on would probably be getting the sprite batcher to work and
+doing a test example where we have got batched sprites flying around the place.
+Once that works, the next thing to do would probably be getting the gui stuff
+working and the scene stack. We will also need to get the input system working
+in order to do the gui stuff, so maybe once we have batched sprites flying
+around in the text example, we should add some kind of thing that makes them
+respond to user input, maybe like a space thing but you move the camera
+yourself.
+
+
 Since I have not done anything to deal with mipmaps, some texture scaling
 methods are screwed, so it might be wise to disable them IDK. Would also be good
 to be able to set texture param defaults so we don't ahve to call a bunch of

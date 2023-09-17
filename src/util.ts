@@ -1,4 +1,18 @@
 /**
+ * Lets you set up a temporary batch of something that works only for the given
+ * frame.
+ */
+export class TemporaryBatch<T> {
+    items: T[];
+
+    constructor(construct: {new(): T}, n: number) {
+        for (let i = 0; i < n; i++) {
+            this.items.push(new construct());
+        }
+    }
+}
+
+/**
  * Represents a 2 dimensional vector real nice.
  */
 export class Vector2 {
@@ -91,6 +105,18 @@ export class Rect {
  */
 export function getScreenRect(gl: WebGLRenderingContext): Rect {
     return new Rect(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+}
+
+/**
+ * A shitty hashing algorithm for non secure purposes.
+ * @param text 
+ */
+export function hash(text: string): string {
+    let h = 0;
+    for(let i = 0; i < text.length; i++) {
+        h = Math.imul(31, h) + text.charCodeAt(i) | 0;
+    }
+    return `${h}`;
 }
 
 /**

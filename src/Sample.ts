@@ -16,7 +16,7 @@ export default class Sample extends util.Initialised {
      */
     async loadFromUrl(ac: AudioContext, url: string): Promise<boolean> {
         this.ac = ac;
-        this.name = url;
+        this.name = (url.startsWith('data:')) ? util.hash(url) : url;
         const request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.responseType = 'arraybuffer';

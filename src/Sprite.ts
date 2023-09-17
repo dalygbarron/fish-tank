@@ -74,8 +74,6 @@ export default class Sprite extends Drawable {
         gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, uvArray, gl.STATIC_DRAW);
-
-
         this.initialised = true;
         return true;
     }

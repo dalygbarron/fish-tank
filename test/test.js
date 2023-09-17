@@ -3,6 +3,8 @@ const MyGame = class extends fish.Game {
     critter = new fish.Texture();
     shader = new fish.Shader();
     sprite = new fish.Sprite();
+    batch = new fish.Batch();
+    normalShader = new fish.Shader();
 
     constructor(gl, ac) {
         super(gl, ac);
@@ -21,7 +23,9 @@ const MyGame = class extends fish.Game {
         this.critter.setParameter(this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
         const loaded = await fish.util.loadText('/test/wavy.frag');
         this.shader.init(this.gl, loaded, null, ['texture', 'critter']);
+        this.normalShader.init(this.gl);
         this.sprite.init(this.gl, new fish.util.Rect(0, 0, 512, 640), new fish.util.Rect(0, 0, 1, 1), [this.texture, this.critter]);
+        this.batch.init(this.gl, this.texture, 100);
         this.gl.disable(this.gl.DEPTH_TEST);
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
@@ -36,6 +40,11 @@ const MyGame = class extends fish.Game {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.shader.update(time);
         this.shader.draw(this.sprite);
+        this.batch.clear();
+        for (let i = 0; i < 10; i++) {
+            this.batch.addComp(this.texture.getRect(), Math.random() * 100, Math.random() * 700, Math.random() * 700, Math.random() * 700);
+        }
+        this.normalShader.draw(this.batch);
     }
 }
 
