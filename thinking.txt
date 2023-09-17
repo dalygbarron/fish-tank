@@ -1,3 +1,10 @@
+shaders only fit the image for the first texture second texture is relative to
+the first one by it's size.... uhhh I am drunk.... but I think do we need to do
+something about this? maybe not.
+
+
+
+
 Basic demo so that I can test this shit out.
 We need lots of sprites flying around in the foreground, and in the background
 we will have a shader that features 2 textures flying around.

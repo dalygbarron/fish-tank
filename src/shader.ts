@@ -2,15 +2,19 @@ import Texture from './Texture';
 import * as util from './util';
 
 const defaultVert = `
-attribute vec4 position;
-attribute vec4 uv;
-uniform vec4 invCanvas;
+attribute vec2 position;
+attribute vec2 uv;
+uniform vec2 canvasInv;
 uniform vec2 textureInv;
+uniform vec2 critterInv;
 varying highp vec2 vTextureCoord;
+varying highp vec2 vCritterCoord;
+varying highp vec2 vPosition;
 void main() {
-    gl_Position = position * (invCanvas * vec4(2, 2, 1.0, 1.0)) -
-        vec4(1.0, 1.0, 0, 0);
-    vTextureCoord = uv.xy * textureInv;
+    gl_Position = vec4(position * canvasInv * 2.0 - vec2(1.0, 1.0), 0.0, 1.0);
+    vTextureCoord = uv * textureInv;
+    vCritterCoord = uv * critterInv;
+    vPosition = position;
 }`;
 
 const defaultFrag = `
@@ -96,8 +100,8 @@ export default class Shader extends util.Initialised {
     private samplers: {
         sampler: WebGLUniformLocation|null,
         invSize: WebGLUniformLocation|null
-    }[];
-    private extras: {[id: string]: WebGLUniformLocation|null};
+    }[] = [];
+    private extras: {[id: string]: WebGLUniformLocation|null} = {};
 
     /**
      * Frees the shader's resources and lets you use it for something else.
@@ -162,12 +166,10 @@ export default class Shader extends util.Initialised {
         this.invCanvas = gl.getUniformLocation(program, 'canvasInv');
         this.time = gl.getUniformLocation(program, 'time');
         if (this.invCanvas) {
-            gl.uniform4f(
+            gl.uniform2f(
                 this.invCanvas,
                 1 / gl.drawingBufferWidth,
-                1 / gl.drawingBufferHeight,
-                1,
-                1
+                1 / gl.drawingBufferHeight
             );
         }
         // Setting up samplers and shader specific uniforms.
@@ -197,6 +199,20 @@ export default class Shader extends util.Initialised {
         else console.error('trying to bind uninitialised shader');
     }
 
+    /**
+     * Tells the shader the time so it can use it.
+     * @param time is the elapsed time of the game.
+     */
+    update(time: number): void {
+        if (this.ready()) {
+            this.gl.useProgram(this.program);
+            this.gl.uniform1f(this.time, time);
+        } else {
+            console.error('trying to update uninitialised shader');
+        }
+
+    }
+
     draw(item: Drawable): void {
         if (!this.ready()) {
             console.error('Trying to draw with uninitialised shader');
@@ -211,19 +227,21 @@ export default class Shader extends util.Initialised {
         this.gl.vertexAttribPointer(this.uv, 2, this.gl.FLOAT, false, 0, 0);
         //this.gl.enableVertexAttribArray(this.uv);
         const textures = item.getTextures();
-        for (let i = 0; i < this.samplers.length; i++) {
+        for (
+            let i = 0;
+            i < Math.min(this.samplers.length, textures.length);
+            i++
+        ) {
             this.gl.activeTexture(this.gl.TEXTURE0 + i);
             textures[i].bind();
             if (this.samplers[i].sampler) {
                 this.gl.uniform1i(this.samplers[i].sampler, i)
             }
             if (this.samplers[i].invSize) {
-                const invWidth = 1 / textures[i].getWidth();
-                const invHeight = 1 / textures[i].getHeight();
                 this.gl.uniform2f(
                     this.samplers[i].invSize,
-                    invWidth,
-                    invHeight
+                    textures[i].getInvWidth(),
+                    textures[i].getInvHeight()
                 );
             }
         }

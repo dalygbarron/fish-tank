@@ -1,5 +1,5 @@
-import * as util from './util'
-import * as shaders from './Shader'
+import * as util from '../src/util'
+import * as shaders from '../src/Shader'
 
 // here are some useful details I deleted from somewhere else:
 // gl.disable(gl.DEPTH_TEST);

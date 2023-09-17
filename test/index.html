@@ -1,19 +1,8 @@
 <html>
     <head>
         <title>fish-tank test</title>
-        <script src="https://requirejs.org/docs/release/2.3.6/comments/require.js" defer></script>
-        <script src="/dist/index.js" defer></script>
-        <script src="test.js" defer></script>
-        <script defer>
-            window.onload = () => {
-                const canvas = document.querySelector('#canvas');
-                const gl = canvas.getContext('webgl2');
-                
-                const texture = new Texture();
-                texture.loadFromURL('sprites.png');
-
-            };
-        </script>
+        <script src="/dist/fish-tank.js" type="module" defer></script>
+        <script src="/test/test.js" type="module" defer></script>
         <style>
             body {
                 background-color: black;
@@ -39,6 +28,6 @@
         </style>
     </head>
     <body>
-        <canvas id="canvas" width="1024" height="600"></canvas>
+        <canvas id="canvas" width="512" height="640"></canvas>
     </body>
 </html>

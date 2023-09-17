@@ -21,7 +21,7 @@ function createVertexArray(rect: Rect): Float32Array {
     items[8] = rect.r();
     items[9] = rect.t();
     items[10] = rect.x;
-    items[11] = rect.y;
+    items[11] = rect.t();
     return items;
 }
 
@@ -69,7 +69,7 @@ export default class Sprite extends Drawable {
         const uvRect = uv || (textures.length > 0) ? textures[0].getRect() :
             new Rect(0, 0, 1, 1);
         const vertexArray = createVertexArray(rect);
-        const uvArray = createVertexArray(uvRect.flipped(false, true));
+        const uvArray = createVertexArray(uvRect.flipped(true, false));
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);

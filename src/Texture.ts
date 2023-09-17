@@ -1,26 +1,5 @@
 import * as util from './util'
 
-// gl.texParameteri(
-//     gl.TEXTURE_2D,
-//     gl.TEXTURE_WRAP_S,
-//     gl.CLAMP_TO_EDGE
-// );
-// gl.texParameteri(
-//     gl.TEXTURE_2D,
-//     gl.TEXTURE_WRAP_T,
-//     gl.CLAMP_TO_EDGE
-// );
-// gl.texParameteri(
-//     gl.TEXTURE_2D,
-//     gl.TEXTURE_MIN_FILTER,
-//     gl.NEAREST
-// );
-// gl.texParameteri(
-//     gl.TEXTURE_2D,
-//     gl.TEXTURE_MAG_FILTER,
-//     gl.NEAREST
-// );
-
 /**
  * Wraps a webgl texture and stores it's width and height so you don't need to
  * query them whenever you need that info.
@@ -28,7 +7,8 @@ import * as util from './util'
 export default class Texture extends util.Initialised {
     private gl: WebGLRenderingContext;
     private glTexture: WebGLTexture;
-    private size: util.Vector2;
+    private size = new util.Vector2(0, 0);
+    private invSize = new util.Vector2(0, 0);
 
     /**
      * Frees resources used by this texture and sets it as uninitialised.
@@ -66,6 +46,7 @@ export default class Texture extends util.Initialised {
         this.gl = gl;
         this.glTexture = glTexture;
         this.size = size;
+        this.invSize.set(1 / size.x, 1 / size.y)
         this.initialised = true;
         return true;
     }
@@ -105,6 +86,7 @@ export default class Texture extends util.Initialised {
                 );
                 this.glTexture = glTexture;
                 this.size.set(image.width, image.height);
+                this.invSize.set(1 / image.width, 1 / image.height);
                 this.initialised = true;
                 resolve(true);
                 return;
@@ -120,19 +102,26 @@ export default class Texture extends util.Initialised {
 
     /**
      * Sets a webgl parameter for the texture.fas
-     * @param gl webgl context.
      * @param param parameter to set.
      * @param value value to give the parameter.
      */
-    setParameter(gl: WebGLRenderingContext, param: GLenum, value: number) {
-        gl.bindTexture(gl.TEXTURE_2D, this.glTexture);
-        gl.texParameteri(gl.TEXTURE_2D, param, value);
+    setParameter(param: GLenum, value: number) {
+        if (!this.ready()) {
+            console.error('trying to set param on uninitialised texture');
+            return;
+        }
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, param, value);
     }
 
     /**
      * Binds the texture in the webgl context.
      */
     bind(): void {
+        if (!this.ready()) {
+            console.error('trying to bind uninitialised texture');
+            return;
+        }
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
     }
 
@@ -150,6 +139,22 @@ export default class Texture extends util.Initialised {
      */
     getHeight(): number {
         return this.size.y;
+    }
+
+    /**
+     * gives you the inverse width.
+     * @returns 1 / width.
+     */
+    getInvWidth(): number {
+        return this.invSize.x;
+    }
+
+    /**
+     * gives you the inverse height.
+     * @returns 1 / height
+     */
+    getInvHeight(): number {
+        return this.invSize.y;
     }
 
     /**

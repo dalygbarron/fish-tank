@@ -1,11 +1,13 @@
 {
     "compilerOptions": {
         "module": "es6",
-        "target": "es2019",
+        "moduleResolution": "node",
+        "target": "es5",
         "declaration": true,
-        "outDir": "dist/"
+        "outDir": "./dist/",
+        "removeComments": true
     },
     "include": [
-        "src/index.ts"
+        "src/*.ts"
     ]
 }
