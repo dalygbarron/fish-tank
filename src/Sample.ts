@@ -69,6 +69,10 @@ export default class Sample extends util.Initialised {
      * Plays the sample.
      */
     play(): void {
+        if (!this.ready()) {
+            console.error(`trying to play uninitialised sample ${this.name}`);
+            return;
+        }
         const actuallyPlay = () => {
             let source = this.ac.createBufferSource();
             source.buffer = this.buffer;

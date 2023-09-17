@@ -22,9 +22,6 @@ class AudioManager {
      * @param sample the sample to play.
      */
     playSample(sample: Sample): void {
-        if (!sample.ready()) {
-            console.error(`trying to play uninitialised sample ${sample.name}`);
-        }
         if (sample.name in this.playingSamples &&
             this.playingSamples[sample.name] == this.frame
         ) {
