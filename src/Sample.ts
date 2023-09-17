@@ -40,32 +40,6 @@ export default class Sample extends util.Initialised {
     }
 
     /**
-     * Loads audio from a buffer of data.
-     * @param ac audio context to use.
-     * @param data to be converted into a sample.
-     * @returns promise resolving to true iff loading was successful.
-     */
-    async loadFromData(ac: AudioContext, data: Uint8Array): Promise<boolean> {
-        this.ac = ac;
-        this.name = data.slice(0, 20).toString();
-        console.log(this.name);
-        return new Promise(resolve => {
-            ac.decodeAudioData(
-                data.buffer,
-                buffer => {
-                    this.buffer = buffer;
-                    this.initialised = true;
-                    resolve(true);
-                },
-                () => {
-                    console.error('Failed to make sample from data');
-                    resolve(false);
-                }
-            )
-        });
-    }
-
-    /**
      * Plays the sample.
      */
     play(): void {

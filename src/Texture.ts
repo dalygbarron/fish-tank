@@ -20,37 +20,6 @@ export default class Texture extends util.Initialised {
         this.initialised = false;
     }
 
-    loadFromData(
-        gl: WebGLRenderingContext,
-        data: Uint8Array,
-        size: util.Vector2,
-        format: GLenum
-    ): boolean {
-        const glTexture = gl.createTexture();
-        if (!glTexture) {
-            console.error('Failed to create webgl texture');
-            return false;
-        }
-        gl.bindTexture(gl.TEXTURE_2D, glTexture);
-        gl.texImage2D(
-            gl.TEXTURE_2D,
-            0,
-            format,
-            size.x,
-            size.y,
-            0,
-            gl.RGBA,
-            gl.UNSIGNED_SHORT_4_4_4_4,
-            data
-        );
-        this.gl = gl;
-        this.glTexture = glTexture;
-        this.size = size;
-        this.invSize.set(1 / size.x, 1 / size.y)
-        this.initialised = true;
-        return true;
-    }
-
     /**
      * Loads data for the texture from the given url. If it already has some
      * data then it frees it.
