@@ -1,13 +1,11 @@
 const MyGame = class extends fish.Game {
-    gl;
     texture = new fish.Texture();
     critter = new fish.Texture();
     shader = new fish.Shader();
     sprite = new fish.Sprite();
 
-    constructor(gl) {
-        super();
-        this.gl = gl;
+    constructor(gl, ac) {
+        super(gl, ac);
     }
 
     async init() {
@@ -41,14 +39,16 @@ const MyGame = class extends fish.Game {
     }
 }
 
-async function start(gl) {
-    let game = new MyGame(gl);
+async function start(gl, ac) {
+    let game = new MyGame(gl, ac);
     await game.init();
     game.run(43);
 }
 
 window.onload = async () => {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const ac = new AudioContext();
     const canvas = document.querySelector('#canvas');
     const gl = canvas.getContext('webgl2');
-    await start(gl);
+    await start(gl, ac);
 }

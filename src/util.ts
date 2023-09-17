@@ -85,6 +85,15 @@ export class Rect {
 }
 
 /**
+ * Creates a rect with the dimensions of the screen with corner at 0, 0.
+ * @param gl rendering context to get dimensions from.
+ * @returns the rectangle.
+ */
+export function getScreenRect(gl: WebGLRenderingContext): Rect {
+    return new Rect(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+}
+
+/**
  * Wraps a number between [0, max). Like modulus if it wasn't fucking annoying
  * with negative numbers.
  * @param x is the number to wrap.

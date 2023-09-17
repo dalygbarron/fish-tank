@@ -194,9 +194,27 @@ export default class Shader extends util.Initialised {
         return true;
     }
 
-    bind(): void {
-        if (this.ready()) this.gl.useProgram(this.program);
-        else console.error('trying to bind uninitialised shader');
+    bind(): boolean {
+        if (this.ready()) {
+            this.gl.useProgram(this.program);
+            return true;
+        }
+        console.error('trying to bind uninitialised shader');
+        return false;
+    }
+
+    /**
+     * Sets the value of an extra shader param that is a float.
+     * @param name name of the extra to update.
+     * @param value value to give it.
+     */
+    extra1f(name: string, value: number): void {
+        if (!this.bind()) return;
+        if (!(name in this.extras)) {
+            console.error(`shader doesn't have extra ${name}`);
+            return;
+        }
+        this.gl.uniform1f(this.extras[name], value);
     }
 
     /**
@@ -204,13 +222,11 @@ export default class Shader extends util.Initialised {
      * @param time is the elapsed time of the game.
      */
     update(time: number): void {
-        if (this.ready()) {
-            this.gl.useProgram(this.program);
-            this.gl.uniform1f(this.time, time);
-        } else {
-            console.error('trying to update uninitialised shader');
-        }
-
+        // TODO: guess this should maybe also handle screen size changes if I
+        //       ever add that as a feature.
+        if (!this.bind()) return;
+        this.gl.useProgram(this.program);
+        this.gl.uniform1f(this.time, time);
     }
 
     draw(item: Drawable): void {

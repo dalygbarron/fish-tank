@@ -215,6 +215,5 @@ fish.input.InputHandler = function (keymap={}, threshold=0.9) {
     this.nameCode = code => {
         let ascii = String.fromCharCode(this.asciiCode(code));
         return `${keymap[code]} / ${ascii}`;
-
     };
 };

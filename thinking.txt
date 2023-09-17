@@ -1,7 +1,7 @@
-shaders only fit the image for the first texture second texture is relative to
-the first one by it's size.... uhhh I am drunk.... but I think do we need to do
-something about this? maybe not.
-
+Since I have not done anything to deal with mipmaps, some texture scaling
+methods are screwed, so it might be wise to disable them IDK. Would also be good
+to be able to set texture param defaults so we don't ahve to call a bunch of
+shit on every single texture when I always use the same settings anyway.
 
 
 
