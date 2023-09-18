@@ -30,7 +30,7 @@ const MyGame = class extends fish.Game {
         const loaded = await fish.util.loadText('/test/wavy.frag');
         this.shader.init(this.gl, loaded, null, ['texture', 'critter']);
         this.normalShader.init(this.gl);
-        this.sprite.init(this.gl, fish.util.rects.get().set(0, 0, 512, 640), fish.util.rects.get().set(0, 0, 1, 1), [this.texture, this.critter]);
+        this.sprite.init(this.gl, fish.util.rects.get().set(0, 0, 720, 864), fish.util.rects.get().set(0, 0, 1, 1), [this.texture, this.critter]);
         this.batch.init(this.gl, this.texture, 100);
         this.gl.disable(this.gl.DEPTH_TEST);
         this.gl.enable(this.gl.BLEND);
