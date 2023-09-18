@@ -161,31 +161,6 @@ export class Font {
 };
 
 /**
- * Loads in the data part of a texture atlas.
- * @param url where the data is loaded from.
- * @returns a promise that resolves to the loaded atlas object.
- */
-export function loadAtlas(url: string): Promise<Atlas> {
-    return new Promise(async (resolve, reject) => {
-        let text = await util.loadText(url);
-        if (text == null) {
-            reject(`couldn't load atlas data from ${url}`);
-            return;
-        }
-        let data = JSON.parse(text);
-        let atlas = new Atlas();
-        for (let frame in data) {
-            let rect = data[frame];
-            atlas.add(
-                frame,
-                new util.Rect(rect.x, rect.y, rect.width, rect.height)
-            );
-        }
-        resolve(atlas);
-    });
-};
-
-/**
  * A sprite batcher.
  */
 export class Batch {

@@ -7,8 +7,8 @@ import * as util from './util'
 export default class Texture extends util.Initialised {
     private gl: WebGLRenderingContext;
     private glTexture: WebGLTexture;
-    private size = new util.Vector2(0, 0);
-    private invSize = new util.Vector2(0, 0);
+    private size = new util.Vector2();
+    private invSize = new util.Vector2();
 
     /**
      * Frees resources used by this texture and sets it as uninitialised.
@@ -127,10 +127,10 @@ export default class Texture extends util.Initialised {
     }
 
     /**
-     * Gives you the size of the texture as a rectangle.
+     * Gives you the size of the texture as a temporary rectangle.
      * @returns dimensions as a rectangle with top left corner at zero.
      */
     getRect(): util.Rect {
-        return new util.Rect(0, 0, this.size.x, this.size.y);
+        return util.rects.get().set(0, 0, this.size.x, this.size.y);
     }
 };

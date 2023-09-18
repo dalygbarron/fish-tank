@@ -1,14 +1,54 @@
-/**
- * Lets you set up a temporary batch of something that works only for the given
- * frame.
- */
-export class TemporaryBatch<T> {
-    items: T[];
 
-    constructor(construct: {new(): T}, n: number) {
-        for (let i = 0; i < n; i++) {
-            this.items.push(new construct());
+/**
+ * Lets you set up a pool of thingies that can be used only on the given tick.
+ */
+export class TemporaryPool<T> {
+    private static instances: TemporaryPool<any>[] = [];
+    private n: number = 0;
+    private items: T[] = [];
+    private construct: new () => T;
+
+    /**
+     * Creates the pool.
+     * @param construct yeah you have to pass the constructor because of some
+     *        kind of typescript nonsense.
+     */
+    constructor(construct: new () => T) {
+        this.construct = construct;
+        TemporaryPool.instances.push(this);
+    }
+
+    /**
+     * Makes all items in the pool free game once again. Call this periodically
+     * like once per frame or whatever.
+     */
+    private refresh(): void {
+        this.n = 0;
+    }
+
+    /**
+     * Get an item from the pool. If there are not enough then another one is
+     * permanently added to the pool.
+     * @returns the free item.
+     */
+    get(): T {
+        let item: T;
+        if (this.n < this.items.length) {
+            item = this.items[this.n];
+        } else {
+            item = new this.construct();
+            this.items.push(item);
         }
+        this.n++;
+        return item;
+    }
+
+    /**
+     * Refreshes all temporary pool instances so that they can reuse the same
+     * items again.
+     */
+    static refreshAll(): void {
+        for (const pool of TemporaryPool.instances) pool.refresh();
     }
 }
 
@@ -16,18 +56,8 @@ export class TemporaryBatch<T> {
  * Represents a 2 dimensional vector real nice.
  */
 export class Vector2 {
-    x: number;
-    y: number;
-
-    /**
-     * Creates the vector.
-     * @param x horizontal parameter.
-     * @param y vertical parameter.
-     */
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
+    x: number = 0;
+    y: number = 0;
 
     /**
      * Sets both parts of the vector in one call.
@@ -44,23 +74,36 @@ export class Vector2 {
  * Represents a 2 dimensional rectangle.
  */
 export class Rect {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
+    pos = new Vector2();
+    size = new Vector2();
 
     /**
-     * Creates the rectangle.
+     * Copies all the fields of another rect.
+     * @param other the rect for this one to copy.
+     * @returns itself for easy chaining.
+     */
+    copy(other: Rect): Rect {
+        this.pos.x = other.pos.x;
+        this.pos.y = other.pos.y;
+        this.size.x = other.size.x;
+        this.size.y = other.size.y;
+        return this;
+    }
+
+    /**
+     * Sets all the components of the rectangle in one call.
      * @param x distance from left.
      * @param y distance from bottom.
      * @param w width.
      * @param h height.
+     * @returns itself for easy chaining.
      */
-    constructor(x: number, y: number, w: number, h: number) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+    set(x: number, y: number, w: number, h: number): Rect {
+        this.pos.x = x;
+        this.pos.y = y;
+        this.size.x = w;
+        this.size.y = h;
+        return this;
     }
 
     /**
@@ -69,7 +112,7 @@ export class Rect {
      * @returns right side.
      */
     r(): number {
-        return this.x + this.w;
+        return this.pos.x + this.size.x;
     }
 
     /**
@@ -78,7 +121,7 @@ export class Rect {
      * @returns top side.
      */
     t(): number {
-        return this.y + this.h;
+        return this.pos.y + this.size.y;
     }
 
     /**
@@ -89,22 +132,32 @@ export class Rect {
      * @returns flipped version of rect.
      */
     flipped(verticalAxis: boolean, horizontalAxis: boolean): Rect {
-        return new Rect(
-            this.x + (verticalAxis ? this.w : 0),
-            this.y + (horizontalAxis ? this.h : 0),
-            verticalAxis ? this.w : -this.w,
-            horizontalAxis ? this.h : -this.h
+        return rects.get().set(
+            this.pos.x + (verticalAxis ? this.size.x : 0),
+            this.pos.y + (horizontalAxis ? this.size.y : 0),
+            verticalAxis ? this.size.x : -this.size.x,
+            horizontalAxis ? this.size.y : -this.size.y
         );
     }
 }
 
+export const rects = new TemporaryPool<Rect>(Rect);
+
+export const vectors = new TemporaryPool<Vector2>(Vector2);
+
 /**
- * Creates a rect with the dimensions of the screen with corner at 0, 0.
+ * Creates a temporary rect with the dimensions of the screen with corner at 0,
+ * 0.
  * @param gl rendering context to get dimensions from.
- * @returns the rectangle.
+ * @returns a temporary rect.
  */
 export function getScreenRect(gl: WebGLRenderingContext): Rect {
-    return new Rect(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    return rects.get().set(
+        0,
+        0,
+        gl.drawingBufferWidth,
+        gl.drawingBufferHeight
+    );
 }
 
 /**
@@ -160,33 +213,33 @@ export function loadText(url: string): Promise<string> {
  * @param {fish.graphics.Font} font the font to give size to the text.
  * @param {number} width the width to fit the text into.
  */
-export function fitText(text, font, width) {
-    // TODO: needs to handle non monospaced fonts now.
-    let fitted = '';
-    const lines = text.split(/\n\n+/);
-    for (let line of lines) {
-        let offset = 0;
-        const tokens = line.split(/\s/);
-        for (let token of tokens) {
-            if (token.length == 0) continue;
-            let size = 0;
-            for (let i = 0; i < token.length; i++) {
-                size += font.getWidth(token.charAt(i));
-            }
-            if (offset + size > width) {
-                fitted += `\n${token}`;
-                offset = size;
-            } else {
-                fitted += token;
-                offset += size;
-            }
-            offset += font.getWidth(' ');
-            fitted += ' ';
-        }
-        fitted += '\n';
-    }
-    return fitted;
-};
+// export function fitText(text, font, width) {
+//     // TODO: needs to handle non monospaced fonts now.
+//     let fitted = '';
+//     const lines = text.split(/\n\n+/);
+//     for (let line of lines) {
+//         let offset = 0;
+//         const tokens = line.split(/\s/);
+//         for (let token of tokens) {
+//             if (token.length == 0) continue;
+//             let size = 0;
+//             for (let i = 0; i < token.length; i++) {
+//                 size += font.getWidth(token.charAt(i));
+//             }
+//             if (offset + size > width) {
+//                 fitted += `\n${token}`;
+//                 offset = size;
+//             } else {
+//                 fitted += token;
+//                 offset += size;
+//             }
+//             offset += font.getWidth(' ');
+//             fitted += ' ';
+//         }
+//         fitted += '\n';
+//     }
+//     return fitted;
+// };
 
 /**
  * Takes a fitted piece of text and tells you how high it is gonna be in the
@@ -195,11 +248,11 @@ export function fitText(text, font, width) {
  * @param {fish.graphics.Font} font is the font used to measure it.
  * @return {number} the number of pixels high it will be.
  */
-export function textHeight(text, font) {
-    // TODO: this won't work anymore.
-    const lines = text.split(/\n(?=\S+)/).length;
-    return lines * font.getLineHeight();
-};
+// export function textHeight(text, font) {
+//     // TODO: this won't work anymore.
+//     const lines = text.split(/\n(?=\S+)/).length;
+//     return lines * font.getLineHeight();
+// };
 
 /**
  * Converts a string containing base64 encoded data into an array of bytes.

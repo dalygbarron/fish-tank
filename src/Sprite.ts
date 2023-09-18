@@ -1,6 +1,6 @@
 import { Drawable } from "./Shader";
 import Texture from "./Texture";
-import { Rect } from "./util";
+import * as util from "./util";
 
 /**
  * Creates a float array containing a rectangle made up of 2 triangles.
@@ -8,19 +8,19 @@ import { Rect } from "./util";
  * @returns array containing both with vertex data being first 12 items and uv
  *          data the following 12.
  */
-function createVertexArray(rect: Rect): Float32Array {
+function createVertexArray(rect: util.Rect): Float32Array {
     const items = new Float32Array(12);
-    items[0] = rect.x;
-    items[1] = rect.y;
+    items[0] = rect.pos.x;
+    items[1] = rect.pos.y;
     items[2] = rect.r();
-    items[3] = rect.y;
-    items[4] = rect.x;
+    items[3] = rect.pos.y;
+    items[4] = rect.pos.x;
     items[5] = rect.t();
     items[6] = rect.r();
-    items[7] = rect.y;
+    items[7] = rect.pos.y;
     items[8] = rect.r();
     items[9] = rect.t();
-    items[10] = rect.x;
+    items[10] = rect.pos.x;
     items[11] = rect.t();
     return items;
 }
@@ -52,8 +52,8 @@ export default class Sprite extends Drawable {
      */
     init(
         gl: WebGLRenderingContext,
-        rect: Rect,
-        uv: Rect|null = null,
+        rect: util.Rect,
+        uv: util.Rect|null = null,
         textures: Texture[] = []
     ): boolean {
         this.gl = gl;
@@ -67,7 +67,7 @@ export default class Sprite extends Drawable {
         this.buffer = buffer;
         this.textureBuffer = textureBuffer;
         const uvRect = uv || (textures.length > 0) ? textures[0].getRect() :
-            new Rect(0, 0, 1, 1);
+            util.rects.get().set(0, 0, 1, 1);
         const vertexArray = createVertexArray(rect);
         const uvArray = createVertexArray(uvRect.flipped(true, false));
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);

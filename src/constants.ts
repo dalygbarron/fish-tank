@@ -16,7 +16,7 @@ uniform mediump float time;
 varying highp vec2 vTextureCoord;
 void main() {
     mediump vec4 flicker = vec4(sin(time) * 0.5 + 0.5, cos(time) * 0.5 + 0.5, tan(time) * 0.5 + 0.5, 1.0);
-    gl_FragColor = texture2D(texture, vTextureCoord) * fade * flicker;
+    gl_FragColor = texture2D(texture, vTextureCoord) * clamp(fade, 0.0, 1.0) * flicker;
 }`;
 
 /**
@@ -54,28 +54,3 @@ export async function getJingle(ac: AudioContext): Promise<Sample> {
     await sample.loadFromUrl(ac, JINGLE);
     return sample;
 }
-
-
-    // /**
-    //  * array of image data for the init screen graphics.
-    //  * @readonly
-    //  * @type Uint16Array
-    //  */
-    // fish.constants.SPLASH = new Uint16Array(splashSize);
-    // let splashBinary = atob(SPLASH);
-    // for (let i = 0; i < splashSize; i++) {
-    //     let c = splashBinary.charCodeAt(i * 2);
-    //     let c2 = splashBinary.charCodeAt(i * 2 + 1);
-    //     let red = (c >>> 4);
-    //     let green = (c & 0xf);
-    //     let blue = (c2 >>> 4);
-    //     let alpha = (c2 & 0xf);
-    //     fish.constants.SPLASH[i] = red << 12 | green << 8 | blue << 4 | alpha;
-    // }
-    // /**
-    //  * array of audio data for the init screen music.
-    //  * @readonly
-    //  * @type Uint8Array
-    //  */
-    // fish.constants.JINGLE = fish.util.base64ToArrayBuffer(JINGLE);
-

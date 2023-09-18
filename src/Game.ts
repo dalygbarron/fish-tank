@@ -1,5 +1,6 @@
 import Shader from './Shader';
 import Sprite from './Sprite';
+import * as audio from './audio';
 import * as util from './util'
 import * as constants from './constants';
 import { getScreenRect } from './util';
@@ -11,6 +12,8 @@ const INV_MILLI = 1 / 1000;
  * timestep whereas rendering does not need to, so the two need to be seperated.
  */
 export default abstract class Game {
+    static fps: number|null = null;
+    static runningGames: Game[] = [];
     gl: WebGLRenderingContext;
     ac: AudioContext;
 
@@ -46,10 +49,14 @@ export default abstract class Game {
         const sprite = new Sprite();
         const shader = new Shader();
         const rect = splashTexture.getRect();
-        rect.x = (this.gl.drawingBufferWidth - rect.w) * 0.5;
-        rect.y = (this.gl.drawingBufferHeight - rect.h) * 0.5;
+        rect.pos.set(
+            (this.gl.drawingBufferWidth - rect.size.x) * 0.5,
+            (this.gl.drawingBufferHeight - rect.size.y) * 0.5
+        );
         sprite.init(this.gl, rect, null, [splashTexture]);
         shader.init(this.gl);
+        this.gl.clearColor(0, 0, 0, 1);
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         shader.draw(sprite);
         return new Promise<void>(resolve => {
             const handler = () => {
@@ -73,6 +80,7 @@ export default abstract class Game {
         shader.init(this.gl, constants.FADE_FRAG, null, ['texture'], ['fade']);
         jingle.play();
         for (let i = 0; i < 40; i++) {
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
             shader.extra1f(
                 'fade',
                 (i < 10) ? i / 10 : (i > 30) ? (10 - (i - 30)) / 10 : 1
@@ -84,12 +92,24 @@ export default abstract class Game {
     }
 
     /**
-     * Starts the game running.
-     * @param logicalFramesPerSecond 
+     * Starts a game running. You can have multiple game objects running at the
+     * same time for if you wanted to like have a game with two screens or
+     * something cool like that, but the condition is that whichever game gets
+     * run first determines the framerate, so if you run a second game with this
+     * function framerate will be ignored.
+     * @param game is the game to set running.
+     * @param logicalFramesPerSecond the number of frames per second the game
+     *        is supposed to be updated at.
      */
-    run(logicalFramesPerSecond: number): void {
-        this.pressAKey().then(() => {
-            this.splash().then(() => {
+    static run(game: Game, logicalFramesPerSecond: number = 60): void {
+        Game.runningGames.push(game);
+        if (Game.fps === null) {
+            Game.fps = logicalFramesPerSecond;
+        } else {
+            return;
+        }
+        game.pressAKey().then(() => {
+            game.splash().then(() => {
                 const delta = 1 / logicalFramesPerSecond;
                 const startTime = Date.now();
                 let currentTime = 0;
@@ -99,10 +119,19 @@ export default abstract class Game {
                         currentTime = Date.now();
                         let elapsed = (currentTime - startTime) * INV_MILLI;
                         while (updates < elapsed * logicalFramesPerSecond) {
-                            this.update(delta);
+                            // TODO: do all updates and refreshes.
+                            audio.update();
+                            util.TemporaryPool.refreshAll();
+                            for (const game of Game.runningGames) {
+                                game.update(delta);
+                            }
                             updates++;
                         }
-                        requestAnimationFrame(() => this.draw(elapsed));
+                        requestAnimationFrame(() => {
+                            for (const game of Game.runningGames) {
+                                game.draw(elapsed);
+                            }
+                        });
                     },
                     delta * 1000
                 );

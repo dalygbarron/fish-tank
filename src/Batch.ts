@@ -7,7 +7,6 @@ import * as util from "./util";
  * same texture, and upload it all to the GPU in one go so it's fast.
  */
 export default class Batch extends Drawable {
-    gl: WebGLRenderingContext;
     texture: Texture;
     max: number;
     vertexData: Float32Array;
@@ -105,18 +104,18 @@ export default class Batch extends Drawable {
         this.vertexData[offset + 9] = t;
         this.vertexData[offset + 10] = l;
         this.vertexData[offset + 11] = t;
-        this.uvData[offset] = src.x;
+        this.uvData[offset] = src.pos.x;
         this.uvData[offset + 1] = src.t();
         this.uvData[offset + 2] = src.r();
         this.uvData[offset + 3] = src.t();
-        this.uvData[offset + 4] = src.x;
-        this.uvData[offset + 5] = src.y;
+        this.uvData[offset + 4] = src.pos.x;
+        this.uvData[offset + 5] = src.pos.y;
         this.uvData[offset + 6] = src.r();
         this.uvData[offset + 7] = src.t();
         this.uvData[offset + 8] = src.r();
-        this.uvData[offset + 9] = src.y;
-        this.uvData[offset + 10] = src.x;
-        this.uvData[offset + 11] = src.y;
+        this.uvData[offset + 9] = src.pos.y;
+        this.uvData[offset + 10] = src.pos.x;
+        this.uvData[offset + 11] = src.pos.y;
         this.n++;
     }
 
@@ -127,17 +126,17 @@ export default class Batch extends Drawable {
      *        centrepoint.
      */
     add(src: util.Rect, dst: util.Rect|util.Vector2) {
-        let l, r, t, b;
+        let l: number, r: number, t: number, b: number;
         if (dst instanceof util.Rect) {
-            l = dst.x;
-            r = dst.r;
-            b = dst.y;
-            t = dst.t;
+            l = dst.pos.x;
+            r = dst.r();
+            b = dst.pos.y;
+            t = dst.t();
         } else if (dst instanceof util.Vector2) {
-            l = dst.x - src.w * 0.5;
-            r = dst.x + src.w * 0.5;
-            b = dst.y + src.h * 0.5;
-            t = dst.y - src.h * 0.5;
+            l = dst.x - src.size.x * 0.5;
+            r = dst.x + src.size.x * 0.5;
+            b = dst.y + src.size.y * 0.5;
+            t = dst.y - src.size.y * 0.5;
         }
         this.addComp(src, l, t, r, b);
     }

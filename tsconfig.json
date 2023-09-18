@@ -5,7 +5,10 @@
         "target": "es5",
         "declaration": true,
         "outDir": "./dist/",
-        "removeComments": true
+        "removeComments": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true
     },
     "include": [
         "src/*.ts"
