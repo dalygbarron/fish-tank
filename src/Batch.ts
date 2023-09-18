@@ -1,5 +1,7 @@
 import { Drawable } from "./Shader";
 import Texture from "./Texture";
+import Font from './Font';
+import {Glyph} from './Font';
 import * as util from "./util";
 
 /**
@@ -125,7 +127,7 @@ export default class Batch extends Drawable {
      * @param dst is where on the screen to draw it, either as a rectangle or a
      *        centrepoint.
      */
-    add(src: util.Rect, dst: util.Rect|util.Vector2) {
+    add(src: util.Rect, dst: util.Rect|util.Vector2): void {
         let l: number, r: number, t: number, b: number;
         if (dst instanceof util.Rect) {
             l = dst.pos.x;
@@ -139,6 +141,39 @@ export default class Batch extends Drawable {
             t = dst.y - src.size.y * 0.5;
         }
         this.addComp(src, l, t, r, b);
+    }
+
+    /**
+     * Writes some text at a point on the screen.
+     * @param text the text to write.
+     * @param origin top left of the first character to write.
+     * @param font the font to get the glyphs to draw from.
+     */
+    addText(text: string, origin: util.Vector2, font: Font): void {
+        const cursor = util.vectors.get().copy(origin);
+        cursor.y -= font.getLineHeight();
+        let previousGlyph: Glyph|null = null;
+        for (let i = 0; i < text.length; i++) {
+            const code = text.charCodeAt(i);
+            if (code == 10) {
+                previousGlyph = null;
+                cursor.set(origin.x, cursor.y - font.getLineHeight());
+            }
+            if (previousGlyph && code in previousGlyph.kerning) {
+                cursor.x += previousGlyph.kerning[code];
+            }
+            const glyph = font.get(code);
+            if (!glyph) continue;
+            this.addComp(
+                glyph.src,
+                cursor.x + glyph.offset.x,
+                cursor.y + glyph.offset.y,
+                cursor.x + glyph.offset.x + glyph.src.size.x,
+                cursor.y + glyph.offset.y + glyph.src.size.y
+            );
+            cursor.x += glyph.advance;
+            previousGlyph = glyph;
+        }
     }
 
     /**

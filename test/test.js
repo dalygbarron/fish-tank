@@ -6,6 +6,7 @@ const MyGame = class extends fish.Game {
     batch = new fish.Batch();
     normalShader = new fish.Shader();
     atlas = new fish.Atlas();
+    font = new fish.Font();
     origin = new fish.util.Vector2(500, 500);
 
     constructor(gl, ac) {
@@ -14,6 +15,8 @@ const MyGame = class extends fish.Game {
 
     async init() {
         await this.atlas.loadFromUrl('/test/sprites.json');
+        await this.font.loadFromUrl('/test/yesevaOne.fnt', this.atlas.get('font').pos);
+        console.log(this.font.glyphs);
         await this.texture.loadFromUrl(this.gl, '/test/sprites.png');
         this.texture.setParameter(this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
         this.texture.setParameter(this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
@@ -35,24 +38,24 @@ const MyGame = class extends fish.Game {
     }
     
     update(delta) {
-        this.origin.x += fish.input.getAxis('LEFT', 'RIGHT') * 100 * delta;
-        this.origin.y += fish.input.getAxis('DOWN', 'UP') * 100 * delta;
+        this.origin.x += fish.input.getAxis('LEFT', 'RIGHT') * 200 * delta;
+        this.origin.y += fish.input.getAxis('DOWN', 'UP') * 200 * delta;
     }
 
     draw(time) {
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.shader.update(time);
         this.shader.draw(this.sprite);
         if (fish.input.getButton('A')) return;
         this.batch.clear();
         const dst = fish.util.vectors.get();
-        this.atlas.forEach((sprite, src) => {
-            dst.set(
-                this.origin.x + Math.random() * 150 - 75,
-                this.origin.y + Math.random() * 150 - 75
-            )
-            this.batch.add(src, dst);
-        });
+        // this.atlas.forEach((sprite, src) => {
+        //     dst.set(
+        //         this.origin.x + Math.random() * 150 - 75,
+        //         this.origin.y + Math.random() * 150 - 75
+        //     )
+        //     this.batch.add(src, dst);
+        // });
+        this.batch.addText('Hello my dear friends.\nI like to bite tango lol. It is very funny.', this.origin, this.font);
         this.normalShader.draw(this.batch);
     }
 }

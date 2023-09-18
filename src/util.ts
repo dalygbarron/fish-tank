@@ -60,13 +60,26 @@ export class Vector2 {
     y: number = 0;
 
     /**
+     * Sets the parts of this vector to those of another.
+     * @param other the vector to copy.
+     * @returns itself for convenience.
+     */
+    copy(other: Vector2): Vector2 {
+        this.x = other.x;
+        this.y = other.y;
+        return this;
+    }
+
+    /**
      * Sets both parts of the vector in one call.
      * @param x value to give x component.
      * @param y value to give y component.
+     * @returns itself for convenience.
      */
-    set(x: number, y: number): void {
+    set(x: number, y: number): Vector2 {
         this.x = x;
         this.y = y;
+        return this;
     }
 };
 
