@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "moduleResolution": "node",
+        "target": "es5",
+        "declaration": true,
+        "outDir": "./dist/",
+        "removeComments": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "sourceMap": true,
+        "inlineSourceMap": false
+    },
+    "include": [
+        "src/*.ts"
+    ]
+}

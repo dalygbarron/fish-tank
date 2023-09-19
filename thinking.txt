@@ -1,0 +1,145 @@
+We can think of the gui system as a sort of grid where we have rows that are
+individually movable, but then as you move up and down to different rows they
+have their own alignment going on. We can configure things like dynamic spacing
+and how stuff that is not currently selected is rendered.
+
+Thus far it seems what appears within these cells is always just some variation
+on text. I need to mock up the character select screen and the comic book
+screen before I can tell for certain what kind of gui elements we may need.
+
+making the gui system animated should be pretty easy, just has a couple of
+values it interpolates and most things can happen while other things are still
+happening I think.
+
+I'm not sure if wrapping text is slow. It seems a waste to do it every frame at
+least. We could create a wrap text function that generates a float32array that
+consists of vertex and uv data interleaved, and this can be fed directly into
+the sprite batcher. It still means copying the data to the sprite batch's array
+and then to the gpu every frame, but at least it doesn't also have to do work
+to figure out what the data is that it is feeding. Actually don't interleave the
+data, just have one lot first, then the other in the second half, that 
+
+
+blending mode should be configured per shader. and yeah textures should be
+banned from any filter mode that needs mip maps.
+
+
+
+Next thing to work on would probably be getting the sprite batcher to work and
+doing a test example where we have got batched sprites flying around the place.
+Once that works, the next thing to do would probably be getting the gui stuff
+working and the scene stack. We will also need to get the input system working
+in order to do the gui stuff, so maybe once we have batched sprites flying
+around in the text example, we should add some kind of thing that makes them
+respond to user input, maybe like a space thing but you move the camera
+yourself.
+
+
+Before we can think too hard about how the gui is gonna look, we have gotta
+think about what it is the user needs to be able to do.
+The main thing they need to be able to do is choose a main chapter of the game
+to be able to play, I think these should be represented with a nice largeish
+image which when they have not yet completed it is line art or something, then
+when they have completed it, it will be coloured.
+They can choose a difficulty setting, which resets which chapters they are
+allowed to play because they are locked by completion on the given difficulty.
+Some chapters will have a choice of what characters you can play as, and if you
+have beaten the chapter before then you get the choice of playing as any
+character that is in the game, and you can also use special items that modify
+the run in some way, if you have unlocked them.
+There should also be an settings screen which at the very least lets you turn
+off the music, and maybe lets you export your progress as some sort of file,
+and maybe also delete your progress also when leaderboards have been implemented
+you could opt out of them.
+Need a button to open leaderboards which just opens another tab to a html page
+showing the leaderboards.
+I also want to have a screen that lets you see lore entries that you unlock
+after each chapter you beat, they are just text and maybe a picture.
+There should also be a screen where you can listen to all of the songs that you
+have heard in the game.
+
+so controls on main screen are:
+easy | normal | hard
+chapter 1 | chapter 2 | ...
+level practice | spell practice
+lore
+music room
+high scores
+settings
+
+
+Regarding the GUI system, I think I would like to have something a bit more
+spacious like the touhou style of ui rather than my usual thing where even non
+interactive gui stuff takes up a bunch of space, and I want to it to be able to
+be pretty ad hoc in how you use it. Looking at how touhou 12's menus work,
+stuff is organised, but it's also animated and it also interacts with other
+elements on the screen, like when you select play game then the main reimu pic
+floats away, then you have character pics on one side and the list of characters
+you can pick on the other side. Interesting to note that at least from entering
+the main menu to playing the game the only gui layout is a vertical list of
+choices. My system could work likewise, but I also need to implement things
+where you can modify your choice by pressing left or right, for example the
+difficulty choice which does nothing if 'pressed', and the chapter choice,
+which also reacts to being 'pressed'.
+One other thing to note is that although you only have vertical lists of text,
+the formatting of that text has quite a bit of control.
+
+choose chapter one from main menu -> choose character -> choose modifier (skipped if not available)
+
+
+
+
+Since I have not done anything to deal with mipmaps, some texture scaling
+methods are screwed, so it might be wise to disable them IDK. Would also be good
+to be able to set texture param defaults so we don't ahve to call a bunch of
+shit on every single texture when I always use the same settings anyway.
+
+
+
+Basic demo so that I can test this shit out.
+We need lots of sprites flying around in the foreground, and in the background
+we will have a shader that features 2 textures flying around.
+
+Well, I think our very first test should just be a background that uses a shader
+with two different textures.
+
+
+Just thinking about how to structure stuff, it might be a good idea to take a
+leaf out of SFML's book and create classes that handle their own shit, but
+rather than doing it in their constructor, objects can be in an uninitialised
+state where they do nothing, and then there is some kind of init function
+that loads their crap and can fail more elegantly than constructors can.
+
+Destructors are not particularly necessary because webgl is garbage collected
+apparently. So yeah, this should work well.
+
+It does mean we should probably make more fields private tho.
+
+
+
+rendering text every frame sort of feels like a waste of time a lot of the time,
+especially if it's text in a gui box that literally doesn't change 90% of the
+time. I kind of feel as though the gui system should have special rendering
+set up that allows it to render more conservatively. Even if we rerun the gpu
+rendering of the quads, most frames the quads would stay very similar which
+would mean that we would not need to reupload them to the gpu (which is probably
+slower than the actual rendering).
+
+The problem here that I see though is that it would not work very well with
+the rendering order. I guess though that gui stuff generally appears on top
+of everything else, though, so perhaps we could make it that there is a
+second render thingy that is more persistent and also it renders on top of
+the normal one.
+
+Come to think of it this could be acheived in game land if the dev was able
+to create a second sprite batcher and we added the facilities to modify
+the existing data as well as just clearing and adding more.
+
+Yeah so I will not bother implementing this myself in the library right now,
+but I will strive to design the system such that the creation of the sprite
+batcher is a matter for the game dev and does not happen automatically.
+
+Good thing to note though is that doing a full redraw of the gui every once in
+a while, even if it was every time something actually happened, would not be
+bad at all. It's only redrawing it literally every frame that sorta sucks since
+it means the gpu literally never gets a break.

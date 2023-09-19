@@ -1,50 +1,37 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>fish-tank test</title>
-        <script src="fish-tank.min.js" defer></script>
-        <script src="test.js" defer></script>
-        <script defer>
-            window.onload = () => {
-                const canvas = document.querySelector('#canvas');
-                const gl = canvas.getContext('webgl2');
-                const context = new AudioContext();
-                if (gl === null || context === null) {
-                    alert('Your browser is not compatible lmao');
-                    return;
-                }
-                fish.start({
-                    rate: 30,
-                    gl: gl,
-                    ac: context,
-                    storePrefix: ''
-                }, createBasedScreen);
-            };
-        </script>
+        <script src="/dist/fish-tank.js" type="module" defer></script>
+        <script src="/test/test.js" type="module" defer></script>
         <style>
+            html, body {
+                margin: 0;
+                height: 100%;
+            }
+
             body {
                 background-color: black;
+                background-image: url('/test/side.png');
             }
 
-            #canvas {
-                position: fixed;
-                top: 0;
-            }
-
-            @media (max-aspect-ratio: 1024/600) {
+            @media (max-aspect-ratio: 512/640) {
                 #canvas {
                     width: 100%;
                 }
             }
 
-            @media (min-aspect-ratio: 1024/600) {
+            @media (min-aspect-ratio: 512/640) {
                 #canvas {
-                    margin: auto;
+                    margin-right: auto;
+                    margin-left: auto;
+                    display: block;
                     height: 100%;
                 }
             }
         </style>
     </head>
     <body>
-        <canvas id="canvas" width="1024" height="600"></canvas>
+        <canvas id="canvas" width="720" height="864"></canvas>
     </body>
 </html>

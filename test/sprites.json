@@ -94,8 +94,8 @@
     "font": {
         "x": 0,
         "y": 0,
-        "width": 128,
-        "height": 256,
+        "width": 185,
+        "height": 185,
         "source_image": "testSprites/font.png",
         "image": "sprites.png",
         "total_width": 454,
@@ -225,29 +225,6 @@
             "offset_y": "-136px",
             "height": "24px",
             "width": "24px",
-            "total_height": "256px",
-            "total_width": "454px"
-        }
-    },
-    "otherFont": {
-        "x": 129,
-        "y": 0,
-        "width": 128,
-        "height": 256,
-        "source_image": "testSprites/otherFont.png",
-        "image": "sprites.png",
-        "total_width": 454,
-        "total_height": 256,
-        "escaped_image": "sprites.png",
-        "offset_x": -129,
-        "offset_y": 0,
-        "px": {
-            "x": "129px",
-            "y": "0px",
-            "offset_x": "-129px",
-            "offset_y": "0px",
-            "height": "256px",
-            "width": "128px",
             "total_height": "256px",
             "total_width": "454px"
         }
