@@ -50,6 +50,12 @@ export default class Atlas extends util.Initialised {
         return util.rects.get().set(0, 0, 1, 1);
     }
 
+    getRandom(): util.Rect {
+        const keys = Object.keys(this.sprites);
+        const index = Math.floor(Math.random() * keys.length);
+        return this.sprites[keys[index]];
+    }
+
     /**
      * Calls a callback on all the sprites. Probably not useful except for
      * debugging purposes.

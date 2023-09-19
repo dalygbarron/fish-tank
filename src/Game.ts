@@ -114,12 +114,16 @@ export default abstract class Game {
                 const startTime = Date.now();
                 let currentTime = 0;
                 let updates = 0;
+                let elapsed = 0;
+                const render = () => {
+                    for (const game of Game.runningGames) game.draw(elapsed);
+                    requestAnimationFrame(render);
+                }
                 setInterval(
                     () => {
                         currentTime = Date.now();
-                        let elapsed = (currentTime - startTime) * INV_MILLI;
+                        elapsed = (currentTime - startTime) * INV_MILLI;
                         while (updates < elapsed * logicalFramesPerSecond) {
-                            // TODO: do all updates and refreshes.
                             audio.update();
                             util.TemporaryPool.refreshAll();
                             for (const game of Game.runningGames) {
@@ -127,14 +131,10 @@ export default abstract class Game {
                             }
                             updates++;
                         }
-                        requestAnimationFrame(() => {
-                            for (const game of Game.runningGames) {
-                                game.draw(elapsed);
-                            }
-                        });
                     },
                     delta * 1000
                 );
+                requestAnimationFrame(render);
             });
         });
     }

@@ -1,3 +1,30 @@
+We can think of the gui system as a sort of grid where we have rows that are
+individually movable, but then as you move up and down to different rows they
+have their own alignment going on. We can configure things like dynamic spacing
+and how stuff that is not currently selected is rendered.
+
+Thus far it seems what appears within these cells is always just some variation
+on text. I need to mock up the character select screen and the comic book
+screen before I can tell for certain what kind of gui elements we may need.
+
+making the gui system animated should be pretty easy, just has a couple of
+values it interpolates and most things can happen while other things are still
+happening I think.
+
+I'm not sure if wrapping text is slow. It seems a waste to do it every frame at
+least. We could create a wrap text function that generates a float32array that
+consists of vertex and uv data interleaved, and this can be fed directly into
+the sprite batcher. It still means copying the data to the sprite batch's array
+and then to the gpu every frame, but at least it doesn't also have to do work
+to figure out what the data is that it is feeding. Actually don't interleave the
+data, just have one lot first, then the other in the second half, that 
+
+
+blending mode should be configured per shader. and yeah textures should be
+banned from any filter mode that needs mip maps.
+
+
+
 Next thing to work on would probably be getting the sprite batcher to work and
 doing a test example where we have got batched sprites flying around the place.
 Once that works, the next thing to do would probably be getting the gui stuff

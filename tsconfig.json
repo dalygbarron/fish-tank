@@ -8,7 +8,9 @@
         "removeComments": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,
-        "noImplicitThis": true
+        "noImplicitThis": true,
+        "sourceMap": true,
+        "inlineSourceMap": false
     },
     "include": [
         "src/*.ts"

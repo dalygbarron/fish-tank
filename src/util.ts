@@ -203,7 +203,7 @@ export function wrap(x: number, max: number): number {
  */
 export function loadText(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.responseType = 'text';
         xhr.onreadystatechange = function () {
             if (this.readyState == 4) {

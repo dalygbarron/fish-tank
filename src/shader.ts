@@ -4,24 +4,32 @@ import * as util from './util';
 const defaultVert = `
 attribute vec2 position;
 attribute vec2 uv;
+attribute vec4 colour;
 uniform vec2 canvasInv;
 uniform vec2 textureInv;
 uniform vec2 critterInv;
 varying highp vec2 vTextureCoord;
 varying highp vec2 vCritterCoord;
 varying highp vec2 vPosition;
+varying highp vec4 vColour;
 void main() {
-    gl_Position = vec4(position * canvasInv * 2.0 - vec2(1.0, 1.0), 0.0, 1.0);
+    gl_Position = vec4(
+      position * canvasInv * 2.0 - vec2(1.0, 1.0),
+      0.0,
+      1.0
+    );
     vTextureCoord = uv * textureInv;
     vCritterCoord = uv * critterInv;
     vPosition = position;
+    vColour = colour;
 }`;
 
 const defaultFrag = `
 uniform sampler2D texture;
 varying highp vec2 vTextureCoord;
+varying highp vec4 vColour;
 void main() {
-    gl_FragColor = texture2D(texture, vTextureCoord);
+    gl_FragColor = texture2D(texture, vTextureCoord) * vColour;
 }`;
 
 /**
@@ -78,6 +86,12 @@ export abstract class Drawable extends util.Initialised {
     abstract getUVBuffer(): WebGLBuffer;
 
     /**
+     * Gives you the drawables buffer of colours.
+     * @returns the buffer of colours.
+     */
+    abstract getColourBuffer(): WebGLBuffer;
+
+    /**
      * Called immediately before the drawable is rendered and allows it to
      * update it's buffers or whatever.
      * @returns the number of vertices to be drawn.
@@ -95,6 +109,7 @@ export default class Shader extends util.Initialised {
     private program: WebGLProgram;
     private position: number;
     private uv: number;
+    private colour: number;
     private invCanvas: WebGLUniformLocation|null;
     private time: WebGLUniformLocation|null;
     private samplers: {
@@ -161,8 +176,10 @@ export default class Shader extends util.Initialised {
         // Setting up engine wide attribs and uniforms.
         this.position = gl.getAttribLocation(program, 'position');
         this.uv = gl.getAttribLocation(program, 'uv');
+        this.colour = gl.getAttribLocation(program, 'colour');
         this.gl.enableVertexAttribArray(this.position);
         this.gl.enableVertexAttribArray(this.uv);
+        this.gl.enableVertexAttribArray(this.colour);
         this.invCanvas = gl.getUniformLocation(program, 'canvasInv');
         this.time = gl.getUniformLocation(program, 'time');
         if (this.invCanvas) {
@@ -237,11 +254,11 @@ export default class Shader extends util.Initialised {
         this.gl.useProgram(this.program);
         const n = item.draw();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getVertexBuffer());
-        this.gl.vertexAttribPointer(this.position, 2, this.gl.FLOAT, false, 0, 0);
-        //this.gl.enableVertexAttribArray(this.position);
+        this.gl.vertexAttribPointer(this.position, 2, this.gl.SHORT, false, 0, 0);
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getUVBuffer());
-        this.gl.vertexAttribPointer(this.uv, 2, this.gl.FLOAT, false, 0, 0);
-        //this.gl.enableVertexAttribArray(this.uv);
+        this.gl.vertexAttribPointer(this.uv, 2, this.gl.SHORT, false, 0, 0);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getColourBuffer());
+        this.gl.vertexAttribPointer(this.colour, 4, this.gl.UNSIGNED_BYTE, true, 0, 0);
         const textures = item.getTextures();
         for (
             let i = 0;

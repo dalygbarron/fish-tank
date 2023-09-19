@@ -1,0 +1,11 @@
+Stuff to do before releasing the typescript version:
+ - reimplement gamepad support
+ - Get rid of the broken shit folder.
+ - make webpack stop mentioning that there is no prod build or whatever and
+   generally make webpack work nice.
+
+Stuff to do before releasing a later typescript version:
+ - think about implementation transformed sprites in the sprite batch. I just
+   read that it is faster to do this via the CPU than on the GPU and that you
+   can indeed just use a single vector to represent both uniform scaling and
+   rotation.

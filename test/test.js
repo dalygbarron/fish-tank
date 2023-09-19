@@ -1,3 +1,18 @@
+class Rodent {
+    rat = new fish.util.Rect();
+    position = new fish.util.Vector2();
+    velocity = new fish.util.Vector2();
+
+    update(delta) {
+        this.position.x += this.velocity.x * delta;
+        this.position.y += this.velocity.y * delta;
+    }
+
+    draw(batch) {
+        batch.add(this.rat, this.position);
+    }
+}
+
 const MyGame = class extends fish.Game {
     texture = new fish.Texture();
     critter = new fish.Texture();
@@ -8,6 +23,7 @@ const MyGame = class extends fish.Game {
     atlas = new fish.Atlas();
     font = new fish.Font();
     origin = new fish.util.Vector2(500, 500);
+    rats = [];
 
     constructor(gl, ac) {
         super(gl, ac);
@@ -31,15 +47,26 @@ const MyGame = class extends fish.Game {
         this.shader.init(this.gl, loaded, null, ['texture', 'critter']);
         this.normalShader.init(this.gl);
         this.sprite.init(this.gl, fish.util.rects.get().set(0, 0, 720, 864), fish.util.rects.get().set(0, 0, 1, 1), [this.texture, this.critter]);
-        this.batch.init(this.gl, this.texture, 100);
+        this.batch.init(this.gl, this.texture, 1024);
         this.gl.disable(this.gl.DEPTH_TEST);
         this.gl.enable(this.gl.BLEND);
         this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+        for (let i = 0; i < 1000; i++) {
+            const rat = new Rodent();
+            rat.rat.copy(this.atlas.getRandom());
+            rat.position.set(
+                Math.random() * 600,
+                Math.random() * 600
+            )
+            rat.velocity.set(Math.random() * 100 - 50, Math.random() * 100 - 50);
+            this.rats.push(rat);
+        }
     }
     
     update(delta) {
         this.origin.x += fish.input.getAxis('LEFT', 'RIGHT') * 200 * delta;
         this.origin.y += fish.input.getAxis('DOWN', 'UP') * 200 * delta;
+        for (let i = 0; i < 1000; i++) this.rats[i].update(delta);
     }
 
     draw(time) {
@@ -48,14 +75,8 @@ const MyGame = class extends fish.Game {
         if (fish.input.getButton('A')) return;
         this.batch.clear();
         const dst = fish.util.vectors.get();
-        // this.atlas.forEach((sprite, src) => {
-        //     dst.set(
-        //         this.origin.x + Math.random() * 150 - 75,
-        //         this.origin.y + Math.random() * 150 - 75
-        //     )
-        //     this.batch.add(src, dst);
-        // });
-        this.batch.addText('Hello my dear friends.\nI like to bite tango lol. It is very funny.', this.origin, this.font);
+        for (let i = 0; i < 1000; i++) this.rats[i].draw(this.batch);
+        this.batch.addText('Hello my dear friends.\nI like to bite tango lol. It is very funny.', this.origin, this.font, fish.colours.RED);
         this.normalShader.draw(this.batch);
     }
 }

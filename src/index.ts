@@ -8,6 +8,7 @@ import Atlas from './Atlas';
 import Font from './Font';
 import * as util from './util';
 import * as input from './input';
+import * as colours from './colours';
 
 global.fish = {
     Texture,
@@ -18,6 +19,7 @@ global.fish = {
     Batch,
     Atlas,
     Font,
+    colours,
     input,
     util
 };
