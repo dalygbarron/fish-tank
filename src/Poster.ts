@@ -1,7 +1,7 @@
 import { Drawable } from "./Shader";
 import Texture from "./Texture";
 import * as util from "./util";
-import {Colour, RED} from './colours';
+import {Colour, WHITE} from './colours';
 
 /**
  * Creates a float array containing a rectangle made up of 2 triangles.
@@ -43,9 +43,12 @@ function createColourArray(colour: Colour): Uint8Array {
 }
 
 /**
- * A rectangle to be drawn on the screen, potentially with one or more textures.
+ * A rectangle to be drawn on the screen, potentially with one or more textures
+ * and with a colour. Designed to be set up once and pretty much left how it is
+ * until it is no longer needed. I guess if I need to be able to move one later
+ * then I guess I will set that up but it's not really a primary concern.
  */
-export default class Sprite extends Drawable {
+export default class Poster extends Drawable {
     textures: Texture[];
     buffer: WebGLBuffer;
     textureBuffer: WebGLBuffer;
@@ -73,7 +76,8 @@ export default class Sprite extends Drawable {
         gl: WebGLRenderingContext,
         rect: util.Rect,
         uv: util.Rect|null = null,
-        textures: Texture[] = []
+        textures: Texture[] = [],
+        colour: Colour = WHITE
     ): boolean {
         this.gl = gl;
         this.textures = textures;
@@ -91,7 +95,7 @@ export default class Sprite extends Drawable {
             util.rects.get().set(0, 0, 1, 1);
         const vertexArray = createVertexArray(rect);
         const uvArray = createVertexArray(uvRect.flipped(true, false));
-        const colourArray = createColourArray(RED);
+        const colourArray = createColourArray(colour);
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);

@@ -1,11 +1,24 @@
 Stuff to do before releasing the typescript version:
- - reimplement gamepad support
- - Get rid of the broken shit folder.
- - make webpack stop mentioning that there is no prod build or whatever and
-   generally make webpack work nice.
+ - Add default settings for texture sampling and also make it that your only
+   choices are linear or nearest, and wrapping wise it's full wrap or full
+   clamp and you don't need to screw with gl constants.
+ - Figure out where to put default values for gl blend mode and that sort of
+   stuff. I guess ideally you should be able to customise these but on the other
+   hand I really don't care and highly doubt anybody else does so might be a
+   waste of time.
+ - Shouldn't need to use WebGLRenderingContext and AudioContext in user code
+   really at all. Find the last few usages and eradicate them. (passing it to
+   stuff doesn't count and the user can use them if they want anyway).
+
 
 Stuff to do before releasing a later typescript version:
  - think about implementation transformed sprites in the sprite batch. I just
    read that it is faster to do this via the CPU than on the GPU and that you
    can indeed just use a single vector to represent both uniform scaling and
    rotation.
+
+Stuff that is DONE!!!!!
+ - reimplement gamepad support
+ - Get rid of the broken shit folder.
+ - make webpack stop mentioning that there is no prod build or whatever and
+   generally make webpack work nice.

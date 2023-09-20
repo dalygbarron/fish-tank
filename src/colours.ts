@@ -16,3 +16,4 @@ export const BLACK = new Colour(0, 0, 0, 255);
 export const RED = new Colour(255, 0, 0, 255);
 export const GREEN = new Colour(0, 255, 0, 255);
 export const BLUE = new Colour(0, 0, 255, 255);
+export const YELLOW = new Colour(255, 255, 0, 255);

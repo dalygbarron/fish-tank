@@ -1,16 +1,21 @@
 {
-  "name": "fish-tank",
-  "version": "0.1.0",
-  "description": "javascript immediate rendering scene handling game lib",
+  "name": "@dalygbarron/fish-tank",
+  "author": "Daly Graham Barron",
+  "license": "GPL-2.0-only",
+  "version": "0.2.2",
+  "description": "typescript immediate rendering scene handling game lib",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "prepack": "tsc"
+  },
   "files": [
     "/dist"
   ],
   "devDependencies": {
-    "expose-loader": "^4.1.0",
-    "ts-loader": "^9.4.4",
-    "typescript": "^5.2.2",
-    "webpack-cli": "^5.1.4"
+    "typescript": "^5.2.2"
+  },
+  "exports": {
+    ".": "./dist/index.js"
   }
 }

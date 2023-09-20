@@ -57,6 +57,10 @@ export default class Texture extends util.Initialised {
                 this.size.set(image.width, image.height);
                 this.invSize.set(1 / image.width, 1 / image.height);
                 this.initialised = true;
+                this.setParameter(this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
+                this.setParameter(this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
+                this.setParameter(this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
+                this.setParameter(this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
                 resolve(true);
                 return;
             };

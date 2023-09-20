@@ -1,8 +1,9 @@
 import Shader from './Shader';
-import Sprite from './Sprite';
+import Sprite from './Poster';
 import * as audio from './audio';
 import * as util from './util'
 import * as constants from './constants';
+import * as input from './input';
 import { getScreenRect } from './util';
 const INV_MILLI = 1 / 1000;
 
@@ -100,42 +101,47 @@ export default abstract class Game {
      * @param game is the game to set running.
      * @param logicalFramesPerSecond the number of frames per second the game
      *        is supposed to be updated at.
+     * @param preload is a promise you can all which can keep evaluating while
+     *        the splashscreen and stuff is happening, but it waits for it to
+     *        finish before starting the main loop. You can stick a big
+     *        function in here that loads all your shit.
      */
-    static run(game: Game, logicalFramesPerSecond: number = 60): void {
+    static run(
+        game: Game,
+        logicalFramesPerSecond: number = 60,
+        preload: Promise<any>
+    ): void {
         Game.runningGames.push(game);
         if (Game.fps === null) {
             Game.fps = logicalFramesPerSecond;
         } else {
             return;
         }
-        game.pressAKey().then(() => {
-            game.splash().then(() => {
-                const delta = 1 / logicalFramesPerSecond;
-                const startTime = Date.now();
-                let currentTime = 0;
-                let updates = 0;
-                let elapsed = 0;
-                const render = () => {
-                    for (const game of Game.runningGames) game.draw(elapsed);
-                    requestAnimationFrame(render);
+        game.pressAKey().then(async () => {
+            await game.splash();
+            await preload;
+            const delta = 1 / logicalFramesPerSecond;
+            const startTime = Date.now();
+            let currentTime = 0;
+            let updates = 0;
+            let elapsed = 0;
+            const loop = () => {
+                currentTime = Date.now();
+                elapsed = (currentTime - startTime) * INV_MILLI;
+                while (updates < elapsed * logicalFramesPerSecond) {
+                    input.update();
+                    audio.update();
+                    util.TemporaryPool.refreshAll();
+                    for (const game of Game.runningGames) {
+                        game.update(delta);
+                    }
+                    updates++;
                 }
-                setInterval(
-                    () => {
-                        currentTime = Date.now();
-                        elapsed = (currentTime - startTime) * INV_MILLI;
-                        while (updates < elapsed * logicalFramesPerSecond) {
-                            audio.update();
-                            util.TemporaryPool.refreshAll();
-                            for (const game of Game.runningGames) {
-                                game.update(delta);
-                            }
-                            updates++;
-                        }
-                    },
-                    delta * 1000
-                );
-                requestAnimationFrame(render);
-            });
+                game.gl.clear(game.gl.COLOR_BUFFER_BIT);
+                for (const game of Game.runningGames) game.draw(elapsed);
+                requestAnimationFrame(loop);
+            };
+            loop();
         });
     }
 }

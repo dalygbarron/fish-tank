@@ -9,8 +9,9 @@
         "noImplicitOverride": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "sourceMap": true,
-        "inlineSourceMap": false
+        "noImplicitAny": true,
+        "inlineSourceMap": true,
+        "lib": ["ES2020", "dom"]
     },
     "include": [
         "src/*.ts"

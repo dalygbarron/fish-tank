@@ -1,25 +1,11 @@
-import Texture from './Texture';
-import Shader from './Shader';
-import Sprite from './Sprite';
-import Game from './Game';
-import Sample from './Sample';
-import Batch from './Batch';
-import Atlas from './Atlas';
-import Font from './Font';
-import * as util from './util';
-import * as input from './input';
-import * as colours from './colours';
-
-global.fish = {
-    Texture,
-    Shader,
-    Sprite,
-    Game,
-    Sample,
-    Batch,
-    Atlas,
-    Font,
-    colours,
-    input,
-    util
-};
+export {default as Texture} from './Texture';
+export {default as Shader} from './Shader';
+export {default as Poster} from './Poster';
+export {default as Game} from './Game';
+export {default as Sample} from './Sample';
+export {default as Batch} from './Batch';
+export {default as Atlas} from './Atlas';
+export {default as Font} from './Font';
+export * as util from './util';
+export * as input from './input';
+export * as colours from './colours';

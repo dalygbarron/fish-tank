@@ -11,7 +11,7 @@ uniform vec2 critterInv;
 varying highp vec2 vTextureCoord;
 varying highp vec2 vCritterCoord;
 varying highp vec2 vPosition;
-varying highp vec4 vColour;
+varying mediump vec4 vColour;
 void main() {
     gl_Position = vec4(
       position * canvasInv * 2.0 - vec2(1.0, 1.0),
@@ -27,7 +27,7 @@ void main() {
 const defaultFrag = `
 uniform sampler2D texture;
 varying highp vec2 vTextureCoord;
-varying highp vec4 vColour;
+varying mediump vec4 vColour;
 void main() {
     gl_FragColor = texture2D(texture, vTextureCoord) * vColour;
 }`;
