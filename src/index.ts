@@ -6,6 +6,7 @@ export {default as Sample} from './Sample';
 export {default as Batch} from './Batch';
 export {default as Atlas} from './Atlas';
 export {default as Font} from './Font';
+export * as extras from './extras';
 export * as util from './util';
 export * as input from './input';
 export * as colours from './colours';

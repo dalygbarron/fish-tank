@@ -1,3 +1,22 @@
+Stuff that I am doing:
+ - Would be nice to have an asset manager thing that can read simple types in
+   directly by their filename, and for more complex types such as shaders can
+   read them in from a json file, and caching any resources required in the
+   process. Difficulty here would be making it that the manager can do
+   everything well without marrying all the types to it. One way of doing this
+   would be to actually create special subclasses of complex types that exist
+   inside the manager itself and have acess to it's shit. A manager is
+   definitely something you instance since it's tied to a given graphics and
+   audio context. Gonna make it you have to have a different instance for each
+   type because it's the only way to make it type safe. Rather than having a
+   resources object you can pass everywhere, I think I will make the default
+   resource managers properties of the game object by default, and if you want
+   your own resource managers you can just add them to your subclass of the game
+   object, and so yeah the game object will get passed around a lot which is
+   kind of necessary anyway for things like scene stack management. Unless you
+   wanna go crazy about it and add a million classes.
+ - Add scene stack handling game object as an extra
+
 Stuff to do before releasing the typescript version:
  - Add default settings for texture sampling and also make it that your only
    choices are linear or nearest, and wrapping wise it's full wrap or full
@@ -9,7 +28,15 @@ Stuff to do before releasing the typescript version:
  - Shouldn't need to use WebGLRenderingContext and AudioContext in user code
    really at all. Find the last few usages and eradicate them. (passing it to
    stuff doesn't count and the user can use them if they want anyway).
-
+ - would be nice if the source maps worked properly and you could see where
+   errors are actually happening.
+ - I think I will add a gui system under the extras namespace. It won't be
+   exhaustively perfect or anything, but it should be usable enough that it
+   would work for most games, and be extensible enough to add stuff it lacks.
+ - Would be nice to add tests. Not sure how it would work exactly with the
+   browser stuff though, I guess I could either use some kind of virtual browser
+   thing that runs the tests or I could just make it compile to some kind of
+   program that runs in the browser.
 
 Stuff to do before releasing a later typescript version:
  - think about implementation transformed sprites in the sprite batch. I just
@@ -17,8 +44,22 @@ Stuff to do before releasing a later typescript version:
    can indeed just use a single vector to represent both uniform scaling and
    rotation.
 
+ - if we are gonna add transformations and shiet, it would be pretty cool if we
+   could also add 3d stuff, although I feel that while in the above I said
+   transformations on the CPU would be faster, I must admit I feel as though
+   this surely can't also be true for 3d stuff as well. I should look into how
+   multimeshes are implemented. Surely they don't pass a transformation matrix
+   for every single vertex of every single instance of the mesh? Yeah no so
+   there is a call called glDrawArraysInstanced, and as far as I understand you
+   pass in an array of transforms as a uniform, and the instanced call gives
+   you a special variable inside the shader that tells you which instance it is
+   so you can index the array.
+   https://learnopengl.com/Advanced-OpenGL/Instancing
+
 Stuff that is DONE!!!!!
  - reimplement gamepad support
  - Get rid of the broken shit folder.
  - make webpack stop mentioning that there is no prod build or whatever and
    generally make webpack work nice.
+ - Add an extras namespace for random shit that is less useful generally
+   speaking, but I would probably use in multiple games.

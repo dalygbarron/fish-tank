@@ -33,9 +33,11 @@ export default class Font extends util.Initialised {
         url: string,
         offset: util.Vector2 = util.vectors.get()
     ): Promise<boolean> {
-        const text = await util.loadText(url);
-        if (!text) {
+        const text = await util.loadText(url).catch(() => {
             console.error(`couldn't load font from ${url}`);
+        });
+        if (!text) {
+            
             return false;
         }
         const lines = text.split('\n');

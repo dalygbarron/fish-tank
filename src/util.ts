@@ -290,8 +290,13 @@ export async function wait(time: number): Promise<void> {
 /**
  * Super class for types that need to be initialised before they can be used.
  */
-export class Initialised {
+export abstract class Initialised {
     protected initialised = false;
+
+    /**
+     * Deletes any resources that ought to be deleted.
+     */
+    abstract free(): void;
 
     /**
      * Check if the object has been initialised yet.
