@@ -4,11 +4,22 @@ import * as util from './util';
 import Ajv from 'ajv';
 
 /**
+ * Something that can be managed by a manager and that potentially has special
+ * resources that need to be manually freed.
+ */
+export abstract class Resource {
+    /**
+     * Frees any resources associated with the given thing.
+     */
+    abstract free(): void;
+}
+
+/**
  * A thing that can load and cache assets of a certain type based on string
  * keys, and 
  */
-export default abstract class Manager<T extends util.Initialised> {
-    cache: {[id: string]: T} = {};
+export default abstract class Manager<T extends Resource> {
+    cache: {[id: string]: T|null} = {};
 
     /**
      * This is the function you must implement which actually creates or loads
@@ -28,7 +39,8 @@ export default abstract class Manager<T extends util.Initialised> {
      */
     free(key: string): void {
         if (key in this.cache) {
-            this.cache[key].free();
+            const entry = this.cache[key];
+            if (entry) entry.free();
             delete this.cache[key];
         }
     }
@@ -43,7 +55,7 @@ export default abstract class Manager<T extends util.Initialised> {
      */
     async get(key: string): Promise<T|null> {
         if (key in this.cache) return this.cache[key];
-        let result: T|null;
+        let result: T|null = null;
         await this.create(key).then(
             value => result = value,
             () => result = null
@@ -126,9 +138,9 @@ export class TextureManager extends Manager<Texture> {
     }
 
     override create(key: string): Promise<Texture> {
-        return new Promise( (resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const texture = new Texture();
-            if (texture.loadFromUrl(this.gl, key)) resolve(texture);
+            if (await texture.loadFromUrl(this.gl, key)) resolve(texture);
             else reject(`Couldn't load texture with key ${key}`)
         });
     }

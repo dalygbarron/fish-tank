@@ -1,3 +1,4 @@
+import { Resource } from './Manager';
 import Texture from './Texture';
 import * as util from './util';
 
@@ -58,51 +59,27 @@ function loadShader(
 }
 
 /**
- * Something that can be drawn by a shader. The reason we use shaders as the
- * class that handles rendering is that they have information about texture
- * names that is useful, also it makes keeping track of what shader is for what
- * feel more natural in my humble opinion.
+ * Something that can be drawn by a shader.
+ * TODO: if at a later point we add instanced 3d rendering we might need to
+ * update this a bit.
  */
-export abstract class Drawable extends util.Initialised {
-    protected gl: WebGLRenderingContext;
+export interface Drawable {
+    vertices: WebGLBuffer;
+    uvs?: WebGLBuffer;
+    colours?: WebGLBuffer;
+    textures?: Texture[];
 
     /**
-     * Gives you all the drawable's textures. This should probably only be
-     * called by Shader but I have no control over that so whatever.
-     * @returns array of all textures associated with this drawable.
+     * This is called before the drawable is drawn by the shader and lets it
+     * set up it's shit.
      */
-    abstract getTextures(): Texture[];
-
-    /**
-     * Gives you the drawable's buffer of vertices for rendering.
-     * @returns buffer of vertices.
-     */
-    abstract getVertexBuffer(): WebGLBuffer;
-
-    /**
-     * Gives you the drawable's buffer of uv mapping data for rendering.
-     * @returns the buffer of uv positions.
-     */
-    abstract getUVBuffer(): WebGLBuffer;
-
-    /**
-     * Gives you the drawables buffer of colours.
-     * @returns the buffer of colours.
-     */
-    abstract getColourBuffer(): WebGLBuffer;
-
-    /**
-     * Called immediately before the drawable is rendered and allows it to
-     * update it's buffers or whatever.
-     * @returns the number of vertices to be drawn.
-     */
-    abstract draw(): number;
-}
+    predraw(): number;
+};
 
 /**
  * Stores a shader program and associated info.
  */
-export default class Shader extends util.Initialised {
+export default class Shader extends Resource {
     private gl: WebGLRenderingContext;
     private vert: WebGLShader;
     private frag: WebGLShader;

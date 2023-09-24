@@ -1,3 +1,6 @@
+import Ajv, { JSONSchemaType } from "ajv";
+
+const ajv = new Ajv();
 
 /**
  * Lets you set up a pool of thingies that can be used only on the given tick.
@@ -218,54 +221,29 @@ export function loadText(url: string): Promise<string> {
     });
 }
 
-/**
- * Takes a piece of text and fits it so that when drawn with a given font it
- * will fit into a given width space. It ignores single newlines, and turns two
- * or more newlines in a row into a single newline.
- * @param {string} text the text to fit.
- * @param {fish.graphics.Font} font the font to give size to the text.
- * @param {number} width the width to fit the text into.
- */
-// export function fitText(text, font, width) {
-//     // TODO: needs to handle non monospaced fonts now.
-//     let fitted = '';
-//     const lines = text.split(/\n\n+/);
-//     for (let line of lines) {
-//         let offset = 0;
-//         const tokens = line.split(/\s/);
-//         for (let token of tokens) {
-//             if (token.length == 0) continue;
-//             let size = 0;
-//             for (let i = 0; i < token.length; i++) {
-//                 size += font.getWidth(token.charAt(i));
-//             }
-//             if (offset + size > width) {
-//                 fitted += `\n${token}`;
-//                 offset = size;
-//             } else {
-//                 fitted += token;
-//                 offset += size;
-//             }
-//             offset += font.getWidth(' ');
-//             fitted += ' ';
-//         }
-//         fitted += '\n';
-//     }
-//     return fitted;
-// };
+export function loadJSON<T>(
+    url: string,
+    schema: JSONSchemaType<T>
+): Promise<T> {
+    return new Promise(async (resolve, reject) => {
+        const text = await loadText(url).catch(reject);
+        if (text === null) return;
+        const validate = ajv.compile(schema);
+        const data = JSON.parse(text);
 
-/**
- * Takes a fitted piece of text and tells you how high it is gonna be in the
- * given font.
- * @param {string} text is text where every newline is taken seriously.
- * @param {fish.graphics.Font} font is the font used to measure it.
- * @return {number} the number of pixels high it will be.
- */
-// export function textHeight(text, font) {
-//     // TODO: this won't work anymore.
-//     const lines = text.split(/\n(?=\S+)/).length;
-//     return lines * font.getLineHeight();
-// };
+    });
+
+
+
+    return loadText(url).then(text => {
+        const validate = ajv.compile(schema)
+        const data = JSON.parse(text);
+        if (validate(data)) {
+
+        }
+
+    })
+}
 
 /**
  * Converts a string containing base64 encoded data into an array of bytes.
@@ -285,24 +263,4 @@ export function base64ToArrayBuffer(base64: string): Uint8Array {
  */
 export async function wait(time: number): Promise<void> {
     return await new Promise(resolve => setTimeout(resolve, time * 1000));
-}
-
-/**
- * Super class for types that need to be initialised before they can be used.
- */
-export abstract class Initialised {
-    protected initialised = false;
-
-    /**
-     * Deletes any resources that ought to be deleted.
-     */
-    abstract free(): void;
-
-    /**
-     * Check if the object has been initialised yet.
-     * @returns true iff the object is ready to roll.
-     */
-    ready(): boolean {
-        return this.initialised;
-    }
 }

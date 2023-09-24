@@ -1,7 +1,8 @@
-import { Drawable } from "./Shader";
+import Drawable from "./Shader";
 import Texture from "./Texture";
 import * as util from "./util";
 import {Colour, WHITE} from './colours';
+import { Resource } from "./Manager";
 
 /**
  * Creates a float array containing a rectangle made up of 2 triangles.
@@ -47,82 +48,72 @@ function createColourArray(colour: Colour): Uint8Array {
  * and with a colour. Designed to be set up once and pretty much left how it is
  * until it is no longer needed. I guess if I need to be able to move one later
  * then I guess I will set that up but it's not really a primary concern.
+ * TODO: the way this class is designed right now is that it is physically
+ * impossible for it to update it's data after it's been created, which is
+ * probably a bit dumb.
  */
-export default class Poster extends Drawable {
+export default class Poster extends Resource implements Drawable {
+    gl: WebGLRenderingContext;
     textures: Texture[];
-    buffer: WebGLBuffer;
-    textureBuffer: WebGLBuffer;
-    colourBuffer: WebGLBuffer;
+    vertices: WebGLBuffer;
+    uvs: WebGLBuffer;
+    colours: WebGLBuffer;
+
+    constructor(
+        gl: WebGLRenderingContext,
+        textures: Texture[],
+        vertices: WebGLBuffer,
+        uvs: WebGLBuffer,
+        colours: WebGLBuffer
+    ) {
+        super();
+        this.gl = gl;
+        this.textures = textures;
+        this.vertices = vertices;
+        this.uvs = uvs;
+        this.colours = colours;
+    }
 
     /**
      * Frees the sprite's resources and sets it as uninitialised.
      */
     free(): void {
-        this.gl.deleteBuffer(this.buffer);
-        this.gl.deleteBuffer(this.textureBuffer);
-        this.gl.deleteBuffer(this.colourBuffer);
-        this.initialised = false;
+        this.gl.deleteBuffer(this.vertices);
+        this.gl.deleteBuffer(this.uvs);
+        this.gl.deleteBuffer(this.colours);
     }
 
-    /**
-     * Initialises the sprite.
-     * @param gl webgl context.
-     * @param rect screen space location.
-     * @param uv texture mapping. Default is size of first texture or unit size.
-     * @param textures list of textures the sprite is drawn with.
-     * @returns true iff successful.
-     */
-    init(
+    predraw(): number {
+        return 6;
+    }
+
+    static create(
         gl: WebGLRenderingContext,
         rect: util.Rect,
         uv: util.Rect|null = null,
         textures: Texture[] = [],
         colour: Colour = WHITE
-    ): boolean {
-        this.gl = gl;
-        this.textures = textures;
-        const buffer = gl.createBuffer();
-        const textureBuffer = gl.createBuffer();
-        const colourBuffer = gl.createBuffer();
-        if (!(buffer && textureBuffer && colourBuffer)) {
-            console.error('Failed to set up buffers for sprite');
-            return false;
-        }
-        this.buffer = buffer;
-        this.textureBuffer = textureBuffer;
-        this.colourBuffer = colourBuffer;
-        const uvRect = uv || (textures.length > 0) ? textures[0].getRect() :
-            util.rects.get().set(0, 0, 1, 1);
-        const vertexArray = createVertexArray(rect);
-        const uvArray = createVertexArray(uvRect.flipped(true, false));
-        const colourArray = createColourArray(colour);
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, uvArray, gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, colourBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, colourArray, gl.STATIC_DRAW);
-        this.initialised = true;
-        return true;
-    }
-
-    override getTextures() {
-        return this.textures;
-    }
-
-    override getVertexBuffer() {
-        return this.buffer;
-    }
-
-    override getUVBuffer() {
-        return this.textureBuffer;
-    }
-
-    override getColourBuffer() {
-        return this.colourBuffer;
-    }
-
-    override draw() {
-        return 6;
+    ): Promise<Poster> {
+        return new Promise((resolve, reject) => {
+            const vertices = gl.createBuffer();
+            const uvs = gl.createBuffer();
+            const colours = gl.createBuffer();
+            if (!(vertices && uvs && colours)) {
+                reject('Failed to set up buffers for poster');
+                return;
+            }
+            const uvRect = uv || (textures.length > 0) ? textures[0].getRect() :
+                util.rects.get().set(0, 0, 1, 1);
+            const vertexArray = createVertexArray(rect);
+            const uvArray = createVertexArray(uvRect.flipped(true, false));
+            const colourArray = createColourArray(colour);
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertices);
+            gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
+            gl.bindBuffer(gl.ARRAY_BUFFER, uvs);
+            gl.bufferData(gl.ARRAY_BUFFER, uvArray, gl.STATIC_DRAW);
+            gl.bindBuffer(gl.ARRAY_BUFFER, colours);
+            gl.bufferData(gl.ARRAY_BUFFER, colourArray, gl.STATIC_DRAW);
+            resolve(new Poster(gl, textures, vertices, uvs, colours));
+        });
     }
 }

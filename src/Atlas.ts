@@ -7,6 +7,10 @@ import * as util from './util';
 export default class Atlas extends util.Initialised {
     private sprites: {[id: string]: util.Rect} = {};
 
+    override free(): void {
+        this.sprites = {};
+    }
+
     /**
      * Loads the atlas data from some file.
      * @param url url of the file to load from.

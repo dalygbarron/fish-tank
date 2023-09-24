@@ -10,6 +10,8 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strict": true,
         "inlineSourceMap": true,
         "lib": ["ES2020", "dom"]
     },

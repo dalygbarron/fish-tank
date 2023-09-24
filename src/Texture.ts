@@ -4,73 +4,37 @@ import * as util from './util'
  * Wraps a webgl texture and stores it's width and height so you don't need to
  * query them whenever you need that info.
  */
-export default class Texture extends util.Initialised {
+export default class Texture {
     private gl: WebGLRenderingContext;
     private glTexture: WebGLTexture;
-    private size = new util.Vector2();
-    private invSize = new util.Vector2();
+    private size: util.Vector2;
+    private invSize: util.Vector2;
+
+    /**
+     * Just puts in literally everything it uses. This is dumb to call directly.
+     * @param gl webgl context.
+     * @param glTexture webgl texture.
+     * @param size size of the texture.
+     * @param invSize (1 / width, 1 / height)
+     */
+    constructor(
+        gl: WebGLRenderingContext,
+        glTexture: WebGLTexture,
+        size: util.Vector2,
+        invSize: util.Vector2
+    ) {
+        this.gl = gl;
+        this.glTexture = glTexture;
+        this.size = size;
+        this.invSize = invSize;
+    }
 
     /**
      * Frees resources used by this texture and sets it as uninitialised.
      * @param gl webgl context.
      */
     free(): void {
-        if (!this.ready()) return;
         this.gl.deleteTexture(this.glTexture);
-        this.initialised = false;
-    }
-
-    /**
-     * Loads data for the texture from the given url. If it already has some
-     * data then it frees it.
-     * @param gl webglrendering context to upload the texture data into.
-     * @param url where to load the image data from.
-     * @returns a promise that should evaluate to true iff the texture was
-     *          successfully loaded. Should never reject, if there is a failure
-     *          then it should evaluate to false and log an error.
-     */
-    async loadFromUrl(
-        gl: WebGLRenderingContext,
-        url: string
-    ): Promise<boolean> {
-        this.free();
-        this.gl = gl;
-        return await new Promise(resolve => {
-            const image = new Image();
-            image.onload = () => {
-                const glTexture = gl.createTexture();
-                if (!glTexture) {
-                    console.error('failed to create webgl texture');
-                    resolve(false);
-                    return;
-                }
-                gl.bindTexture(gl.TEXTURE_2D, glTexture);
-                gl.texImage2D(
-                    gl.TEXTURE_2D,
-                    0,
-                    gl.RGBA,
-                    gl.RGBA,
-                    gl.UNSIGNED_BYTE,
-                    image
-                );
-                this.glTexture = glTexture;
-                this.size.set(image.width, image.height);
-                this.invSize.set(1 / image.width, 1 / image.height);
-                this.initialised = true;
-                this.setParameter(this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
-                this.setParameter(this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
-                this.setParameter(this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-                this.setParameter(this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-                resolve(true);
-                return;
-            };
-            image.onerror = () => {
-                console.error(`Failed loading image from ${url}`);
-                resolve(false);
-                return;
-            }
-            image.src = url;
-        });
     }
 
     /**
@@ -79,10 +43,6 @@ export default class Texture extends util.Initialised {
      * @param value value to give the parameter.
      */
     setParameter(param: GLenum, value: number) {
-        if (!this.ready()) {
-            console.error('trying to set param on uninitialised texture');
-            return;
-        }
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
         this.gl.texParameteri(this.gl.TEXTURE_2D, param, value);
     }
@@ -91,10 +51,6 @@ export default class Texture extends util.Initialised {
      * Binds the texture in the webgl context.
      */
     bind(): void {
-        if (!this.ready()) {
-            console.error('trying to bind uninitialised texture');
-            return;
-        }
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.glTexture);
     }
 
@@ -136,5 +92,52 @@ export default class Texture extends util.Initialised {
      */
     getRect(): util.Rect {
         return util.rects.get().set(0, 0, this.size.x, this.size.y);
+    }
+
+    /**
+     * Loads a texture from a given image at a url.
+     * @param gl gl context.
+     * @param url where to load image data from.
+     * @returns promise that resolves to a texture or rejects with an error
+     *          message.
+     */
+    static loadFromUrl(
+        gl: WebGLRenderingContext,
+        url: string
+    ): Promise<Texture> {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => {
+                const glTexture = gl.createTexture();
+                if (!glTexture) {
+                    reject('Failed to create webgl texture');
+                    return;
+                }
+                gl.bindTexture(gl.TEXTURE_2D, glTexture);
+                gl.texImage2D(
+                    gl.TEXTURE_2D,
+                    0,
+                    gl.RGBA,
+                    gl.RGBA,
+                    gl.UNSIGNED_BYTE,
+                    image
+                );
+                const size = new util.Vector2().set(image.width, image.height);
+                const invSize = new util.Vector2().set(
+                    1 / image.width,
+                    1 / image.height
+                );
+                const texture = new Texture(gl, glTexture, size, invSize);
+                texture.setParameter(gl.TEXTURE_WRAP_T, gl.REPEAT);
+                texture.setParameter(gl.TEXTURE_WRAP_S, gl.REPEAT);
+                texture.setParameter(gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                texture.setParameter(gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                resolve(texture);
+            };
+            image.onerror = () => {
+                reject(`Failed loading image from ${url}`);
+            };
+            image.src = url;
+        });
     }
 };

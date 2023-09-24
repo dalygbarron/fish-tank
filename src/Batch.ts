@@ -10,18 +10,19 @@ import * as util from "./util";
  * same texture, and upload it all to the GPU in one go so it's fast.
  */
 export default class Batch extends Drawable {
-    texture: Texture;
-    max: number;
-    vertexData: Int16Array;
-    uvData: Int16Array;
-    colourData: Uint8Array;
     n: number = 0;
-    vertexBuffer: WebGLBuffer;
-    uvBuffer: WebGLBuffer;
-    colourBuffer: WebGLBuffer;
+    max: number = 0
+    texture?: Texture;
+    vertexData?: Int16Array;
+    uvData?: Int16Array;
+    colourData?: Uint8Array;
+    vertexBuffer?: WebGLBuffer;
+    uvBuffer?: WebGLBuffer;
+    colourBuffer?: WebGLBuffer;
 
     override getTextures() {
-        return [this.texture];
+        if (this.ready()) return [this.texture!];
+        return [];
     }
 
     override getVertexBuffer() {
