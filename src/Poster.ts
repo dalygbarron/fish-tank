@@ -1,7 +1,7 @@
-import Drawable from "./Shader";
+import { Drawable } from "./Shader";
 import Texture from "./Texture";
 import * as util from "./util";
-import {Colour, WHITE} from './colours';
+import { Colour, WHITE } from './colours';
 import { Resource } from "./Manager";
 
 /**

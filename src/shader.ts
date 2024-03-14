@@ -2,6 +2,13 @@ import { Resource } from './Manager';
 import Texture from './Texture';
 import * as util from './util';
 
+const JSON_SCHEMA = {
+    type: 'object',
+    properties: {
+
+    }
+};
+
 const defaultVert = `
 attribute vec2 position;
 attribute vec2 uv;
@@ -96,15 +103,58 @@ export default class Shader extends Resource {
     private extras: {[id: string]: WebGLUniformLocation|null} = {};
 
     /**
+     * Just inserts literally everything the shader needs. Prolly not wise to
+     * call directly.
+     * @param gl gl context.
+     * @param vert created vertex shader.
+     * @param frag created fragment shader.
+     * @param program created shader program.
+     * @param position position vertex param id.
+     * @param uv uv vertex param id.
+     * @param colour colour vertex param id.
+     * @param invCanvas inverse canvas size uniform location.
+     * @param time time uniform location.
+     * @param samplers list of sampler and corresponding invSize uniforms.
+     * @param extras list of extra uniform locations.
+     */
+    constructor(
+        gl: WebGLRenderingContext,
+        vert: WebGLShader,
+        frag: WebGLShader,
+        program: WebGLProgram,
+        position: number,
+        uv: number,
+        colour: number,
+        invCanvas: WebGLUniformLocation|null,
+        time: WebGLUniformLocation|null,
+        samplers: {
+            sampler: WebGLUniformLocation|null,
+            invSize: WebGLUniformLocation|null
+        }[],
+        extras: {[id: string]: WebGLUniformLocation|null}
+    ) {
+        super();
+        this.gl = gl;
+        this.vert = vert;
+        this.frag = frag;
+        this.program = program;
+        this.position = position;
+        this.uv = uv;
+        this.colour = colour;
+        this.invCanvas = invCanvas;
+        this.time = time;
+        this.samplers = samplers;
+        this.extras = extras;
+    }
+
+    /**
      * Frees the shader's resources and lets you use it for something else.
      * @param gl webgl context for getting at the resources.
      */
     free(): void {
-        if (!this.ready()) return;
         this.gl.deleteProgram(this.program);
         this.gl.deleteShader(this.frag);
         this.gl.deleteShader(this.vert);
-        this.initialised = false;
     }
 
     /**
@@ -188,22 +238,13 @@ export default class Shader extends Resource {
         return true;
     }
 
-    bind(): boolean {
-        if (this.ready()) {
-            this.gl.useProgram(this.program);
-            return true;
-        }
-        console.error('trying to bind uninitialised shader');
-        return false;
-    }
-
     /**
      * Sets the value of an extra shader param that is a float.
      * @param name name of the extra to update.
      * @param value value to give it.
      */
     extra1f(name: string, value: number): void {
-        if (!this.bind()) return;
+        this.gl.useProgram(this.program);
         if (!(name in this.extras)) {
             console.error(`shader doesn't have extra ${name}`);
             return;
@@ -218,43 +259,75 @@ export default class Shader extends Resource {
     update(time: number): void {
         // TODO: guess this should maybe also handle screen size changes if I
         //       ever add that as a feature.
-        if (!this.bind()) return;
         this.gl.useProgram(this.program);
         this.gl.uniform1f(this.time, time);
     }
 
     draw(item: Drawable): void {
-        if (!this.ready()) {
-            console.error('Trying to draw with uninitialised shader');
-            return;
-        }
         this.gl.useProgram(this.program);
-        const n = item.draw();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getVertexBuffer());
+        const n = item.predraw();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.vertices);
         this.gl.vertexAttribPointer(this.position, 2, this.gl.SHORT, false, 0, 0);
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getUVBuffer());
-        this.gl.vertexAttribPointer(this.uv, 2, this.gl.SHORT, false, 0, 0);
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.getColourBuffer());
-        this.gl.vertexAttribPointer(this.colour, 4, this.gl.UNSIGNED_BYTE, true, 0, 0);
-        const textures = item.getTextures();
-        for (
-            let i = 0;
-            i < Math.min(this.samplers.length, textures.length);
-            i++
-        ) {
-            this.gl.activeTexture(this.gl.TEXTURE0 + i);
-            textures[i].bind();
-            if (this.samplers[i].sampler) {
-                this.gl.uniform1i(this.samplers[i].sampler, i)
-            }
-            if (this.samplers[i].invSize) {
-                this.gl.uniform2f(
-                    this.samplers[i].invSize,
-                    textures[i].getInvWidth(),
-                    textures[i].getInvHeight()
-                );
+        if (item.uvs) {
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.uvs);
+            this.gl.vertexAttribPointer(this.uv, 2, this.gl.SHORT, false, 0, 0);
+        }
+        if (item.colours) {
+            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, item.colours);
+            this.gl.vertexAttribPointer(this.colour, 4, this.gl.UNSIGNED_BYTE, true, 0, 0);
+        }
+        if (item.textures) {
+            for (
+                let i = 0;
+                i < Math.min(this.samplers.length, item.textures.length);
+                i++
+            ) {
+                this.gl.activeTexture(this.gl.TEXTURE0 + i);
+                item.textures[i].bind();
+                if (this.samplers[i].sampler) {
+                    this.gl.uniform1i(this.samplers[i].sampler, i)
+                }
+                if (this.samplers[i].invSize) {
+                    this.gl.uniform2f(
+                        this.samplers[i].invSize,
+                        item.textures[i].getInvWidth(),
+                        item.textures[i].getInvHeight()
+                    );
+                }
             }
         }
         this.gl.drawArrays(this.gl.TRIANGLES, 0, n);
+    }
+
+    /**
+     * Creates a shader by passing in it's source code and stuff, or leaving
+     * default for the default shader.
+     * @param gl gl rendering context.
+     * @param fragSrc source code of fragment shader.
+     * @param vertSrc source code of vertex shader.
+     * @param samplers list of sampler names this shader uses.
+     * @param extras list of extra uniforms this shader uses.
+     * @returns promising resolving to shader or rejecting on error.
+     */
+    static createFromSources(
+        gl: WebGLRenderingContext,
+        fragSrc: string|null = null,
+        vertSrc: string|null = null,
+        samplers: string[] = ['texture'],
+        extras: string[] = []
+    ): Promise<Shader> {
+        return new Promise(async (resolve, reject) => {
+
+        });
+    }
+
+    static createFromJson(
+        gl: WebGLRenderingContext,
+        url: string
+    ): Promise<Shader> {
+        return new Promise(async (resolve, reject) => {
+
+
+        });
     }
 }
